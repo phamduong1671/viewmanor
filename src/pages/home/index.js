@@ -1,5 +1,12 @@
+import { Fragment } from "react";
+import SearchBox from "../../layouts/components/searchBox";
+
 function Home() {
-    return <h2>Home page</h2>;
+    return (
+        <Fragment>
+            <SearchBox />
+        </Fragment>
+    );
 }
 
 export default Home;
