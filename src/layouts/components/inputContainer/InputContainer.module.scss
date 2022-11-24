@@ -1,0 +1,38 @@
+.input-container{
+    // width: 36%;
+    height: 42px;
+    max-width: 268px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: #fff;
+    border: solid 1px #bbb;
+    border-radius: 4px;
+    &:hover{
+        background-color: #eee;
+    }
+}
+
+.input-combobox{
+    width: calc(100% - 40px);
+    min-width: 44px;
+    padding: 0 0 0 16px;
+    border: none;
+    outline: none;
+    cursor: default;
+    background-color: rgba(0, 0, 0, 0);
+    &::placeholder{
+        font-size: 15px;
+    }
+}
+
+.icon-dropdown{
+    width: 24px;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: #fff;
+    border: none;
+    background-color: rgba(0, 0, 0, 0);
+}

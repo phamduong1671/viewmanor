@@ -1,7 +1,9 @@
 import classNames from "classnames/bind";
 import { Link } from "react-router-dom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faAngleDown, faMagnifyingGlass } from "@fortawesome/free-solid-svg-icons";
+import { faMagnifyingGlass } from "@fortawesome/free-solid-svg-icons";
+
+import InputContainer from "../inputContainer/InputContainer";
 import style from './SearchBox.module.scss';
 import buttonHeader from '../header/Header.module.scss';
 
@@ -17,22 +19,10 @@ function SearchBox() {
                     <div id="btn-rent" className={cl('rent')}>THUÊ</div>
                 </div>
                 <div className={cl('search-props')}>
-                    <div className={cl('input-container')}>
-                        <input className={cl('input-combobox')} spellCheck={false} placeholder='Loại' readOnly />
-                        <div className={cl('icon-dropdown')}><FontAwesomeIcon icon={faAngleDown} /></div>
-                    </div>
-                    <div className={cl('input-container')}>
-                        <input className={cl('input-combobox')} spellCheck={false} placeholder='Tỉnh / Thành Phố' readOnly />
-                        <div className={cl('icon-dropdown')}><FontAwesomeIcon icon={faAngleDown} /></div>
-                    </div>
-                    <div className={cl('input-container')}>
-                        <input className={cl('input-combobox')} spellCheck={false} placeholder='Quận / Huyện' readOnly />
-                        <div className={cl('icon-dropdown')}><FontAwesomeIcon icon={faAngleDown} /></div>
-                    </div>
-                    <div className={cl('input-container')}>
-                        <input className={cl('input-combobox')} spellCheck={false} placeholder='Loại' readOnly />
-                        <div className={cl('icon-dropdown')}><FontAwesomeIcon icon={faAngleDown} /></div>
-                    </div>
+                    <InputContainer placeholder='Loại' />
+                    <InputContainer placeholder='Tỉnh / Thành Phố' />
+                    <InputContainer placeholder='Quận / Huyện' />
+                    <InputContainer placeholder='Diện Tích' />
                 </div>
                 <div className={cl('btn-search-container')}>
                     <Link className={`${cx('btn-header')} ${cl('btn-search')}`} to='/search'>

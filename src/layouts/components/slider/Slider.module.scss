@@ -1,0 +1,16 @@
+.slider-container{
+    height: 660px;
+    margin: 36px 24px;
+}
+
+.name-slider{
+    font-weight: 700;
+    padding-bottom: 30px;
+    display: flex;
+    justify-content: space-between;
+    color: #551a8b;
+}
+
+.post-list{
+    height: calc(100% - 48px);
+}

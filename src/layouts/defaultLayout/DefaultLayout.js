@@ -8,9 +8,10 @@ function DefaultLayout({children}) {
     return ( 
         <div>
             <Header />
-            <div className={cl('container')}>
+            <div className={cl('content')}>
                 {children}
             </div>
+            <div className={cl('footer')}>Footer</div>
         </div>
      );
 }
