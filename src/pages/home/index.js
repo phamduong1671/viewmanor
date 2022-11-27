@@ -3,6 +3,7 @@ import SearchBox from "../../layouts/components/searchBox";
 import Slider from "../../layouts/components/slider/Slider";
 
 function Home() {
+
     return (
         <Fragment>
             <SearchBox />

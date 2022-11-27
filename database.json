@@ -1,0 +1,28 @@
+{
+  "posts": [
+    {
+      "id": 1,
+      "title": "json-server",
+      "author": "typicode"
+    }
+  ],
+  "users": [
+    {
+      "id": 1,
+      "account": "phamduong",
+      "password": "123"
+    },
+    {
+      "account": "duong246",
+      "password": "456",
+      "id": 2
+    }
+  ],
+  "profiles": [
+    {
+      "name": "Duong",
+      "age": 22,
+      "address": "Hanoi"
+    }
+  ]
+}
