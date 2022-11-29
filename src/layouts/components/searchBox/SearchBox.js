@@ -20,12 +20,12 @@ function SearchBox() {
                 </div>
                 <div className={cl('search-props')}>
                     <div className={cl('center')}>
-                        <InputContainer placeholder='Loại' />
-                        <InputContainer placeholder='Tỉnh / Thành Phố' />
+                        <InputContainer id='loai' value='Loại' />
+                        <InputContainer id='tinh' value='Tỉnh / Thành Phố' />
                     </div>
                     <div className={cl('center')}>
-                        <InputContainer placeholder='Quận / Huyện' />
-                        <InputContainer placeholder='Diện Tích' />
+                        <InputContainer id='huyen' value='Quận / Huyện' />
+                        <InputContainer id='dientich' value='Diện Tích' />
                     </div>
                 </div>
                 <div className={cl('btn-search-container')}>

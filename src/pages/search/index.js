@@ -11,10 +11,10 @@ function Search() {
     return (
         <div>
             <div className={cl('content-header')}>
-                <InputContainer placeholder='Loại' />
-                <InputContainer placeholder='Tỉnh / Thành Phố' />
-                <InputContainer placeholder='Quận / Huyện' />
-                <InputContainer placeholder='Diện Tích' />
+                <InputContainer id='loai' value='Loại' />
+                <InputContainer id='tinh' value='Tỉnh / Thành Phố' />
+                <InputContainer id='huyen' value='Quận / Huyện' />
+                <InputContainer id='dientich' value='Diện Tích' />
                 <div className={cl('btn-search')}>
                     <FontAwesomeIcon fontSize={'20px'} icon={faMagnifyingGlass} />
                     Tìm

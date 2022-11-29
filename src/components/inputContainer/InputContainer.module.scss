@@ -25,9 +25,7 @@
     cursor: default;
     background-color: rgba(0, 0, 0, 0);
     user-select: none;
-    &::placeholder{
-        font-size: 15px;
-    }
+    font-size: 15px;
 }
 
 .icon-dropdown{

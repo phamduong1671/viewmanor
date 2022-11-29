@@ -1,5 +1,5 @@
 import classNames from "classnames/bind";
-import { useState } from "react";
+import { useCallback, useState } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faAngleDown } from "@fortawesome/free-solid-svg-icons";
 
@@ -8,33 +8,26 @@ import ComboboxValue from "../comboboxValue/ComboboxValue";
 
 const tabs = ['']
 
-function InputContainer({ placeholder }) {
+function InputContainer(props) {
     const cl = classNames.bind(style)
     const [show, setShow] = useState(false)
-    const [icon, setIcon] = useState(faAngleDown)
+    const [value, setValue] = useState(props.value)
 
     const showValue = () => {
-        if (show) {
-            setShow(false)
-        } else{
-            setShow(true)
-        }
+        setShow(prev => !prev)
     }
 
-    const hideValue = () => {
-        setIcon(faAngleDown)
-        setShow(false)
-    }
-
-    console.log(show);
+    const callbackValue = useCallback((item) => {
+        setValue(item);
+    },[])
 
     return (
-        <div className={cl('cbb-container')} onClick={showValue} onBlur={hideValue}>
+        <div className={cl('cbb-container')} onClick={() => showValue()} >
             <div className={cl('input-container')}>
-                <input className={cl('input-cbb')} spellCheck={false} placeholder={placeholder} readOnly />
+                <input className={cl('input-cbb')} spellCheck={false} value={value} readOnly />
                 <div className={cl('icon-dropdown')}><FontAwesomeIcon icon={faAngleDown} /></div>
             </div>
-            {show && <ComboboxValue />}
+            {show && <ComboboxValue id={props.id} value={callbackValue} />}
         </div>
     );
 }
