@@ -1,9 +1,17 @@
 import { Fragment } from 'react'
 import { Routes, Route } from 'react-router-dom';
-import { publicRoutes } from './routes'
+import { Navigate } from 'react-router-dom';
+
+import { publicRoutes, privateRoutes } from './routes'
 import DefaultLayout from './layouts/defaultLayout'
 
 function App() {
+
+  const currentUser = false;
+
+  const RequireAuth = ({ children }) => {
+    return currentUser ? children : <Navigate to="/sign-in" />;
+  };
 
   return (
     <div className='App'>
@@ -18,7 +26,22 @@ function App() {
               path={route.path}
               element={
                 <Layout>
-                  <Page />
+                    <Page />
+                </Layout>
+              }
+            />
+          )
+        })}
+        {privateRoutes.map((route, index) => {
+          const Layout = route.layout === null ? Fragment : DefaultLayout
+          const Page = route.component
+          return (
+            <Route
+              key={index}
+              path={route.path}
+              element={
+                <Layout>
+                    <RequireAuth><Page /></RequireAuth>
                 </Layout>
               }
             />

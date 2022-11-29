@@ -1,7 +1,10 @@
-.input-container{
-    width: 36%;
+.cbb-container{
     height: 42px;
-    max-width: 268px;
+}
+
+.input-container{
+    width: 270px;
+    height: 42px;
     display: flex;
     justify-content: center;
     align-items: center;
@@ -13,7 +16,7 @@
     }
 }
 
-.input-combobox{
+.input-cbb{
     width: calc(100% - 40px);
     min-width: 44px;
     padding: 0 0 0 16px;
@@ -21,6 +24,7 @@
     outline: none;
     cursor: default;
     background-color: rgba(0, 0, 0, 0);
+    user-select: none;
     &::placeholder{
         font-size: 15px;
     }

@@ -3,7 +3,7 @@ import { Link } from "react-router-dom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faMagnifyingGlass } from "@fortawesome/free-solid-svg-icons";
 
-import InputContainer from "../inputContainer/InputContainer";
+import InputContainer from "../../../components/inputContainer/InputContainer";
 import style from './SearchBox.module.scss';
 import buttonHeader from '../header/Header.module.scss';
 
@@ -19,10 +19,14 @@ function SearchBox() {
                     <div id="btn-rent" className={cl('rent')}>THUÊ</div>
                 </div>
                 <div className={cl('search-props')}>
-                    <InputContainer placeholder='Loại' />
-                    <InputContainer placeholder='Tỉnh / Thành Phố' />
-                    <InputContainer placeholder='Quận / Huyện' />
-                    <InputContainer placeholder='Diện Tích' />
+                    <div className={cl('center')}>
+                        <InputContainer placeholder='Loại' />
+                        <InputContainer placeholder='Tỉnh / Thành Phố' />
+                    </div>
+                    <div className={cl('center')}>
+                        <InputContainer placeholder='Quận / Huyện' />
+                        <InputContainer placeholder='Diện Tích' />
+                    </div>
                 </div>
                 <div className={cl('btn-search-container')}>
                     <Link className={`${cx('btn-header')} ${cl('btn-search')}`} to='/search'>

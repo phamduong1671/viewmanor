@@ -12,7 +12,6 @@ const publicRoutes = [
     { path: '/', component: Home },
     { path: '/sign-in', component: SignIn, layout: null },
     { path: '/sign-up', component: SignUp, layout: null },
-    { path: '/post', component: Post },
     { path: '/search', component: Search },
     { path: '/forgot-password', component: ForgotPassword, layout: null },
     { path: '/info-item', component: InfoItem}
@@ -20,7 +19,7 @@ const publicRoutes = [
 
 // Private routes
 const privateRoutes = [
-
+    { path: '/post', component: Post }
 ];
 
 export { publicRoutes, privateRoutes };

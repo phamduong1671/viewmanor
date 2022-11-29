@@ -1,0 +1,25 @@
+.cbb-value{
+    width: 270px;
+    height: 270px;
+    position: relative;
+    background-color: #fff;
+    overflow-y: auto;
+    border: solid 0.5px #bbb;
+    border-radius: 4px;
+    z-index: 1;
+}
+
+
+.cbb-item{
+    height: 40px;
+    padding: 0px 10px;
+    display: flex;
+    align-items: center;
+    user-select: none;
+    &:hover{
+        background-color: #bdffb3;
+    }
+    &:active{
+        background-color: #98fb84;
+    }
+}

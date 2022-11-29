@@ -1,7 +1,8 @@
 import { initializeApp } from "firebase/app";
+import { getAuth } from "firebase/auth";
 
 const firebaseConfig = {
-  apiKey: "AIzaSyBx0cy7dMw_J4QpJ6T68Rc2j9AZjD77rls",
+  apiKey: process.env.REACT_APP_FIREBASE_KEY,
   authDomain: "viewmanor-1eafb.firebaseapp.com",
   projectId: "viewmanor-1eafb",
   storageBucket: "viewmanor-1eafb.appspot.com",
@@ -10,3 +11,4 @@ const firebaseConfig = {
 };
 
 const app = initializeApp(firebaseConfig);
+export const auth = getAuth();

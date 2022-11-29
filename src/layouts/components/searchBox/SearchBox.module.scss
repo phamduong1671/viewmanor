@@ -1,5 +1,6 @@
 .banner {
     width: 100%;
+    min-width: 680px;
     height: 360px;
     display: flex;
     align-items: center;
@@ -12,7 +13,7 @@
 
 // Search box
 .search-box {
-    width: 50%;
+    width: 680px;
     height: 66%;
     min-width: 400px;
     background-color: rgba(0, 0, 0, 0.3);
@@ -40,11 +41,12 @@
 // Search props
 .search-props{
     height: 128px;
+}
+
+.center{
+    padding: 10px;
     display: flex;
-    flex-wrap: wrap;
-    flex-direction: row;
     justify-content: space-evenly;
-    align-items: center;
 }
 
 .btn-search-container{
@@ -56,5 +58,4 @@
     display: flex;
     background-color: #fff;
     border-radius: 4px;
-    padding: 50px;
 }
