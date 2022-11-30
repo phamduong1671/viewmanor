@@ -1,8 +1,10 @@
 import classNames from "classnames/bind";
 import { useNavigate } from "react-router";
+import { addDoc, collection, doc, serverTimestamp, setDoc, Timestamp } from "firebase/firestore";
 
 import signInStyle from '../signIn/SignIn.module.scss'
 import style from './SignUp.module.scss'
+import { db } from "../../firebase";
 
 function SignUp() {
     const navigate = useNavigate()
@@ -11,6 +13,21 @@ function SignUp() {
 
     const goSignInPage = () => {
         navigate('/sign-in')
+    }
+
+    const handleSignUp = async (e) => {
+        e.preventDefault()
+        try {
+            const res = await addDoc(collection(db, "cities"), {
+                name: "Los Angeles",
+                state: "CA",
+                country: "USA",
+                timestamp: serverTimestamp()
+            });
+        }
+        catch (err) {
+            console.log(err)
+        }
     }
 
     return (
@@ -41,7 +58,7 @@ function SignUp() {
                     <div className={cl('label')}>Nhập lại mật khẩu</div>
                     <input type='password' className={cl('input-signIn')} placeholder='Nhập lại mật khẩu' />
                 </div>
-                <button className={cl('btn-signIn')}>Đăng ký</button>
+                <button className={cl('btn-signIn')} onClick={handleSignUp} >Đăng ký</button>
                 <div className={cl('no-account')}>
                     Đã có tài khoản?
                     <a className={cl('link')} onClick={goSignInPage}>Đăng nhập tại đây</a>

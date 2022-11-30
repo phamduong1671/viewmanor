@@ -1,4 +1,5 @@
 import { Fragment } from "react";
+
 import SearchBox from "../../layouts/components/searchBox";
 import Slider from "../../components/slider/Slider";
 

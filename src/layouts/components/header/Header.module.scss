@@ -51,14 +51,51 @@
     visibility: hidden;
 }
 
-.btn-home {}
+// .btn-home {}
 
 .btn-user {
+    border-left: 1.5px solid #e3e3e3;
     display: flex;
 }
 
-.btn-signIn {}
+.btn-signIn {height: 48px;
+    padding: 0px 12px;
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    text-decoration: none;
+    cursor: pointer;
 
-.btn-signUp {}
+    &:hover {
+        background-color: #b3e3ff;
+    }
 
-.btn-post {}
+    &:active {
+        background-color: #0677b9;
+        color: aliceblue;
+    }}
+
+// .btn-signUp {}
+
+// .btn-post {}
+
+// User Features
+.user-features{
+    width: 200px;
+    background-color: #fff;
+    border-radius: 4px;
+    box-shadow: 0px 2px 5px #bcbcbc;
+    display: flex;
+    flex-direction: column;
+}
+
+.item-feature{
+    text-decoration: none;
+    margin: 6px 12px;
+    padding: 6px 12px;
+    border-radius: 4px;
+    color: #551a8b;
+    &:hover{
+        background-color: #eee;
+    }
+}

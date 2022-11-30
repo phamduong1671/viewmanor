@@ -1,10 +1,11 @@
 import classNames from "classnames/bind";
 import { useNavigate } from "react-router";
-import { useState } from "react";
+import { useContext, useState } from "react";
 import { signInWithEmailAndPassword } from "firebase/auth";
 import { auth } from "../../firebase";
 
 import style from './SignIn.module.scss'
+import { AuthContext } from "../../context/AuthContext";
 
 function SignIn() {
     const navigate = useNavigate()
@@ -21,11 +22,14 @@ function SignIn() {
         navigate('/forgot-password')
     }
 
+    const {dispatch} = useContext(AuthContext)
+
     const handleSignIn = (e) => {
         e.preventDefault();
         signInWithEmailAndPassword(auth, email, password)
             .then((userCredential) => {
                 const user = userCredential.user;
+                dispatch({type:"LOGIN", payload:user})
                 navigate('/')
             })
             .catch((error) => {

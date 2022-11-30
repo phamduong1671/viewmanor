@@ -6,6 +6,8 @@ import Post from '../pages/post';
 import Search from '../pages/search';
 import ForgotPassword from '../pages/forgotPassword';
 import InfoItem from '../pages/infoItem';
+import UserPost from '../pages/userPost';
+import UserInformation from '../pages/userInformation';
 
 // Public routes
 const publicRoutes = [
@@ -19,7 +21,9 @@ const publicRoutes = [
 
 // Private routes
 const privateRoutes = [
-    { path: '/post', component: Post }
+    { path: '/post', component: Post },
+    { path: '/user-info', component: UserInformation },
+    { path: '/user-post', component: UserPost }
 ];
 
 export { publicRoutes, privateRoutes };

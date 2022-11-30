@@ -1,13 +1,14 @@
-import { Fragment } from 'react'
+import { Fragment, useContext } from 'react'
 import { Routes, Route } from 'react-router-dom';
 import { Navigate } from 'react-router-dom';
 
 import { publicRoutes, privateRoutes } from './routes'
 import DefaultLayout from './layouts/defaultLayout'
+import { AuthContext } from './context/AuthContext';
 
 function App() {
 
-  const currentUser = false;
+  const { currentUser } = useContext(AuthContext)
 
   const RequireAuth = ({ children }) => {
     return currentUser ? children : <Navigate to="/sign-in" />;
@@ -26,7 +27,7 @@ function App() {
               path={route.path}
               element={
                 <Layout>
-                    <Page />
+                  <Page />
                 </Layout>
               }
             />
@@ -41,7 +42,9 @@ function App() {
               path={route.path}
               element={
                 <Layout>
-                    <RequireAuth><Page /></RequireAuth>
+                  <RequireAuth>
+                    <Page />
+                  </RequireAuth>
                 </Layout>
               }
             />
