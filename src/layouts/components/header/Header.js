@@ -8,14 +8,9 @@ import { Fragment, useContext } from "react";
 import { AuthContext } from "../../../context/AuthContext";
 
 function Header() {
-
     const cl = classNames.bind(style)
 
     const { currentUser } = useContext(AuthContext)
-
-    const isSignIn = () => {
-        return currentUser ? true : false;
-    };
 
     const navigate = useNavigate()
     const goHomePage = () => {
@@ -39,7 +34,6 @@ function Header() {
                     interactive
                     render={attrs => (
                         <div className={cl('user-features')} tabIndex="0" {...attrs}>
-                            <Link className={cl('item-feature')} to='/user-post'>Tin đã đăng</Link>
                             <Link className={cl('item-feature')} to='/user-info'>Thông tin tài khoản</Link>
                             <div className={cl('item-feature')} onClick={handleSignOut}>Đăng xuất</div>
                         </div>

@@ -1,0 +1,32 @@
+// Content
+.content{
+    width: calc(100% - 360px);
+    height: calc(100vh - 116px);
+    display: flex;
+}
+
+.props{
+    width: 500px;
+    min-width: 300px;
+    min-height: 450px;
+    margin: 24px 43px;
+    border-left: solid 3px rgba(51, 51, 51, 0.166);
+    padding-inline: 30px;
+    font-size: 24px;
+    font-weight: 500;
+    color: #551a8b;
+}
+
+.props-item{
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    padding: 18px 0;
+    font-size: 17px;
+}
+
+.value-item{
+    color: black;
+    font-size: 15px;
+    font-weight: 400;
+}
