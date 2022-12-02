@@ -8,7 +8,7 @@ function Information() {
     return (
         <div className={cl('content')}>
             <div className={cl('props')}>
-                Liên hệ
+                Thông tin
                 <div className={cl('props-item')}>
                     <label>Họ Tên</label>
                     <label className={cl('value-item')}>Phạm Ánh Dương</label>
@@ -22,6 +22,13 @@ function Information() {
                     <label className={cl('value-item')}>0987654321</label>
                 </div>
                 <div className={cl('props-item')}>
+                    <label>Địa chỉ cụ thể</label>
+                    <label className={cl('value-item')}>Đội 12, thôn Vạn Phúc</label>
+                </div>
+            </div>
+            <div className={cl('props')}>
+                Liên hệ
+                <div className={cl('props-item')}>
                     <label>Facebook</label>
                     <label className={cl('value-item')}>fb.com/pham.duong.142892</label>
                 </div>
@@ -32,25 +39,6 @@ function Information() {
                 <div className={cl('props-item')}>
                     <label>Khác</label>
                     <label className={cl('value-item')}>...</label>
-                </div>
-            </div>
-            <div className={cl('props')}>
-                Địa chỉ
-                <div className={cl('props-item')}>
-                    <label>Tỉnh / Thành phố</label>
-                    <label className={cl('value-item')}>Hà Nội</label>
-                </div>
-                <div className={cl('props-item')}>
-                    <label>Quận / Huyện</label>
-                    <label className={cl('value-item')}>Mỹ Đức</label>
-                </div>
-                <div className={cl('props-item')}>
-                    <label>Xã / Phường</label>
-                    <label className={cl('value-item')}>Vạn Kim</label>
-                </div>
-                <div className={cl('props-item')}>
-                    <label>Địa chỉ cụ thể</label>
-                    <label className={cl('value-item')}>Đội 12, thôn Vạn Phúc</label>
                 </div>
             </div>
         </div>

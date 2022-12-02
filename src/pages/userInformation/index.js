@@ -38,8 +38,8 @@ function UserInformation() {
                 </div>
             </div>
             {feature === '1' && <Information />}
-            {feature === '2' && <EditInfo />}
-            {feature === '3' && <PostsPublished />}
+            {feature === '2' && <PostsPublished />}
+            {feature === '3' && <EditInfo />}
         </div >
     );
 }

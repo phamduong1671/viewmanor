@@ -1,11 +1,11 @@
 // Content
-.content{
+.content {
     width: calc(100% - 360px);
     height: calc(100vh - 116px);
     display: flex;
 }
 
-.props{
+.props {
     width: 500px;
     min-width: 300px;
     min-height: 450px;
@@ -15,9 +15,10 @@
     font-size: 24px;
     font-weight: 500;
     color: #551a8b;
+    cursor: default;
 }
 
-.props-item{
+.props-item {
     width: 100%;
     display: flex;
     flex-direction: column;
@@ -25,8 +26,9 @@
     font-size: 17px;
 }
 
-.value-item{
+.value-item {
     color: black;
     font-size: 15px;
     font-weight: 400;
+    cursor: text;
 }

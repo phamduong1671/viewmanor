@@ -6,12 +6,15 @@ import style from './ComboboxValue.module.scss'
 // combobox item
 const loai = ['loai 1', 'loai 2', 'loai 3', 'loai 4', 'loai 5', 'loai 6', 'loai 7', 'loai 8']
 const thanhPho = ['Thành Phố 1', 'Thành Phố 2', 'Thành Phố 3', 'Thành Phố 4', 'Thành Phố 5', 'Thành Phố 6', 'Thành Phố 7', 'Thành Phố 8']
-const huyen = ['huyen 1', 'huyen 2', 'huyen 3', 'huyen 4', 'huyen 5', 'huyen 6', 'huyen 7', 'huyen 8']
-const dienTich = ['dien tich 1', 'dien tich 2', 'dien tich 3', 'dien tich 4', 'dien tich 5', 'dien tich 6', 'dien tich 7', 'dien tich 8']
+const huyen = ['Huyện 1', 'Huyện 2', 'Huyện 3', 'Huyện 4', 'Huyện 5', 'Huyện 6', 'Huyện 7', 'Huyện 8']
+const xa = ['Xã 1', 'Xã 2', 'Xã 3', 'Xã 4', 'Xã 5', 'Xã 6', 'Xã 7', 'Xã 8']
+const dienTich = ['Diện tích 1', 'Diện tích 2', 'Diện tích 3', 'Diện tích 4', 'Diện tích 5', 'Diện tích 6', 'Diện tích 7', 'Diện tích 8']
 
 function ComboboxValue(props) {
     const cl = classNames.bind(style)
+    /* eslint-disable no-unused-vars */
     let type = []
+    /* eslint-enable no-unused-vars */
 
     const typeCbb = () => {
         switch (props.id) {
@@ -21,6 +24,8 @@ function ComboboxValue(props) {
                 return type = thanhPho;
             case 'huyen':
                 return type = huyen;
+            case 'xa':
+                return type = xa;
             case 'dientich':
                 return type = dienTich;
             default:
@@ -29,7 +34,6 @@ function ComboboxValue(props) {
     }
 
     const selectItem = (item) => {
-        console.log(typeof item)
         props.value(item);
     }
 

@@ -1,8 +1,31 @@
-.post-props{
-    width: 50%;
+.content {
     display: flex;
-    justify-content: space-evenly;
-    padding: 24px;
+}
+
+.content-left,
+.content-right {
+    width: 50%;
+    min-height: 605px;
+}
+
+.post-props {
+    min-width: 368px;
+    padding: 12px 52px;
     font-weight: 700;
     color: #551a8b;
+}
+
+.input-container{
+    right: 0px;
+}
+
+.wrap-image{
+    width: 200px;
+    height: 200px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: solid 1px #333;
+    font-size: 15px;
+    cursor: pointer;
 }
