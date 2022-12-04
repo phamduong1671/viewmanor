@@ -1,6 +1,7 @@
 .btn-user {
     display: flex;
     align-items: center;
+    cursor: pointer;
 }
 
 .icon-avatar {
@@ -19,5 +20,4 @@
     font-weight: 700;
     font-size: 15px;
     color: #551a8b;
-    cursor: pointer;
 }

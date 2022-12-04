@@ -4,12 +4,13 @@ import { faMagnifyingGlass } from "@fortawesome/free-solid-svg-icons";
 
 import style from './Search.module.scss';
 import InputContainer from "../../components/inputContainer/InputContainer";
+import PostItem from "../../components/postItem/PostItem";
 
 function Search() {
     const cl = classNames.bind(style);
 
     return (
-        <div>
+        <div className={cl('wrap-content')}>
             <div className={cl('content-header')}>
                 <InputContainer id='loai' value='Loại' />
                 <InputContainer id='tinh' value='Tỉnh / Thành Phố' />
@@ -19,6 +20,9 @@ function Search() {
                     <FontAwesomeIcon fontSize={'20px'} icon={faMagnifyingGlass} />
                     Tìm
                 </div>
+            </div>
+            <div className={cl('content')}>
+                <PostItem />
             </div>
         </div>
     );

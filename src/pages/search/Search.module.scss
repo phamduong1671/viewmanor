@@ -1,3 +1,8 @@
+.wrap-content{
+    min-height: 600px;
+}
+
+// Header
 .content-header{
     margin-top: 24px;
     padding: 0 24px;
@@ -22,4 +27,9 @@
     &:active{
         background-color: rgb(0, 156, 24);
     }
+}
+
+// Content
+.content{
+    margin: 24px 24px;
 }

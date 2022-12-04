@@ -21,3 +21,21 @@ code {
 .slick-list {
   margin: 0 -10px;
 }
+
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  box-shadow: inset 0 0 5px rgb(198, 198, 198); 
+}
+
+::-webkit-scrollbar-thumb {
+  background: rgba(0, 132, 7, 0.212); 
+  border-radius: 10px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #12b30061; 
+}

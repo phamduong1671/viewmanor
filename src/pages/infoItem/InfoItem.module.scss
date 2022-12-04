@@ -1,0 +1,147 @@
+.item-container {
+    min-width: 800px;
+}
+
+.title {
+    text-align: center;
+    font-size: 24px;
+    font-weight: 900;
+    color: #551a8b;
+    padding: 24px 128px;
+}
+
+.wrap-image {
+    width: calc(100% - 128px);
+    height: 360px;
+    margin: 0 64px;
+    background-color: whitesmoke;
+}
+
+.wrap-content {
+    margin: 48px 12%;
+}
+
+// Information
+.information,
+.description,
+.author {
+    padding: 5px 24px;
+    margin-top: 30px;
+    border-radius: 4px;
+    box-shadow: 0px 2px 5px #bcbcbc;
+}
+
+h1 {
+    color: #551a8b;
+    font-size: 20px;
+    font-weight: 500;
+}
+
+.half {
+    width: 50%;
+}
+
+// Description
+label {
+    line-height: 32px;
+    margin-right: 12px;
+    white-space: pre-line;
+    color: #000000ac;
+}
+
+// Author
+.btn-user {
+    display: flex;
+    align-items: center;
+}
+
+.icon-avatar {
+    width: 48px;
+    height: 48px;
+    margin: 0 12px;
+}
+
+.avatar {
+    width: 100%;
+    height: 100%;
+    border-radius: 50%;
+}
+
+.username {
+    font-weight: 700;
+    font-size: 15px;
+    color: #551a8b;
+    cursor: default;
+}
+
+.wrap-author {
+    display: flex;
+}
+
+.email,
+.phone {
+    width: 50%;
+    margin-top: 20px;
+    font-size: 17px;
+    font-weight: 400;
+}
+
+// Button Zalo & Facebook
+.wrap-btn {
+    width: 100%;
+    height: 100px;
+    display: flex;
+    align-items: center;
+}
+
+.btn-zalo {
+    width: 76px;
+    height: 40px;
+    margin-right: 36px;
+    display: flex;
+    align-items: center;
+    background-color: #0a67fe89;
+    border-radius: 4px;
+    &:hover{
+        background-color: #0a67fec0;
+    }
+}
+
+.btn-facebook {
+    width: 112px;
+    height: 40px;
+    margin-right: 36px;
+    display: flex;
+    align-items: center;
+    background-color: #0A68FE;
+    background-color: #0a67fe89;
+    border-radius: 4px;
+    &:hover{
+        background-color: #0a67fec0;
+    }
+}
+
+.icon-zalo{
+    width: 30px;
+    height: 30px;
+    margin-left: 5px;
+    background-image: url(../../assets/image/zalo-logo.png);
+    background-size: cover;
+    background-position: center;
+    background-size: 52px;
+}
+
+.icon-facebook {
+    width: 30px;
+    height: 30px;
+    margin-left: 5px;
+    background-image: url(../../assets/image/facebook-logo.png);
+    background-size: cover;
+    background-position: center;
+    background-size: 72px;
+}
+
+.label-zalo,
+.label-facebook {
+    margin-left: 4px;
+}
