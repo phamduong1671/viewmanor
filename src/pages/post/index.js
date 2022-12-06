@@ -10,19 +10,19 @@ function Post() {
         <div className={cl('content')}>
             <div className={cl('content-child')}>
                 <div className={cl('post-props')}>Danh mục
-                    <InputContainer placeholder='Loại' />
+                    <InputContainer id='danhmuc' value='Danh mục' />
                 </div>
                 <div className={cl('post-props')}>Loại
-                    <InputContainer placeholder='Loại' />
+                    <InputContainer id='loai' value='Loại' />
                 </div>
                 <div className={cl('post-props')}>Tỉnh / Thành phố
-                    <InputContainer placeholder='Loại' />
+                    <InputContainer id='tinh' value='Tỉnh / Thành phố' />
                 </div>
                 <div className={cl('post-props')}>Quận / Huyện
-                    <InputContainer placeholder='Loại' />
+                    <InputContainer id='huyen' value='Quận / Huyện' />
                 </div>
                 <div className={cl('post-props')}>Xã / Phường
-                    <InputContainer placeholder='Loại' />
+                    <InputContainer id='xa' value='Xã / Phường' />
                 </div>
             </div>
             <div className={cl('content-child')}>

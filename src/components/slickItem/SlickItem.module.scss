@@ -1,8 +1,5 @@
-.post-item {
-    width: 30%;
-    min-width: 420px;
+.slick-item{
     height: 585px;
-    margin: 16px;
     box-shadow: 0px 2px 5px #bcbcbc;
     background-color: #efefef;
     border-radius: 4px;
@@ -40,7 +37,7 @@
 // Information
 .info {
     width: 100%;
-    height: calc(100% / 3);
+    height: calc(100% / 2.5);
     background-color: rgba(0, 255, 0, 0.136);
     display: flex;
     align-items: center;

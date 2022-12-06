@@ -2,22 +2,22 @@ import classNames from "classnames/bind";
 import { useNavigate } from "react-router";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
-import style from './PostItem.module.scss'
+import style from './SlickItem.module.scss'
 import icon from '../../assets/image/default-avatar.jpg'
-import image from '../../assets/image/background-sign-up.jpg'
+import image from '../../assets/image/background-sign-up.png'
 import { faHouse, faRulerCombined } from '@fortawesome/free-solid-svg-icons'
 import { faMap, faMoneyBill1 } from "@fortawesome/free-regular-svg-icons";
 
-function PostItem() {
+function SlickItem() {
     const cl = classNames.bind(style)
     const navigate = useNavigate()
 
     const goInfoItemPage = () => {
-        navigate('/info-item')
+        navigate('./info-item')
     }
 
     return (
-        <div className={cl('post-item')} onClick={goInfoItemPage} >
+        <div className={cl('slick-item')} onClick={goInfoItemPage} >
             <div className={cl('wrap-image')}>
                 <img
                     className={cl('image')}
@@ -69,4 +69,4 @@ function PostItem() {
     );
 }
 
-export default PostItem;
+export default SlickItem;

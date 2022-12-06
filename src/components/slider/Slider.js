@@ -5,7 +5,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faAnglesRight } from '@fortawesome/free-solid-svg-icons';
 
 import style from './Slider.module.scss'
-import PostItem from '../postItem';
+import SlickItem from '../slickItem';
 import settings from './Slick';
 
 function Slider({ name }) {
@@ -27,15 +27,15 @@ function Slider({ name }) {
             </div>
             <div className={cl('post-list')}>
                 <Slick {...settings}>
-                    <PostItem />
-                    <PostItem />
-                    <PostItem />
-                    <PostItem />
-                    <PostItem />
-                    <PostItem />
-                    <PostItem />
-                    <PostItem />
-                    <PostItem />
+                    <SlickItem />
+                    <SlickItem />
+                    <SlickItem />
+                    <SlickItem />
+                    <SlickItem />
+                    <SlickItem />
+                    <SlickItem />
+                    <SlickItem />
+                    <SlickItem />
                 </Slick>
             </div>
         </div>

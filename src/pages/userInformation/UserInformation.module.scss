@@ -8,17 +8,15 @@
 // Sidebar
 .wrap-sidebar{
     width: 360px;
-    height: calc(100vh - 160px);
-    min-height: 500px;
     margin-top: 0;
     display: flex;
-    align-items: center;
     justify-content: center;
 }
 
 .sidebar{
     width: 80%;
-    height: 90%;
+    height: fit-content;
+    margin-top: 30px;
     background-color: whitesmoke;
     border-radius: 8px;
     box-shadow: 0px 2px 5px #bcbcbc;
@@ -50,8 +48,8 @@
 
 .feature{
     width: 100%;
-    height: 50%;
     display: flex;
+    padding: 5px 0;
     flex-direction: column;
     align-items: center;
     justify-content: center;

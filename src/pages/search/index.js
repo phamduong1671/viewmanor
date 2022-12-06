@@ -4,7 +4,7 @@ import { faMagnifyingGlass } from "@fortawesome/free-solid-svg-icons";
 
 import style from './Search.module.scss';
 import InputContainer from "../../components/inputContainer/InputContainer";
-import PostItem from "../../components/postItem/PostItem";
+import PostItem from "../../components/postItem";
 
 function Search() {
     const cl = classNames.bind(style);
@@ -22,6 +22,16 @@ function Search() {
                 </div>
             </div>
             <div className={cl('content')}>
+                <PostItem />
+                <PostItem />
+                <PostItem />
+                <PostItem />
+                <PostItem />
+                <PostItem />
+                <PostItem />
+                <PostItem />
+                <PostItem />
+                <PostItem />
                 <PostItem />
             </div>
         </div>

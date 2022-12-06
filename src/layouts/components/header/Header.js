@@ -6,6 +6,7 @@ import style from './Header.module.scss';
 import BtnUser from "../../../components/btnUser/BtnUser";
 import { Fragment, useContext } from "react";
 import { AuthContext } from "../../../context/AuthContext";
+import logo from '../../../assets/logo.png'
 
 function Header() {
     const cl = classNames.bind(style)
@@ -25,7 +26,13 @@ function Header() {
 
     return (
         <div className={cl('header')}>
-            <div className={cl('header-left')} onClick={goHomePage}></div>
+            <div className={cl('header-left')} onClick={goHomePage}>
+                <img
+                    className={cl('logo')}
+                    src={logo}
+                    alt='logo'
+                />
+            </div>
             <div className={cl('header-right')}>
                 <Link className={cl('btn-search', 'btn-header')} to='/search'>Tìm kiếm</Link>
                 <Link className={cl('btn-home', 'btn-header')} to='/'>Trang chủ</Link>

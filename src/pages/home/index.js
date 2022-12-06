@@ -10,7 +10,6 @@ function Home() {
             <SearchBox />
             <Slider name='Tin Bán' />
             <Slider name='Tin Cho Thuê' />
-            <div>BLOG</div>
         </Fragment>
     );
 }
