@@ -1,47 +1,89 @@
 import classNames from "classnames/bind";
-import { useState } from "react";
+import { collection, getDocs } from "firebase/firestore";
+import { getDownloadURL, ref, uploadBytesResumable } from "firebase/storage";
+import { useContext, useEffect, useState } from "react";
 
+import { storage } from "../../firebase";
 import style from './EditInfo.module.scss'
-
-const user = { name: 'Phạm Ánh Dương', email: 'duong@gmail.com', phone: '0987654321', facebook: 'fb.com/pham.duong.142892', zalo: '', other: '', ward: 'Vạn Kim', address: '' }
+import { db } from '../../firebase'
+import { AuthContext } from '../../context/AuthContext'
 
 function EditInfo() {
     const cl = classNames.bind(style)
-    const [data, setData] = useState(user)
-    const [edit, setEdit] = useState(data)
+    const [file, setFile] = useState('')
+    const [user, setUser] = useState({})
+    const [edit, setEdit] = useState({})
+    const { currentUser } = useContext(AuthContext)
 
-    const changeName = (value) =>{
-        setEdit({name: value, email: edit.email, phone: edit.phone, facebook: edit.facebook, zalo: edit.zalo, other: edit.other, address: edit.address})
-    }
-    const changeEmail = (value) =>{
-        setEdit({name: edit.name, email: value, phone: edit.phone, facebook: edit.facebook, zalo: edit.zalo, other: edit.other, address: edit.address})
-    }
-    const changePhone = (value) =>{
-        setEdit({name: edit.name, email: edit.email, phone: value, facebook: edit.facebook, zalo: edit.zalo, other: edit.other, address: edit.address})
-    }
-    const changeFacebook = (value) =>{
-        setEdit({name: edit.name, email: edit.email, phone: edit.phone, facebook: value, zalo: edit.zalo, other: edit.other, address: edit.address})
-    }
-    const changeZalo = (value) =>{
-        setEdit({name: edit.name, email: edit.email, phone: edit.phone, facebook: edit.facebook, zalo: value, other: edit.other, address: edit.address})
-    }
-    const changeOther = (value) =>{
-        setEdit({name: edit.name, email: edit.email, phone: edit.phone, facebook: edit.facebook, zalo: edit.zalo, other: value, address: edit.address})
-    }
-    const changeAddress = (value) =>{
-        setEdit({name: edit.name, email: edit.email, phone: edit.phone, facebook: edit.facebook, zalo: edit.zalo, other: edit.other, address: value})
+    useEffect(() => {
+        const fetchUser = async () => {
+            try {
+                const querySnapshot = await getDocs(collection(db, "users"));
+                querySnapshot.forEach((doc) => {
+                    if (doc.id === currentUser.uid) {
+                        setUser({ id: doc.id, ...doc.data() })
+                    }
+                });
+            } catch (error) {
+                console.log(error)
+            }
+        }
+        fetchUser()
+    }, [currentUser])
+    
+    console.log(user);
+    
+    const handleUpdate = (e) => {
+
     }
 
     const handleSave = () => {
-        setData(edit)
-        alert('Đã lưu')
+
     }
 
     const handleCancel = () => {
         if (window.confirm('Hủy thay đổi?')) {
-            setEdit(data)
+            setEdit(user)
         } else return null
     }
+
+    useEffect(() => {
+        const uploadFile = () => {
+            const name = new Date().getTime() + file.name
+            const storageRef = ref(storage, name)
+
+            console.log(name)
+
+            const uploadTask = uploadBytesResumable(storageRef, file);
+
+            uploadTask.on(
+                'state_changed',
+                (snapshot) => {
+                    const progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
+                    console.log('Upload is ' + progress + '% done');
+                    switch (snapshot.state) {
+                        case 'paused':
+                            console.log('Upload is paused');
+                            break;
+                        case 'running':
+                            console.log('Upload is running');
+                            break;
+                        default:
+                            break;
+                    }
+                },
+                (error) => {
+                    console.log(error)
+                },
+                () => {
+                    getDownloadURL(uploadTask.snapshot.ref).then((downloadURL) => {
+                        console.log('File available at', downloadURL);
+                    });
+                }
+            );
+        }
+        file && uploadFile()
+    }, [file])
 
     return (
         <div className={cl('wrap-content')}>
@@ -54,7 +96,7 @@ function EditInfo() {
                             id="name"
                             value={edit.name}
                             className={cl('value-item')}
-                            onChange={(e) => changeName(e.target.value)}
+                            onChange={(e) => handleUpdate(e.target.value)}
                         />
                     </div>
                     <div className={cl('props-item')}>
@@ -63,7 +105,7 @@ function EditInfo() {
                             id="email"
                             value={edit.email}
                             className={cl('value-item')}
-                            onChange={(e) => changeEmail(e.target.value)}
+                            onChange={(e) => handleUpdate(e.target.value)}
                         />
                     </div>
                     <div className={cl('props-item')}>
@@ -72,7 +114,7 @@ function EditInfo() {
                             id="phone"
                             value={edit.phone}
                             className={cl('value-item')}
-                            onChange={(e) => changePhone(e.target.value)}
+                            onChange={(e) => handleUpdate(e.target.value)}
                         />
                     </div>
                     <div className={cl('props-item')}>
@@ -81,7 +123,7 @@ function EditInfo() {
                             id="address"
                             value={edit.address}
                             className={cl('value-item')}
-                            onChange={(e) => changeAddress(e.target.value)}
+                            onChange={(e) => handleUpdate(e.target.value)}
                         />
                     </div>
                 </div>
@@ -92,7 +134,7 @@ function EditInfo() {
                             id="facebook"
                             value={edit.facebook}
                             className={cl('value-item')}
-                            onChange={(e) => changeFacebook(e.target.value)}
+                            onChange={(e) => handleUpdate(e.target.value)}
                         />
                     </div>
                     <div className={cl('props-item')}>
@@ -101,7 +143,7 @@ function EditInfo() {
                             id="zalo"
                             value={edit.zalo}
                             className={cl('value-item')}
-                            onChange={(e) => changeZalo(e.target.value)}
+                            onChange={(e) => handleUpdate(e.target.value)}
                         />
                     </div>
                     <div className={cl('props-item')}>
@@ -110,22 +152,36 @@ function EditInfo() {
                             id="other"
                             value={edit.other}
                             className={cl('value-item')}
-                            onChange={(e) => changeOther(e.target.value)}
+                            onChange={(e) => handleUpdate(e.target.value)}
                         />
+                    </div>
+                    <div className={cl('props-item')}>
+                        <div
+                            className={cl('btn-image')}
+                            onClick={() => document.querySelector('.input-field').click()}
+                        >
+                            Đổi ảnh đại diện
+                            <input
+                                type='file'
+                                className={cl('input-field')}
+                                onChange={(e) => setFile(e.target.files[0])}
+                                hidden
+                            />
+                        </div>
                     </div>
                 </div>
             </div>
             <div className={cl('btn')}>
                 <button
                     className={cl('btn-save')}
-                    disabled={edit === data}
+                    disabled={edit === user}
                     onClick={handleSave}
                 >
                     Lưu
                 </button>
                 <button
                     className={cl('btn-cancel')}
-                    disabled={edit === data}
+                    disabled={edit === user}
                     onClick={handleCancel}
                 >
                     Hủy
