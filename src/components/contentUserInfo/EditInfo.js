@@ -39,7 +39,7 @@ function EditInfo() {
 
     // Cập nhật thông tin người dùng
     const handleSave = async (e) => {
-        e.preventDefault()
+        e.preventDefault();
 
         if (user.name === '' || user.email === '' || user.phone === '')
             alert('Không được để trống "Họ tên", "Email" và "Số điện thoại"!')
@@ -58,6 +58,7 @@ function EditInfo() {
             } catch (e) {
                 console.log("Transaction failed: ", e);
             }
+            window.location.reload(false);
         }
     }
 
@@ -111,7 +112,7 @@ function EditInfo() {
                         <label>Họ Tên</label>
                         <input
                             id="name"
-                            value={user.name}
+                            value={user.name || ''}
                             className={cl('value-item')}
                             onChange={(e) => handleInput(e)}
                         />
@@ -120,7 +121,7 @@ function EditInfo() {
                         <label>Email</label>
                         <input
                             id="email"
-                            value={user.email}
+                            value={user.email || ''}
                             className={cl('value-item')}
                             onChange={(e) => handleInput(e)}
                         />
@@ -129,7 +130,7 @@ function EditInfo() {
                         <label>Số điện thoại</label>
                         <input
                             id="phone"
-                            value={user.phone}
+                            value={user.phone || ''}
                             className={cl('value-item')}
                             onChange={(e) => handleInput(e)}
                         />

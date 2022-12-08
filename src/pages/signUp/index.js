@@ -1,30 +1,32 @@
 import classNames from "classnames/bind";
 import { useNavigate } from "react-router";
 import { doc, setDoc } from "firebase/firestore";
-import { useState } from "react";
-import { createUserWithEmailAndPassword } from "firebase/auth";
+import { useContext, useState } from "react";
+import { createUserWithEmailAndPassword, signInWithEmailAndPassword } from "firebase/auth";
 
 import signInStyle from '../signIn/SignIn.module.scss'
 import style from './SignUp.module.scss'
 import { auth, db } from "../../firebase";
+import { AuthContext } from "../../context/AuthContext";
 
 function SignUp() {
     const navigate = useNavigate()
     const cl = classNames.bind(signInStyle)
     const cx = classNames.bind(style)
     const [data, setData] = useState({})
-
+    const {dispatch} = useContext(AuthContext)
+    
     const goSignInPage = () => {
         navigate('/sign-in')
     }
-
+    
     const handleInput = (e) => {
         const id = e.target.id
         const value = e.target.value
-
+        
         setData({ ...data, [id]: value })
     }
-
+    
     const handleSignUp = async (e) => {
         e.preventDefault()
         try {
@@ -40,6 +42,15 @@ function SignUp() {
                 other: '',
                 address: ''
             });
+
+            // Đăng nhập luôn khi đăng ký thành công
+            signInWithEmailAndPassword(auth, data.email, data.password)
+            .then((userCredential) => {
+                const user = userCredential.user;
+                dispatch({type:"LOGIN", payload:user})
+                navigate('/')
+            })
+            .catch(console.log('error'));
         }
         catch (err) {
             console.log(err)

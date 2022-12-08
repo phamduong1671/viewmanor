@@ -1,8 +1,8 @@
 import { Fragment, useContext, useEffect, useState } from "react";
 import { useNavigate } from "react-router";
 import classNames from "classnames/bind";
+import { collection, getDocs } from "firebase/firestore";
 
-import icon from '../../assets/image/default-avatar.jpg'
 import style from './UserInformation.module.scss'
 import Information from "../../components/contentUserInfo/Information";
 import EditInfo from "../../components/contentUserInfo/EditInfo";
@@ -10,7 +10,7 @@ import PostsPublished from "../../components/contentUserInfo/PostsPublished";
 import UserManager from "../../components/contentUserInfo/UserManager";
 import { AuthContext } from '../../context/AuthContext'
 import { db } from '../../firebase'
-import { collection, getDocs } from "firebase/firestore";
+import icon from '../../assets/image/default-avatar.jpg';
 
 function UserInformation() {
     const cl = classNames.bind(style)
@@ -47,20 +47,13 @@ function UserInformation() {
     return (
         <div className={cl('wrap-content')}>
             <div className={cl('wrap-sidebar')}>
-                <div className={cl('sidebar')}> 
-                     <div className={cl('user')}>
-                        {user.avatar === '' ?
-                            <img
-                                className={cl('avatar')}
-                                src={icon}
-                                alt='avatar'
-                            />
-                            : <img
-                                className={cl('avatar')}
-                                src={user.avatar}
-                                alt='avatar'
-                            />
-                        }
+                <div className={cl('sidebar')}>
+                    <div className={cl('user')}>
+                        <img
+                            className={cl('avatar')}
+                            src={user.avatar || icon}
+                            alt='avatar'
+                        />
                         <div className={cl('name')}>{user.name}</div>
                     </div>
                     <div className={cl('feature')}>

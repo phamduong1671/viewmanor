@@ -2,6 +2,7 @@ import classNames from 'classnames/bind';
 import { memo } from 'react';
 
 import style from './ComboboxValue.module.scss'
+import { data } from '../../tree'
 
 // combobox item
 const loai = ['Tất cả', 'Loại 1', 'Loại 2', 'Loại 3', 'Loại 4', 'Loại 5', 'Loại 6', 'Loại 7', 'Loại 8']
@@ -11,6 +12,8 @@ const xa = ['Tất cả Xã / Phường', 'Xã 1', 'Xã 2', 'Xã 3', 'Xã 4', 'X
 const dienTich = ['Tất cả', 'Diện tích 1', 'Diện tích 2', 'Diện tích 3', 'Diện tích 4', 'Diện tích 5', 'Diện tích 6', 'Diện tích 7', 'Diện tích 8']
 const danhMuc = ['Bán', 'Cho thuê']
 const thoiGian = ['Tất cả', 'Tuần này', 'Tháng này']
+
+const dvhc = data
 
 function ComboboxValue(props) {
     const cl = classNames.bind(style)

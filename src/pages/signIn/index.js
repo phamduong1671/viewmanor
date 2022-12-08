@@ -14,6 +14,7 @@ function SignIn() {
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
     const [error, setError] = useState(false);
+    const {dispatch} = useContext(AuthContext)
 
     const goSignUpPage = () => {
         navigate('/sign-up')
@@ -21,8 +22,6 @@ function SignIn() {
     const goForgotPasswordPage = () => {
         navigate('/forgot-password')
     }
-
-    const {dispatch} = useContext(AuthContext)
 
     const handleSignIn = (e) => {
         e.preventDefault();
@@ -36,7 +35,7 @@ function SignIn() {
                 setError(true)
             });
     }
-
+    
     return (
         <div className={cl('page')}>
             <div className={cl('container')}>
@@ -57,7 +56,7 @@ function SignIn() {
                         placeholder='Nhập mật khẩu'
                         onChange={(e) => setPassword(e.target.value)}
                     />
-                    <a className={cl('link')} onClick={goForgotPasswordPage}>Quên mật khẩu?</a>
+                    <div className={cl('link')} onClick={goForgotPasswordPage}>Quên mật khẩu?</div>
                 </div>
 
                 <button className={cl('btn-signIn')} onClick={handleSignIn} >Đăng nhập</button>
@@ -65,7 +64,7 @@ function SignIn() {
 
                 <div className={cl('no-account')}>
                     Chưa có tài khoản?
-                    <a className={cl('link')} onClick={goSignUpPage}>Đăng ký ngay</a>
+                    <div className={cl('link')} onClick={goSignUpPage}>Đăng ký ngay</div>
                 </div>
             </div>
         </div>

@@ -6,8 +6,6 @@ import { faAngleDown } from "@fortawesome/free-solid-svg-icons";
 import style from './InputContainer.module.scss'
 import ComboboxValue from "../comboboxValue/ComboboxValue";
 
-const tabs = ['']
-
 function InputContainer(props) {
     const cl = classNames.bind(style)
     const [show, setShow] = useState(false)
@@ -27,7 +25,7 @@ function InputContainer(props) {
                 <input className={cl('input-cbb')} spellCheck={false} value={value} readOnly />
                 <div className={cl('icon-dropdown')}><FontAwesomeIcon icon={faAngleDown} /></div>
             </div>
-            {show && <ComboboxValue id={props.id} value={callbackValue} />}
+            {show && <ComboboxValue id={props.id} value={props.value} callback={callbackValue} />}
         </div>
     );
 }
