@@ -1,5 +1,5 @@
 import classNames from "classnames/bind";
-import { collection, doc, getDocs, setDoc } from "firebase/firestore";
+import { collection, doc, getDocs, runTransaction } from "firebase/firestore";
 import { getDownloadURL, ref, uploadBytesResumable } from "firebase/storage";
 import { useContext, useEffect, useState } from "react";
 
@@ -34,20 +34,30 @@ function EditInfo() {
     }, [currentUser])
 
     const handleInput = (e) => {
-        setUser({...user, [e.target.id] : e.target.value})
+        setUser({ ...user, [e.target.id]: e.target.value })
     }
 
+    // Cập nhật thông tin người dùng
     const handleSave = async (e) => {
         e.preventDefault()
-        setOriginal(user)
-        try {
-            console.log(user);
-            await setDoc(doc(db, "users", user.uid), {
-                ...user
-            });
-        }
-        catch (err) {
-            console.log(err)
+
+        if (user.name === '' || user.email === '' || user.phone === '')
+            alert('Không được để trống "Họ tên", "Email" và "Số điện thoại"!')
+        else {
+            setOriginal(user)
+            try {
+                await runTransaction(db, async (transaction) => {
+                    const sfDoc = await transaction.get(doc(db, "users", user.id));
+                    if (!sfDoc.exists()) {
+                        // eslint-disable-next-line
+                        throw "Document does not exist!";
+                    }
+                    transaction.update(doc(db, "users", user.id), { ...user });
+                });
+                alert('Đã lưu')
+            } catch (e) {
+                console.log("Transaction failed: ", e);
+            }
         }
     }
 
@@ -84,7 +94,7 @@ function EditInfo() {
                 },
                 () => {
                     getDownloadURL(uploadTask.snapshot.ref).then((downloadURL) => {
-                        setUser((prev)=>({...prev, avatar: downloadURL}))
+                        setUser((prev) => ({ ...prev, avatar: downloadURL }))
                     });
                 }
             );
@@ -128,7 +138,7 @@ function EditInfo() {
                         <label>Địa chỉ cụ thể</label>
                         <input
                             id="address"
-                            value={user.address}
+                            value={user.address || ''}
                             className={cl('value-item')}
                             onChange={(e) => handleInput(e)}
                         />
@@ -139,7 +149,7 @@ function EditInfo() {
                         <label>Facebook</label>
                         <input
                             id="facebook"
-                            value={user.facebook}
+                            value={user.facebook || ''}
                             className={cl('value-item')}
                             onChange={(e) => handleInput(e)}
                         />
@@ -148,7 +158,7 @@ function EditInfo() {
                         <label>Zalo</label>
                         <input
                             id="zalo"
-                            value={user.zalo}
+                            value={user.zalo || ''}
                             className={cl('value-item')}
                             onChange={(e) => handleInput(e)}
                         />
@@ -157,7 +167,7 @@ function EditInfo() {
                         <label>Khác</label>
                         <input
                             id="other"
-                            value={user.other}
+                            value={user.other || ''}
                             className={cl('value-item')}
                             onChange={(e) => handleInput(e)}
                         />

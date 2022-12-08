@@ -47,8 +47,8 @@ function UserInformation() {
     return (
         <div className={cl('wrap-content')}>
             <div className={cl('wrap-sidebar')}>
-                <div className={cl('sidebar')}>
-                    <div className={cl('user')}>
+                <div className={cl('sidebar')}> 
+                     <div className={cl('user')}>
                         {user.avatar === '' ?
                             <img
                                 className={cl('avatar')}
