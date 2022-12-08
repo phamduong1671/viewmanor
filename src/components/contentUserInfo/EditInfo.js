@@ -1,5 +1,5 @@
 import classNames from "classnames/bind";
-import { collection, getDocs } from "firebase/firestore";
+import { collection, doc, getDocs, setDoc } from "firebase/firestore";
 import { getDownloadURL, ref, uploadBytesResumable } from "firebase/storage";
 import { useContext, useEffect, useState } from "react";
 
@@ -12,7 +12,7 @@ function EditInfo() {
     const cl = classNames.bind(style)
     const [file, setFile] = useState('')
     const [user, setUser] = useState({})
-    const [edit, setEdit] = useState({})
+    const [original, setOriginal] = useState({})
     const { currentUser } = useContext(AuthContext)
 
     useEffect(() => {
@@ -21,7 +21,9 @@ function EditInfo() {
                 const querySnapshot = await getDocs(collection(db, "users"));
                 querySnapshot.forEach((doc) => {
                     if (doc.id === currentUser.uid) {
-                        setUser({ id: doc.id, ...doc.data() })
+                        const data = { id: doc.id, ...doc.data() }
+                        setUser(data)
+                        setOriginal(data)
                     }
                 });
             } catch (error) {
@@ -30,20 +32,28 @@ function EditInfo() {
         }
         fetchUser()
     }, [currentUser])
-    
-    console.log(user);
-    
-    const handleUpdate = (e) => {
 
+    const handleInput = (e) => {
+        setUser({...user, [e.target.id] : e.target.value})
     }
 
-    const handleSave = () => {
-
+    const handleSave = async (e) => {
+        e.preventDefault()
+        setOriginal(user)
+        try {
+            console.log(user);
+            await setDoc(doc(db, "users", user.uid), {
+                ...user
+            });
+        }
+        catch (err) {
+            console.log(err)
+        }
     }
 
     const handleCancel = () => {
         if (window.confirm('Hủy thay đổi?')) {
-            setEdit(user)
+            setUser(original)
         } else return null
     }
 
@@ -51,9 +61,6 @@ function EditInfo() {
         const uploadFile = () => {
             const name = new Date().getTime() + file.name
             const storageRef = ref(storage, name)
-
-            console.log(name)
-
             const uploadTask = uploadBytesResumable(storageRef, file);
 
             uploadTask.on(
@@ -77,7 +84,7 @@ function EditInfo() {
                 },
                 () => {
                     getDownloadURL(uploadTask.snapshot.ref).then((downloadURL) => {
-                        console.log('File available at', downloadURL);
+                        setUser((prev)=>({...prev, avatar: downloadURL}))
                     });
                 }
             );
@@ -94,36 +101,36 @@ function EditInfo() {
                         <label>Họ Tên</label>
                         <input
                             id="name"
-                            value={edit.name}
+                            value={user.name}
                             className={cl('value-item')}
-                            onChange={(e) => handleUpdate(e.target.value)}
+                            onChange={(e) => handleInput(e)}
                         />
                     </div>
                     <div className={cl('props-item')}>
                         <label>Email</label>
                         <input
                             id="email"
-                            value={edit.email}
+                            value={user.email}
                             className={cl('value-item')}
-                            onChange={(e) => handleUpdate(e.target.value)}
+                            onChange={(e) => handleInput(e)}
                         />
                     </div>
                     <div className={cl('props-item')}>
                         <label>Số điện thoại</label>
                         <input
                             id="phone"
-                            value={edit.phone}
+                            value={user.phone}
                             className={cl('value-item')}
-                            onChange={(e) => handleUpdate(e.target.value)}
+                            onChange={(e) => handleInput(e)}
                         />
                     </div>
                     <div className={cl('props-item')}>
                         <label>Địa chỉ cụ thể</label>
                         <input
                             id="address"
-                            value={edit.address}
+                            value={user.address}
                             className={cl('value-item')}
-                            onChange={(e) => handleUpdate(e.target.value)}
+                            onChange={(e) => handleInput(e)}
                         />
                     </div>
                 </div>
@@ -132,27 +139,27 @@ function EditInfo() {
                         <label>Facebook</label>
                         <input
                             id="facebook"
-                            value={edit.facebook}
+                            value={user.facebook}
                             className={cl('value-item')}
-                            onChange={(e) => handleUpdate(e.target.value)}
+                            onChange={(e) => handleInput(e)}
                         />
                     </div>
                     <div className={cl('props-item')}>
                         <label>Zalo</label>
                         <input
                             id="zalo"
-                            value={edit.zalo}
+                            value={user.zalo}
                             className={cl('value-item')}
-                            onChange={(e) => handleUpdate(e.target.value)}
+                            onChange={(e) => handleInput(e)}
                         />
                     </div>
                     <div className={cl('props-item')}>
                         <label>Khác</label>
                         <input
                             id="other"
-                            value={edit.other}
+                            value={user.other}
                             className={cl('value-item')}
-                            onChange={(e) => handleUpdate(e.target.value)}
+                            onChange={(e) => handleInput(e)}
                         />
                     </div>
                     <div className={cl('props-item')}>
@@ -174,14 +181,14 @@ function EditInfo() {
             <div className={cl('btn')}>
                 <button
                     className={cl('btn-save')}
-                    disabled={edit === user}
+                    disabled={user === original}
                     onClick={handleSave}
                 >
                     Lưu
                 </button>
                 <button
                     className={cl('btn-cancel')}
-                    disabled={edit === user}
+                    disabled={user === original}
                     onClick={handleCancel}
                 >
                     Hủy

@@ -20,7 +20,6 @@ function UserManager({ id }) {
                     if(doc.id !== currentUser.uid)
                         list.push({ id: doc.id, ...doc.data() })
                 });
-                console.log(list);
                 setUsers(list)
             } catch (error) {
                 console.log(error)

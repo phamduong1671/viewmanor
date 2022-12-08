@@ -2,12 +2,11 @@ import classNames from "classnames/bind";
 
 import style from './PostsPublished.module.scss'
 import InputContainer from '../inputContainer'
-import { postItem } from '../../database.js'
 import { useState } from "react";
 
 function PostsPublished({ id }) {
     const cl = classNames.bind(style)
-    const [posts, setPosts] = useState(postItem)
+    const [posts, setPosts] = useState({})
 
     const handleDelete = (e) => {
         if (window.confirm('Xóa tin này?')) {

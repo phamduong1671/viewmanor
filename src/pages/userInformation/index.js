@@ -1,4 +1,4 @@
-import { Fragment, useEffect, useState } from "react";
+import { Fragment, useContext, useEffect, useState } from "react";
 import { useNavigate } from "react-router";
 import classNames from "classnames/bind";
 
@@ -7,21 +7,34 @@ import style from './UserInformation.module.scss'
 import Information from "../../components/contentUserInfo/Information";
 import EditInfo from "../../components/contentUserInfo/EditInfo";
 import PostsPublished from "../../components/contentUserInfo/PostsPublished";
-import { userItem } from '../../database.js'
 import UserManager from "../../components/contentUserInfo/UserManager";
+import { AuthContext } from '../../context/AuthContext'
+import { db } from '../../firebase'
+import { collection, getDocs } from "firebase/firestore";
 
 function UserInformation() {
     const cl = classNames.bind(style)
     const navigate = useNavigate()
     const [feature, setFeature] = useState('1')
-
-    // Tài khoản đang hoạt động
+    const { currentUser } = useContext(AuthContext)
     const [user, setUser] = useState({})
+
+    // Lấy thông tin người dùng đang hoạt động
     useEffect(() => {
-        userItem.forEach(item => {
-            if (item.userId === 1) setUser(item)
-        })
-    })
+        const fetchUser = async () => {
+            try {
+                const querySnapshot = await getDocs(collection(db, "users"));
+                querySnapshot.forEach((doc) => {
+                    if (doc.id === currentUser.uid) {
+                        setUser({ id: doc.id, ...doc.data() })
+                    }
+                });
+            } catch (error) {
+                console.log(error)
+            }
+        }
+        fetchUser()
+    }, [currentUser])
 
     const handleFeature = (id) => {
         setFeature(id)
@@ -36,8 +49,19 @@ function UserInformation() {
             <div className={cl('wrap-sidebar')}>
                 <div className={cl('sidebar')}>
                     <div className={cl('user')}>
-                        <img className={cl('avatar')} src={icon} alt='avatar' />
-                        <div className={cl('name')}>Phạm Ánh Dương</div>
+                        {user.avatar === '' ?
+                            <img
+                                className={cl('avatar')}
+                                src={icon}
+                                alt='avatar'
+                            />
+                            : <img
+                                className={cl('avatar')}
+                                src={user.avatar}
+                                alt='avatar'
+                            />
+                        }
+                        <div className={cl('name')}>{user.name}</div>
                     </div>
                     <div className={cl('feature')}>
                         <div
@@ -67,7 +91,7 @@ function UserInformation() {
                         >
                             Đổi mật khẩu
                         </div>
-                        {user.role === 'admin' ? (
+                        {user.role === 'Quản trị viên' ? (
                             <Fragment>
                                 <div
                                     id='4'
@@ -92,7 +116,7 @@ function UserInformation() {
             {feature === '2' && <PostsPublished id={user.userId} />}
             {feature === '3' && <EditInfo />}
             {feature === '4' && <PostsPublished />}
-            {feature === '5' && <UserManager id={user.userId}/>}
+            {feature === '5' && <UserManager id={user.userId} />}
         </div >
     );
 }

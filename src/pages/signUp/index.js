@@ -33,7 +33,12 @@ function SignUp() {
             await setDoc(doc(db, "users", res.user.uid), {
                 ...data,
                 status: 'Bình thường',
-                role: 'Người dùng'
+                role: 'Người dùng',
+                avatar: '',
+                facebook: '',
+                zalo: '',
+                other: '',
+                address: ''
             });
         }
         catch (err) {
@@ -41,8 +46,8 @@ function SignUp() {
         }
     }
 
-    const handlePassword2 = ()=>{
-        
+    const handlePassword2 = () => {
+
     }
 
     return (
