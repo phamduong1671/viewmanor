@@ -1,4 +1,94 @@
-export const data = [
+export const types = [
+    {
+        'id': '1',
+        'name': 'Nhà'
+    },
+    {
+        'id': '2',
+        'name': 'Nhà phố thương mại'
+    },
+    {
+        'id': '3',
+        'name': 'Căn hộ'
+    },
+    {
+        'id': '4',
+        'name': 'Biệt thự'
+    },
+    {
+        'id': '5',
+        'name': 'Nhà kho'
+    },
+    {
+        'id': '6',
+        'name': 'Nhà xưởng'
+    },
+    {
+        'id': '7',
+        'name': 'Đất'
+    },
+    {
+        'id': '8',
+        'name': 'Đất dự án'
+    },
+    {
+        'id': '9',
+        'name': 'Đất nông nghiệp'
+    }
+]
+
+export const sqms = [
+    {
+        'id': '0001',
+        'name': '< 30m²'
+    },
+    {
+        'id': '0002',
+        'name': '30m² - 60m²'
+    },
+    {
+        'id': '0003',
+        'name': '60m² - 90m²'
+    },
+    {
+        'id': '0004',
+        'name': '90m² - 120m²'
+    },
+    {
+        'id': '0005',
+        'name': '120m² - 150m²'
+    },
+    {
+        'id': '0006',
+        'name': '150m² - 200m²'
+    },
+    {
+        'id': '0007',
+        'name': '200m² - 250m²'
+    },
+    {
+        'id': '0008',
+        'name': '250m² - 300m²'
+    },
+    {
+        'id': '0009',
+        'name': '300m² - 350m²'
+    },
+    {
+        'id': '0010',
+        'name': '350m² - 500m²'
+    },
+    {
+        'id': '0011',
+        'name': '500m² - 1000m²'
+    },
+    {
+        'id': '0012',
+        'name': '> 1000m²'
+    }
+]
+
+export const dvhc = [
     {
         "level1_id": "01",
         "name": "Thành phố Hà Nội",

@@ -38,6 +38,10 @@
     cursor: pointer;
 }
 
+.is-active{
+    background: rgba(0, 130, 6, 0.75);
+}
+
 // Search props
 .search-props{
     height: 128px;
