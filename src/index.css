@@ -20,6 +20,7 @@ code {
 
 .slick-list {
   margin: 0 -10px;
+  min-width: 800px;
 }
 
 ::-webkit-scrollbar {

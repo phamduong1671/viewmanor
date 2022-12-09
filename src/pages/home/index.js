@@ -8,8 +8,8 @@ function Home() {
     return (
         <Fragment>
             <SearchBox />
-            <Slider name='Tin Bán' />
-            <Slider name='Tin Cho Thuê' />
+            <Slider name='Bán' />
+            <Slider name='Cho thuê' />
         </Fragment>
     );
 }

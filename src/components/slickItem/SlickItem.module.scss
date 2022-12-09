@@ -36,15 +36,15 @@
 
 // Information
 .info {
-    width: 100%;
-    height: calc(100% / 2.5);
+    width: calc(100% - 10px);
     background-color: rgba(0, 255, 0, 0.136);
     display: flex;
-    align-items: center;
+    padding: 10px 5px;
 }
 
 .half {
     width: 50%;
+    padding: 0 5px;
 }
 
 label {
@@ -58,8 +58,7 @@ label {
     width: 100%;
     height: calc(100% / 3);
     background-color: rgba(128, 128, 128, 0.136);
-    display: flex;
-    align-items: center;
+    padding-top: 10px;
 }
 
 .btn-user {

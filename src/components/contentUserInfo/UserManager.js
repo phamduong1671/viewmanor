@@ -1,23 +1,21 @@
 import classNames from "classnames/bind";
 import { collection, getDocs, doc, deleteDoc } from "firebase/firestore";
+import { useEffect, useState } from "react";
 
 import style from './UserManager.module.scss'
-import { useContext, useEffect, useState } from "react";
 import { db } from '../../firebase.js'
-import { AuthContext } from '../../context/AuthContext'
 
 function UserManager({ id }) {
     const cl = classNames.bind(style)
-    const { currentUser } = useContext(AuthContext)
     const [users, setUsers] = useState([])
 
     useEffect(() => {
-        const fetchUser = async () => {
+        const fetchUsers = async () => {
             let list = []
             try {
                 const querySnapshot = await getDocs(collection(db, "users"));
                 querySnapshot.forEach(doc => {
-                    if(doc.id !== currentUser.uid)
+                    if (doc.id !== id)
                         list.push({ id: doc.id, ...doc.data() })
                 });
                 setUsers(list)
@@ -25,8 +23,8 @@ function UserManager({ id }) {
                 console.log(error)
             }
         }
-        fetchUser();
-    }, [currentUser])
+        fetchUsers();
+    }, [id])
 
     const handleDelete = async (id) => {
         if (window.confirm('Xóa tài khoản này?')) {
@@ -37,10 +35,12 @@ function UserManager({ id }) {
                 console.log(error);
             }
         }
+
+        // Xóa tất cả tin đăng của người dùng
     }
 
     const handleStatus = (e) => {
-        if (e.value === 'Chặn') {
+        if (e.value === 'Đã chặn') {
             if (window.confirm('Bỏ chặn người dùng này?')) {
                 console.log('đã bỏ chặn');
             }

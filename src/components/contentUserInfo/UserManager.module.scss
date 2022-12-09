@@ -1,6 +1,7 @@
 // Content
 .content {
     width: calc(100% - 360px);
+    min-width: 875px;
     height: calc(100vh - 166px);
     border-left: solid 1px green;
     padding: 25px;

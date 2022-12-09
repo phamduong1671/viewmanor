@@ -1,17 +1,42 @@
 import classNames from "classnames/bind";
+import { useEffect, useState } from "react";
+import { collection, deleteDoc, doc, getDocs } from "firebase/firestore";
 
 import style from './PostsPublished.module.scss'
 import InputContainer from '../inputContainer'
-import { useState } from "react";
+import { db } from '../../firebase.js'
 
 function PostsPublished({ id }) {
     const cl = classNames.bind(style)
-    const [posts, setPosts] = useState({})
+    const [posts, setPosts] = useState([])
+    console.log(id);
 
-    const handleDelete = (e) => {
-        if (window.confirm('Xóa tin này?')) {
-            let newPosts = posts.filter(item => JSON.stringify(item.id) !== e)
-            setPosts(newPosts)
+    useEffect(() => {
+        const fetchPosts = async () => {
+            let list = []
+            try {
+                const querySnapshot = await getDocs(collection(db, "posts"));
+                querySnapshot.forEach(doc => {
+                    if (doc.data().userId === id)
+                        list.push({ id: doc.id, ...doc.data() })
+                });
+                setPosts(list)
+            } catch (error) {
+                console.log(error)
+            }
+        }
+        fetchPosts();
+    }, [id])
+
+
+    const handleDelete = async (id) => {
+        if (window.confirm('Xóa tin đăng này?')) {
+            try {
+                await deleteDoc(doc(db, "posts", id));
+                setPosts(posts.filter(item => item.id !== id))
+            } catch (error) {
+                console.log(error);
+            }
         }
     }
 
@@ -37,53 +62,28 @@ function PostsPublished({ id }) {
                         </tr>
                     </thead>
                     <tbody>
-                        {id ?
-                            posts.map((post, index) => (post.userId === 2 ?
-                                <tr key={index}>
-                                    <td>{post.id}</td>
-                                    <td>{post.category}</td>
-                                    <td>{post.type}</td>
-                                    <td>{post.date}</td>
-                                    <td>{post.ward}</td>
-                                    <td>
-                                        <button
-                                            title="Sửa"
-                                            className={cl('btn-icon', 'btn-update')}
-                                            onClick={(e) => handleUpdate(e.target.id)}
-                                        ></button>
-                                        <button
-                                            id={post.id}
-                                            title="Xóa"
-                                            className={cl('btn-icon', 'btn-delete')}
-                                            onClick={(e) => handleDelete(e.target.id)}
-                                        ></button>
-                                    </td>
-                                </tr>
-                                : null
-                            ))
-                            : posts.map((post, index) =>
-                                <tr key={index}>
-                                    <td>{post.id}</td>
-                                    <td>{post.category}</td>
-                                    <td>{post.type}</td>
-                                    <td>{post.date}</td>
-                                    <td>{post.ward}</td>
-                                    <td>
-                                        <button
-                                            title="update"
-                                            className={cl('btn-icon', 'btn-update')}
-                                            onClick={(e) => handleUpdate(e.target.id)}
-                                        ></button>
-                                        <button
-                                            id={post.id}
-                                            title="delete"
-                                            className={cl('btn-icon', 'btn-delete')}
-                                            onClick={(e) => handleDelete(e.target.id)}
-                                        ></button>
-                                    </td>
-                                </tr>
-                            )
-                        }
+                        {posts.map((post, index) =>
+                            <tr key={index}>
+                                <td>{post.id}</td>
+                                <td>{post.category}</td>
+                                <td>{post.type}</td>
+                                <td>{post.date}</td>
+                                <td>{post.ward}</td>
+                                <td>
+                                    <button
+                                        title="Sửa"
+                                        className={cl('btn-icon', 'btn-update')}
+                                        onClick={(e) => handleUpdate(e.target.id)}
+                                    ></button>
+                                    <button
+                                        id={post.id}
+                                        title="Xóa"
+                                        className={cl('btn-icon', 'btn-delete')}
+                                        onClick={(e) => handleDelete(e.target.id)}
+                                    ></button>
+                                </td>
+                            </tr>
+                        )}
                     </tbody>
                 </table>
             </div>

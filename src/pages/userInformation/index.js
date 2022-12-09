@@ -106,10 +106,10 @@ function UserInformation() {
                 </div>
             </div>
             {feature === '1' && <Information />}
-            {feature === '2' && <PostsPublished id={user.userId} />}
+            {feature === '2' && <PostsPublished id={user.id} />}
             {feature === '3' && <EditInfo />}
             {feature === '4' && <PostsPublished />}
-            {feature === '5' && <UserManager id={user.userId} />}
+            {feature === '5' && <UserManager id={user.id} />}
         </div >
     );
 }

@@ -1,16 +1,38 @@
 import classNames from "classnames/bind";
 import { useNavigate } from "react-router";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { useState, useEffect } from "react";
+import { faHouse, faRulerCombined } from '@fortawesome/free-solid-svg-icons'
+import { faMap, faMoneyBill1 } from "@fortawesome/free-regular-svg-icons";
+import { collection, getDocs } from "firebase/firestore";
 
 import style from './SlickItem.module.scss'
 import icon from '../../assets/image/default-avatar.jpg'
 import image from '../../assets/image/background-sign-up.png'
-import { faHouse, faRulerCombined } from '@fortawesome/free-solid-svg-icons'
-import { faMap, faMoneyBill1 } from "@fortawesome/free-regular-svg-icons";
+import { db } from '../../firebase'
 
-function SlickItem() {
+function SlickItem({ value }) {
     const cl = classNames.bind(style)
     const navigate = useNavigate()
+    const [users, setUsers] = useState([])
+
+    useEffect(() => {
+        const fetchUsers = async () => {
+            let list = []
+            try {
+                const querySnapshot = await getDocs(collection(db, "users"));
+                querySnapshot.forEach(doc => {
+                    if (doc.id === value.userId) {
+                        list.push({ id: doc.id, ...doc.data() })
+                    }
+                });
+                setUsers(list)
+            } catch (error) {
+                console.log(error)
+            }
+        }
+        fetchUsers();
+    }, [value])
 
     const goInfoItemPage = () => {
         navigate('./info-item')
@@ -27,27 +49,27 @@ function SlickItem() {
             </div>
             <div className={cl('wrap-info')}>
                 <div className={cl('title')}>
-                    Cần bán căn hộ Vinhomes Grand Park - phân khu Rainbow toà S3.05
+                    {value.title}
                 </div>
                 <div className={cl('info')}>
                     <div className={cl('half')}>
                         <div>
                             <FontAwesomeIcon icon={faHouse} color='#32a428' />
-                            <label>Căn hộ</label>
+                            <label>{value.type}</label>
                         </div>
                         <div>
                             <FontAwesomeIcon icon={faMap} color='#32a428' />
-                            <label>Đống Đa, Hà Nội</label>
+                            <label>{value.distric + ', ' + value.city}</label>
                         </div>
                     </div>
                     <div className={cl('half')}>
                         <div>
                             <FontAwesomeIcon icon={faRulerCombined} color='#32a428' />
-                            <label>50 mét vuông</label>
+                            <label>{value.sqm + ' m²'}</label>
                         </div>
                         <div>
                             <FontAwesomeIcon icon={faMoneyBill1} color='#32a428' />
-                            <label>1.900.000.000 VND</label>
+                            <label>{value.price + ' VND'}</label>
                         </div>
                     </div>
                 </div>
@@ -60,7 +82,7 @@ function SlickItem() {
                             />
                         </div>
                         <div className={cl('username')}>
-                            Phạm Ánh Dương
+                            name
                         </div>
                     </div>
                 </div>

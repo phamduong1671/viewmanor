@@ -18,12 +18,11 @@ function SearchBox() {
     const [show, setShow] = useState('')
     const [type, setType] = useState({})
     const [city, setCity] = useState({})
-    const [huyen, setHuyen] = useState({})
+    const [distric, setDistric] = useState({})
     const [sqm, setSqm] = useState({})
 
     const handleCategory = (e) => {
         setCategory(e.target.id)
-        
     }
 
     const showValue = (e) => {
@@ -48,7 +47,7 @@ function SearchBox() {
                 break;
             case 3:
                 const selected3 = city.level2s.filter(item => item.level2_id === e.target.id)
-                setHuyen(selected3[0])
+                setDistric(selected3[0])
                 break;
             case 4:
                 const selected4 = sqms.filter(item => item.id === e.target.id)
@@ -114,7 +113,7 @@ function SearchBox() {
                             <div className={cl('input-container')}>
                                 <input className={cl('input-cbb')}
                                     spellCheck={false}
-                                    value={city.name || 'Tỉnh / Thành Phố'}
+                                    value={city.name || 'Tỉnh / Thành phố'}
                                     readOnly
                                 />
                                 <div className={cl('icon-dropdown')}>
@@ -139,18 +138,18 @@ function SearchBox() {
                     </div>
                     <div className={cl('center')}>
                         {/* Quận Huyện */}
-                        <div id='huyen' className={cl('cbb-container')} onClick={(e) => showValue(e)} >
+                        <div id='distric' className={cl('cbb-container')} onClick={(e) => showValue(e)} >
                             <div className={cl('input-container')}>
                                 <input className={cl('input-cbb')}
                                     spellCheck={false}
-                                    value={huyen.name || 'Quận / Huyện'}
+                                    value={distric.name || 'Quận / Huyện'}
                                     readOnly
                                 />
                                 <div className={cl('icon-dropdown')}>
                                     <FontAwesomeIcon icon={faAngleDown} />
                                 </div>
                             </div>
-                            {show === 'huyen' &&
+                            {show === 'distric' &&
                                 <div className={cl('cbb-value')}>
                                     {city.name ?
                                         city.level2s.map(item => (

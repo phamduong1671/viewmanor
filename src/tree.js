@@ -1,38 +1,53 @@
+export const categorys = [
+    {
+        'id': '000001',
+        'name': 'Bán'
+    },
+    {
+        'id': '000002',
+        'name': 'Cho thuê'
+    }
+]
+
 export const types = [
     {
         'id': '1',
-        'name': 'Nhà'
+        'name': 'Nhà trọ'
     },
     {
         'id': '2',
-        'name': 'Nhà phố thương mại'
+        'name': 'Nhà'
     },
     {
         'id': '3',
-        'name': 'Căn hộ'
+        'name': 'Nhà phố thương mại'
     },
     {
         'id': '4',
-        'name': 'Biệt thự'
+        'name': 'Căn hộ'
     },
     {
         'id': '5',
-        'name': 'Nhà kho'
+        'name': 'Biệt thự'
     },
     {
         'id': '6',
-        'name': 'Nhà xưởng'
+        'name': 'Nhà kho'
     },
     {
         'id': '7',
-        'name': 'Đất'
+        'name': 'Nhà xưởng'
     },
     {
         'id': '8',
-        'name': 'Đất dự án'
+        'name': 'Đất'
     },
     {
         'id': '9',
+        'name': 'Đất dự án'
+    },
+    {
+        'id': '0',
         'name': 'Đất nông nghiệp'
     }
 ]
