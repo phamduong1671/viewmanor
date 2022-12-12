@@ -1,7 +1,7 @@
 import { Fragment, useContext, useEffect, useState } from "react";
 import { useNavigate } from "react-router";
 import classNames from "classnames/bind";
-import { collection, getDocs } from "firebase/firestore";
+import { doc, onSnapshot } from "firebase/firestore";
 
 import style from './UserInformation.module.scss'
 import Information from "../../components/contentUserInfo/Information";
@@ -21,19 +21,16 @@ function UserInformation() {
 
     // Lấy thông tin người dùng đang hoạt động
     useEffect(() => {
-        const fetchUser = async () => {
-            try {
-                const querySnapshot = await getDocs(collection(db, "users"));
-                querySnapshot.forEach((doc) => {
-                    if (doc.id === currentUser.uid) {
-                        setUser({ id: doc.id, ...doc.data() })
-                    }
-                });
-            } catch (error) {
-                console.log(error)
+        const unsub = onSnapshot(doc(db, "users", currentUser.uid),
+            (doc) => {
+                setUser({ id: doc.id, ...doc.data() })
+            }, (error) => {
+                console.log(error);
             }
+        );
+        return () => {
+            unsub();
         }
-        fetchUser()
     }, [currentUser])
 
     const handleFeature = (id) => {
@@ -105,7 +102,7 @@ function UserInformation() {
                     </div>
                 </div>
             </div>
-            {feature === '1' && <Information />}
+            {feature === '1' && <Information user={user} />}
             {feature === '2' && <PostsPublished id={user.id} />}
             {feature === '3' && <EditInfo />}
             {feature === '4' && <PostsPublished />}

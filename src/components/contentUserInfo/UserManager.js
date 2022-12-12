@@ -1,5 +1,5 @@
 import classNames from "classnames/bind";
-import { collection, getDocs, doc, deleteDoc } from "firebase/firestore";
+import { collection, doc, runTransaction, onSnapshot } from "firebase/firestore";
 import { useEffect, useState } from "react";
 
 import style from './UserManager.module.scss'
@@ -10,43 +10,63 @@ function UserManager({ id }) {
     const [users, setUsers] = useState([])
 
     useEffect(() => {
-        const fetchUsers = async () => {
-            let list = []
-            try {
-                const querySnapshot = await getDocs(collection(db, "users"));
-                querySnapshot.forEach(doc => {
+        const unsub = onSnapshot(collection(db, "users"),
+            (snapshot) => {
+                let list = [];
+                snapshot.docs.forEach((doc) => {
                     if (doc.id !== id)
                         list.push({ id: doc.id, ...doc.data() })
                 });
-                setUsers(list)
-            } catch (error) {
-                console.log(error)
-            }
-        }
-        fetchUsers();
-    }, [id])
-
-    const handleDelete = async (id) => {
-        if (window.confirm('Xóa tài khoản này?')) {
-            try {
-                await deleteDoc(doc(db, "users", id));
-                setUsers(users.filter(item => item.id !== id))
-            } catch (error) {
+                setUsers(list);
+            }, (error) => {
                 console.log(error);
             }
+        );
+
+        return () => {
+            unsub();
         }
 
-        // Xóa tất cả tin đăng của người dùng
-    }
+    }, [id])
 
-    const handleStatus = (e) => {
-        if (e.value === 'Đã chặn') {
-            if (window.confirm('Bỏ chặn người dùng này?')) {
-                console.log('đã bỏ chặn');
+    const handleDisable = async (e) => {
+        let user = {}
+        users.forEach(item => {
+            if (item.id === e.target.id)
+                user = item
+        })
+
+        if (user.status === 'Bình thường') {
+            if (window.confirm('Khóa tài khoản này?')) {
+                try {
+                    await runTransaction(db, async (transaction) => {
+                        const sfDoc = await transaction.get(doc(db, "users", e.target.id));
+                        if (!sfDoc.exists()) {
+                            // eslint-disable-next-line
+                            throw "Document does not exist!";
+                        }
+                        transaction.update(doc(db, "users", user.id), { ...user, status: 'Bị khóa' });
+                    });
+                    console.log('đã khóa');
+                } catch (err) {
+                    console.log("Transaction failed: ", err);
+                }
             }
         } else {
-            if (window.confirm('Chặn người dùng này?')) {
-                console.log('đã chặn');
+            if (window.confirm('Mở khóa tài khoản này?')) {
+                try {
+                    await runTransaction(db, async (transaction) => {
+                        const sfDoc = await transaction.get(doc(db, "users", e.target.id));
+                        if (!sfDoc.exists()) {
+                            // eslint-disable-next-line
+                            throw "Document does not exist!";
+                        }
+                        transaction.update(doc(db, "users", user.id), { ...user, status: 'Bình thường' });
+                    });
+                    console.log('đã mở khóa');
+                } catch (err) {
+                    console.log("Transaction failed: ", err);
+                }
             }
         }
     }
@@ -76,16 +96,10 @@ function UserManager({ id }) {
                                 <td>
                                     <button
                                         id={user.id}
-                                        value={user.status}
-                                        title="Chặn/Bỏ chặn"
-                                        className={cl('btn-icon', 'btn-status')}
-                                        onClick={(e) => handleStatus(e.target)}
-                                    ></button>
-                                    <button
-                                        id={user.id}
                                         title="Xóa"
-                                        className={cl('btn-icon', 'btn-delete')}
-                                        onClick={(e) => handleDelete(e.target.id)}
+                                        value={user.status}
+                                        className={cl('btn-icon', 'btn-disable')}
+                                        onClick={(e) => handleDisable(e)}
                                     ></button>
                                 </td>
                             </tr>

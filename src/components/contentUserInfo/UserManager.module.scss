@@ -3,6 +3,7 @@
     width: calc(100% - 360px);
     min-width: 875px;
     height: calc(100vh - 166px);
+    min-height: 500px;
     border-left: solid 1px green;
     padding: 25px;
 }
@@ -70,10 +71,6 @@ td {
     }
 }
 
-.btn-delete {
-    background-image: url('../../assets/image/delete.svg');
-}
-
-.btn-status {
+.btn-disable{
     background-image: url('../../assets/image/block.svg');
 }

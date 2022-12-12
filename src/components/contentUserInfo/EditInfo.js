@@ -1,5 +1,5 @@
 import classNames from "classnames/bind";
-import { collection, doc, getDocs, runTransaction } from "firebase/firestore";
+import { doc, runTransaction, onSnapshot } from "firebase/firestore";
 import { getDownloadURL, ref, uploadBytesResumable } from "firebase/storage";
 import { useContext, useEffect, useState } from "react";
 
@@ -16,22 +16,21 @@ function EditInfo() {
     const { currentUser } = useContext(AuthContext)
 
     useEffect(() => {
-        const fetchUser = async () => {
-            try {
-                const querySnapshot = await getDocs(collection(db, "users"));
-                querySnapshot.forEach((doc) => {
-                    if (doc.id === currentUser.uid) {
-                        const data = { id: doc.id, ...doc.data() }
-                        setUser(data)
-                        setOriginal(data)
-                    }
-                });
-            } catch (error) {
-                console.log(error)
+        const unsub = onSnapshot(doc(db, "users", currentUser.uid),
+            (doc) => {
+                const data = { id: doc.id, ...doc.data() }
+                setUser(data)
+                setOriginal(data)
+            }, (error) => {
+                console.log(error);
             }
+        );
+        return () => {
+            unsub();
         }
-        fetchUser()
     }, [currentUser])
+
+    console.log(original);
 
     const handleInput = (e) => {
         setUser({ ...user, [e.target.id]: e.target.value })
@@ -58,7 +57,6 @@ function EditInfo() {
             } catch (e) {
                 console.log("Transaction failed: ", e);
             }
-            window.location.reload(false);
         }
     }
 
@@ -185,6 +183,11 @@ function EditInfo() {
                                 onChange={(e) => setFile(e.target.files[0])}
                                 hidden
                             />
+                        </div>
+                        <div
+                            className={cl('show-image')}
+                        >
+                            <img src="" alt="avatar"/>
                         </div>
                     </div>
                 </div>

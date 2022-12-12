@@ -1,30 +1,9 @@
 import classNames from "classnames/bind";
-import { useContext, useEffect, useState } from "react";
-import { collection, getDocs } from "firebase/firestore";
 
 import style from './Information.module.scss'
-import { AuthContext } from '../../context/AuthContext'
-import { db } from '../../firebase'
 
-function Information() {
+function Information({user}) {
     const cl = classNames.bind(style)
-    const { currentUser } = useContext(AuthContext)
-    const [user, setUser] = useState({})
-
-    useEffect(() => {
-        const fetchUser = async () => {
-            try {
-                const querySnapshot = await getDocs(collection(db, "users"));
-                querySnapshot.forEach((doc) => {
-                    if (doc.id === currentUser.uid)
-                        setUser({ id: doc.id, ...doc.data() })
-                });
-            } catch (error) {
-                console.log(error)
-            }
-        }
-        fetchUser()
-    }, [currentUser])
 
     return (
         <div className={cl('content')}>
