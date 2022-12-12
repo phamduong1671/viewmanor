@@ -1,15 +1,50 @@
+import { useContext, useEffect, useState } from "react";
+import { doc, onSnapshot } from "firebase/firestore";
 import classNames from "classnames/bind";
 
 import icon from '../../assets/image/default-avatar.jpg'
 import style from './InfoItem.module.scss'
+import { PostContext } from "../../context/PostContext";
+import { db } from '../../firebase'
 
 function InfoItem() {
     const cl = classNames.bind(style)
+    const { currentPost } = useContext(PostContext)
+    const [post, setPost] = useState({})
+    const [user, setUser] = useState({})
+
+    useEffect(() => {
+        const unsub = onSnapshot(doc(db, "posts", currentPost.id),
+            (doc) => {
+                setPost({ id: doc.id, ...doc.data() })
+            }, (error) => {
+                console.log(error);
+            }
+        );
+        return () => {
+            unsub();
+        }
+    }, [currentPost])
+
+    useEffect(() => {
+        if (post.userId) {
+            const unsub = onSnapshot(doc(db, "users", post.userId),
+                (doc) => {
+                    setUser({ id: doc.id, ...doc.data() })
+                }, (error) => {
+                    console.log(error);
+                }
+            );
+            return () => {
+                unsub();
+            }
+        }
+    }, [post])
 
     return (
         <div className={cl('item-container')}>
             <div className={cl('title')}>
-                Cần bán căn hộ Vinhomes Grand Park - phân khu Rainbow toà S3.05
+                {post.title}
             </div>
             <div className={cl('wrap-image')}>
 
@@ -21,21 +56,21 @@ function InfoItem() {
                         <div className={cl('half')}>
                             <div>
                                 <label>Loại:</label>
-                                <label>Căn hộ</label>
+                                <label>{post.type}</label>
                             </div>
                             <div>
                                 <label>Địa chỉ:</label>
-                                <label>Tây Sơn, Đống Đa, Hà Nội</label>
+                                <label>{post.address + ', ' + post.ward + ', ' + post.distric + ', ' + post.city}</label>
                             </div>
                         </div>
                         <div className={cl('half')}>
                             <div>
                                 <label>Diện Tích:</label>
-                                <label>50 mét vuông</label>
+                                <label>{post.sqm} mét vuông</label>
                             </div>
                             <div>
                                 <label>Giá:</label>
-                                <label>1.900.000.000 VND</label>
+                                <label>{post.price && post.price.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',')} VND</label>
                             </div>
                         </div>
                     </div>
@@ -43,14 +78,7 @@ function InfoItem() {
                 <div className={cl('description')}>
                     <h1>Mô tả</h1>
                     <label>
-                        {`Mình chủ nhà, cần bán căn hộ tại Đại đô thị Vinhomes Grand Park Quận 9.
-                        Vị trí Tòa nhà phân khu The Rainbow.
-                        
-                        Tòa S3.05 diện tích 49m², 1PN.
-                        View sông Tắc, hướng Đông Nam
-                        Giá rẻ hơn thị trường, tiện mua ở hoặc đầu tư
-                        
-                        Khách mua có thể nhận nhà công chứng vào ở ngay.`}
+                        {post.description}
                     </label>
                 </div>
                 <div className={cl('author')}>
@@ -58,30 +86,34 @@ function InfoItem() {
                     <div className={cl('btn-user')}>
                         <div className={cl('icon-avatar')}><img className={cl('avatar')} src={icon} alt='avatar' /></div>
                         <div className={cl('username')}>
-                            Phạm Ánh Dương
+                            {user.name}
                         </div>
                     </div>
                     <div className={cl('wrap-author')}>
                         <div className={cl('email')}>Email:
-                            <div>duong@gmail.com</div>
+                            <div>{user.email}</div>
                         </div>
                         <div className={cl('phone')}>Số điện thoại:
-                            <div>0987654321</div>
+                            <div>{user.phone}</div>
                         </div>
                     </div>
                     <div className={cl('wrap-btn')}>
-                        <div className={cl('btn-zalo')} onClick={() => window.location='https://zalo.me/0869913240'}>
-                            <div className={cl('icon-zalo')}></div>
-                            <div className={cl('label-zalo')}>
-                                Zalo
+                        {user.zalo &&
+                            <div className={cl('btn-zalo')} onClick={() => window.location = `https://zalo.me/${user.zalo}`}>
+                                <div className={cl('icon-zalo')}></div>
+                                <div className={cl('label-zalo')}>
+                                    Zalo
+                                </div>
                             </div>
-                        </div>
-                        <div className={cl('btn-facebook')} onClick={() => window.location='https://www.facebook.com/pham.duong.142892/'}>
-                            <div className={cl('icon-facebook')}></div>
-                            <div className={cl('label-facebook')}>
-                                Facebook
+                        }
+                        {user.facebook &&
+                            <div className={cl('btn-facebook')} onClick={() => window.location = user.facebook}>
+                                <div className={cl('icon-facebook')}></div>
+                                <div className={cl('label-facebook')}>
+                                    Facebook
+                                </div>
                             </div>
-                        </div>
+                        }
                     </div>
                 </div>
             </div>

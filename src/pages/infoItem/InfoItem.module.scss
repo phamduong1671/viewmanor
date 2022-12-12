@@ -25,7 +25,7 @@
 .information,
 .description,
 .author {
-    padding: 5px 24px;
+    padding: 5px 24px 20px 24px;
     margin-top: 30px;
     border-radius: 4px;
     box-shadow: 0px 2px 5px #bcbcbc;
@@ -39,6 +39,7 @@ h1 {
 
 .half {
     width: 50%;
+    padding-right: 20px;
 }
 
 // Description
@@ -89,7 +90,6 @@ label {
 // Button Zalo & Facebook
 .wrap-btn {
     width: 100%;
-    height: 100px;
     display: flex;
     align-items: center;
 }

@@ -30,7 +30,7 @@ function EditInfo() {
         }
     }, [currentUser])
 
-    console.log(original);
+    console.log(file);
 
     const handleInput = (e) => {
         setUser({ ...user, [e.target.id]: e.target.value })
@@ -184,11 +184,11 @@ function EditInfo() {
                                 hidden
                             />
                         </div>
-                        <div
-                            className={cl('show-image')}
-                        >
-                            <img src="" alt="avatar"/>
-                        </div>
+                        <img
+                            className={cl('avatar')}
+                            src={user.avatar}
+                            alt="avatar"
+                        />
                     </div>
                 </div>
             </div>

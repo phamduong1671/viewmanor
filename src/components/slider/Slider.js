@@ -4,7 +4,7 @@ import { useNavigate } from 'react-router';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faAnglesRight } from '@fortawesome/free-solid-svg-icons';
 import { collection, getDocs } from 'firebase/firestore';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useContext } from 'react';
 import { faHouse, faRulerCombined } from '@fortawesome/free-solid-svg-icons'
 import { faMap, faMoneyBill1 } from "@fortawesome/free-regular-svg-icons";
 
@@ -12,11 +12,13 @@ import style from './Slider.module.scss'
 import settings from './Slick';
 import { db } from '../../firebase'
 import image from '../../assets/image/background-sign-up.png'
+import { PostContext } from '../../context/PostContext';
 
 function Slider({ name }) {
     const cl = classNames.bind(style)
     const navigate = useNavigate()
     const [posts, setPosts] = useState([])
+    const { dispatch } = useContext(PostContext)
 
     useEffect(() => {
         const fetchPosts = async () => {
@@ -38,7 +40,10 @@ function Slider({ name }) {
         navigate('/search')
     };
 
-    const goInfoItemPage = () => {
+    const goInfoItemPage = (e) => {
+        const postId = {id: e.target.id}
+        dispatch({ type: "SHOW", payload: postId })
+
         navigate('./info-item')
     }
 
@@ -54,34 +59,40 @@ function Slider({ name }) {
             <div className={cl('post-list')}>
                 <Slick {...settings}>
                     {posts.filter(item => item.category === name).map(post =>
-                        <div key={post.id} className={cl('slick-item')} onClick={goInfoItemPage} >
-                            <div className={cl('wrap-image')}>
+                        <div
+                            key={post.id}
+                            id={post.id}
+                            className={cl('slick-item')}
+                            onClick={e => goInfoItemPage(e)}
+                        >
+                            <div id={post.id} className={cl('wrap-image')}>
                                 <img
+                                    id={post.id}
                                     className={cl('image')}
                                     src={image}
                                     alt="postItem"
                                 />
                             </div>
-                            <div className={cl('wrap-info')}>
-                                <div className={cl('title')}>
+                            <div id={post.id} className={cl('wrap-info')}>
+                                <div id={post.id} className={cl('title')}>
                                     {post.title}
                                 </div>
-                                <div className={cl('info')}>
-                                    <div>
+                                <div id={post.id} className={cl('info')}>
+                                    <div id={post.id}>
                                         <FontAwesomeIcon icon={faHouse} color='#32a428' />
-                                        <label>{post.type}</label>
+                                        <label id={post.id}>{post.type}</label>
                                     </div>
-                                    <div>
+                                    <div id={post.id}>
                                         <FontAwesomeIcon icon={faRulerCombined} color='#32a428' />
-                                        <label>{post.sqm + ' m²'}</label>
+                                        <label id={post.id}>{post.sqm + ' m²'}</label>
                                     </div>
-                                    <div>
+                                    <div id={post.id}>
                                         <FontAwesomeIcon icon={faMoneyBill1} color='#32a428' />
-                                        <label>{post.price + ' VND'}</label>
+                                        <label id={post.id}>{post.price.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',') + ' VND'}</label>
                                     </div>
-                                    <div>
+                                    <div id={post.id}>
                                         <FontAwesomeIcon icon={faMap} color='#32a428' />
-                                        <label>{post.ward + ', ' + post.distric + ', ' + post.city}</label>
+                                        <label id={post.id}>{post.ward + ', ' + post.distric + ', ' + post.city}</label>
                                     </div>
                                 </div>
                             </div>

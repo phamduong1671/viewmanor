@@ -1,5 +1,4 @@
 import { Fragment, useContext, useEffect, useState } from "react";
-import { useNavigate } from "react-router";
 import classNames from "classnames/bind";
 import { doc, onSnapshot } from "firebase/firestore";
 
@@ -11,10 +10,10 @@ import UserManager from "../../components/contentUserInfo/UserManager";
 import { AuthContext } from '../../context/AuthContext'
 import { db } from '../../firebase'
 import icon from '../../assets/image/default-avatar.jpg';
+import ChangePassword from "../../components/contentUserInfo/ChangePassword";
 
 function UserInformation() {
     const cl = classNames.bind(style)
-    const navigate = useNavigate()
     const [feature, setFeature] = useState('1')
     const { currentUser } = useContext(AuthContext)
     const [user, setUser] = useState({})
@@ -32,13 +31,9 @@ function UserInformation() {
             unsub();
         }
     }, [currentUser])
-
+    
     const handleFeature = (id) => {
         setFeature(id)
-    }
-
-    const changePassword = () => {
-        navigate('/forgot-password')
     }
 
     return (
@@ -76,22 +71,23 @@ function UserInformation() {
                             Chỉnh sửa thông tin cá nhân
                         </div>
                         <div
+                            id='4'
                             className={cl('item-feature')}
-                            onClick={changePassword}
+                            onClick={(e) => handleFeature(e.target.id)}
                         >
                             Đổi mật khẩu
                         </div>
                         {user.role === 'Quản trị viên' ? (
                             <Fragment>
                                 <div
-                                    id='4'
+                                    id='5'
                                     className={cl('item-feature')}
                                     onClick={(e) => handleFeature(e.target.id)}
                                 >
                                     Quản lý tin đăng
                                 </div>
                                 <div
-                                    id='5'
+                                    id='6'
                                     className={cl('item-feature')}
                                     onClick={(e) => handleFeature(e.target.id)}
                                 >
@@ -105,8 +101,9 @@ function UserInformation() {
             {feature === '1' && <Information user={user} />}
             {feature === '2' && <PostsPublished id={user.id} />}
             {feature === '3' && <EditInfo />}
-            {feature === '4' && <PostsPublished />}
-            {feature === '5' && <UserManager id={user.id} />}
+            {feature === '4' && <ChangePassword />}
+            {feature === '5' && <PostsPublished />}
+            {feature === '6' && <UserManager id={user.id} />}
         </div >
     );
 }

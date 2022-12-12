@@ -9,7 +9,6 @@ import { db } from '../../firebase.js'
 function PostsPublished({ id }) {
     const cl = classNames.bind(style)
     const [posts, setPosts] = useState([])
-    console.log(id);
 
     useEffect(() => {
         const fetchPosts = async () => {
@@ -17,8 +16,7 @@ function PostsPublished({ id }) {
             try {
                 const querySnapshot = await getDocs(collection(db, "posts"));
                 querySnapshot.forEach(doc => {
-                    if (doc.data().userId === id)
-                        list.push({ id: doc.id, ...doc.data() })
+                    list.push({ id: doc.id, ...doc.data() })
                 });
                 setPosts(list)
             } catch (error) {
@@ -40,7 +38,7 @@ function PostsPublished({ id }) {
         }
     }
 
-    const handleUpdate = (e) => {
+    const handleUpdate = (id) => {
 
     }
 
@@ -62,28 +60,48 @@ function PostsPublished({ id }) {
                         </tr>
                     </thead>
                     <tbody>
-                        {posts.map((post, index) =>
-                            <tr key={index}>
-                                <td>{post.id}</td>
-                                <td>{post.category}</td>
-                                <td>{post.type}</td>
-                                <td>{post.date}</td>
-                                <td>{post.ward}</td>
-                                <td>
-                                    <button
-                                        title="Sửa"
-                                        className={cl('btn-icon', 'btn-update')}
-                                        onClick={(e) => handleUpdate(e.target.id)}
-                                    ></button>
-                                    <button
-                                        id={post.id}
-                                        title="Xóa"
-                                        className={cl('btn-icon', 'btn-delete')}
-                                        onClick={(e) => handleDelete(e.target.id)}
-                                    ></button>
-                                </td>
-                            </tr>
-                        )}
+                        {id ?
+                            posts.map((post, index) => (
+                                post.userId === id &&
+                                <tr key={index}>
+                                    <td>{post.id}</td>
+                                    <td>{post.category}</td>
+                                    <td>{post.type}</td>
+                                    <td>{post.date}</td>
+                                    <td>{post.ward}</td>
+                                    <td>
+                                        <button
+                                            id={post.id}
+                                            title="Sửa"
+                                            className={cl('btn-icon', 'btn-update')}
+                                            onClick={(e) => handleUpdate(e.target.id)}
+                                        ></button>
+                                        <button
+                                            id={post.id}
+                                            title="Xóa"
+                                            className={cl('btn-icon', 'btn-delete')}
+                                            onClick={(e) => handleDelete(e.target.id)}
+                                        ></button>
+                                    </td>
+                                </tr>
+                            ))
+                            : posts.map((post, index) =>
+                                <tr key={index}>
+                                    <td>{post.id}</td>
+                                    <td>{post.category}</td>
+                                    <td>{post.type}</td>
+                                    <td>{post.date}</td>
+                                    <td>{post.ward}</td>
+                                    <td>
+                                        <button
+                                            id={post.id}
+                                            title="Xóa"
+                                            className={cl('btn-icon', 'btn-delete')}
+                                            onClick={(e) => handleDelete(e.target.id)}
+                                        ></button>
+                                    </td>
+                                </tr>
+                            )}
                     </tbody>
                 </table>
             </div>
