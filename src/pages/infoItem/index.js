@@ -2,10 +2,10 @@ import { useContext, useEffect, useState } from "react";
 import { doc, onSnapshot } from "firebase/firestore";
 import classNames from "classnames/bind";
 
-import icon from '../../assets/image/default-avatar.jpg'
-import style from './InfoItem.module.scss'
+import { db } from '../../firebase';
+import style from './InfoItem.module.scss';
 import { PostContext } from "../../context/PostContext";
-import { db } from '../../firebase'
+import icon from '../../assets/image/default-avatar.jpg';
 
 function InfoItem() {
     const cl = classNames.bind(style)

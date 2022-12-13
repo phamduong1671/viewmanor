@@ -1,6 +1,6 @@
 import classNames from "classnames/bind";
-import { useState } from "react";
-import { Link } from "react-router-dom";
+import { useContext, useState } from "react";
+import { useNavigate } from 'react-router';
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faMagnifyingGlass } from "@fortawesome/free-solid-svg-icons";
 import { faAngleDown } from "@fortawesome/free-solid-svg-icons";
@@ -9,20 +9,25 @@ import { faAngleDown } from "@fortawesome/free-solid-svg-icons";
 import style from './SearchBox.module.scss';
 import buttonHeader from '../header/Header.module.scss';
 import { types, dvhc, sqms } from '../../../tree.js'
+import { PropsContext } from '../../../context/PropsContext';
 
 
 function SearchBox() {
+    const navigate = useNavigate()
     const cl = classNames.bind(style)
     const cx = classNames.bind(buttonHeader)
-    const [category, setCategory] = useState('')
+    const [category, setCategory] = useState('Bán')
     const [show, setShow] = useState('')
     const [type, setType] = useState({})
     const [city, setCity] = useState({})
     const [distric, setDistric] = useState({})
     const [sqm, setSqm] = useState({})
+    const [props, setProps] = useState({category: 'Bán'})
+    const { dispatch } = useContext(PropsContext)
 
     const handleCategory = (e) => {
         setCategory(e.target.id)
+        setProps({...props, category: e.target.id})
     }
 
     const showValue = (e) => {
@@ -40,22 +45,32 @@ function SearchBox() {
             case 1:
                 const selected1 = types.filter(item => item.id === e.target.id)
                 setType(selected1[0])
+                setProps({...props, type: selected1[0].name})
                 break;
             case 2:
                 const selected2 = dvhc.filter(item => item.level1_id === e.target.id)
                 setCity(selected2[0])
+                setProps({...props, city: selected2[0].name})
                 break;
             case 3:
                 const selected3 = city.level2s.filter(item => item.level2_id === e.target.id)
                 setDistric(selected3[0])
+                setProps({...props, distric: selected3[0].name})
                 break;
             case 4:
                 const selected4 = sqms.filter(item => item.id === e.target.id)
                 setSqm(selected4[0])
+                setProps({...props, sqm: selected4[0]})
                 break;
             default:
                 break;
         }
+    }
+
+    const handleSearch = () => {
+        dispatch({ type: "SEARCH", payload: props })
+
+        navigate('./search')
     }
 
     return (
@@ -63,15 +78,15 @@ function SearchBox() {
             <div className={cl('search-box')}>
                 <div className={cl('buy-rent')}>
                     <div
-                        id="btn-buy"
-                        className={category === 'btn-buy' ? cl('buy', 'is-active') : cl('buy')}
+                        id="Bán"
+                        className={category === 'Bán' ? cl('buy', 'is-active') : cl('buy')}
                         onClick={e => handleCategory(e)}
                     >
                         MUA
                     </div>
                     <div
-                        id="btn-rent"
-                        className={category === 'btn-rent' ? cl('buy', 'is-active') : cl('buy')}
+                        id="Cho thuê"
+                        className={category === 'Cho thuê' ? cl('buy', 'is-active') : cl('buy')}
                         onClick={e => handleCategory(e)}
                     >
                         THUÊ
@@ -198,10 +213,16 @@ function SearchBox() {
                     </div>
                 </div>
                 <div className={cl('btn-search-container')}>
-                    <Link className={`${cx('btn-header')} ${cl('btn-search')}`} to='/search'>
-                        <FontAwesomeIcon fontSize={'20px'} icon={faMagnifyingGlass} />
+                    <div
+                        className={`${cx('btn-header')} ${cl('btn-search')}`}
+                        onClick={handleSearch}
+                    >
+                        <FontAwesomeIcon
+                            fontSize={'20px'}
+                            icon={faMagnifyingGlass}
+                        />
                         Tìm kiếm
-                    </Link>
+                    </div>
                 </div>
             </div>
         </div >

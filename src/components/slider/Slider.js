@@ -1,18 +1,17 @@
-import classNames from 'classnames/bind';
 import Slick from 'react-slick';
+import classNames from 'classnames/bind';
 import { useNavigate } from 'react-router';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faAnglesRight } from '@fortawesome/free-solid-svg-icons';
-import { collection, getDocs } from 'firebase/firestore';
 import { useState, useEffect, useContext } from 'react';
-import { faHouse, faRulerCombined } from '@fortawesome/free-solid-svg-icons'
+import { collection, onSnapshot } from 'firebase/firestore';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faMap, faMoneyBill1 } from "@fortawesome/free-regular-svg-icons";
+import { faHouse, faRulerCombined, faAnglesRight } from '@fortawesome/free-solid-svg-icons';
 
-import style from './Slider.module.scss'
 import settings from './Slick';
 import { db } from '../../firebase'
-import image from '../../assets/image/background-sign-up.png'
+import style from './Slider.module.scss'
 import { PostContext } from '../../context/PostContext';
+import image from '../../assets/image/background-sign-up.png';
 
 function Slider({ name }) {
     const cl = classNames.bind(style)
@@ -21,19 +20,20 @@ function Slider({ name }) {
     const { dispatch } = useContext(PostContext)
 
     useEffect(() => {
-        const fetchPosts = async () => {
-            let list = []
-            try {
-                const querySnapshot = await getDocs(collection(db, "posts"));
-                querySnapshot.forEach(doc => {
+        const unsub = onSnapshot(collection(db, "posts"),
+            (snapshot) => {
+                let list = [];
+                snapshot.docs.forEach((doc) => {
                     list.push({ id: doc.id, ...doc.data() })
                 });
-                setPosts(list)
-            } catch (error) {
-                console.log(error)
+                setPosts(list);
+            }, (error) => {
+                console.log(error);
             }
+        );
+        return () => {
+            unsub();
         }
-        fetchPosts();
     }, [])
 
     const goSearchPage = () => {
@@ -41,7 +41,7 @@ function Slider({ name }) {
     };
 
     const goInfoItemPage = (e) => {
-        const postId = {id: e.target.id}
+        const postId = { id: e.target.id }
         dispatch({ type: "SHOW", payload: postId })
 
         navigate('./info-item')

@@ -7,6 +7,7 @@ import App from './App';
 import reportWebVitals from './reportWebVitals';
 import { AuthContextProvider } from './context/AuthContext';
 import { PostContextProvider } from './context/PostContext';
+import { PropsContextProvider } from './context/PropsContext';
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
@@ -14,7 +15,9 @@ root.render(
   <Router>
     <AuthContextProvider>
       <PostContextProvider>
-        <App />
+        <PropsContextProvider>
+          <App />
+        </PropsContextProvider>
       </PostContextProvider>
     </AuthContextProvider>
   </Router>
