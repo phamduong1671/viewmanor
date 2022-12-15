@@ -8,7 +8,7 @@ import { faAngleDown } from "@fortawesome/free-solid-svg-icons";
 // import OutsideAlerter from '../../../components/OutsideAlerter.js'
 import style from './SearchBox.module.scss';
 import buttonHeader from '../header/Header.module.scss';
-import { types, dvhc, sqms } from '../../../tree.js'
+import { types, dvhc, sqms } from '../../../tree.js';
 import { PropsContext } from '../../../context/PropsContext';
 
 

@@ -11,7 +11,7 @@ import settings from './Slick';
 import { db } from '../../firebase'
 import style from './Slider.module.scss'
 import { PostContext } from '../../context/PostContext';
-import image from '../../assets/image/background-sign-up.png';
+import image from '../../assets/image/no-image.png';
 
 function Slider({ name }) {
     const cl = classNames.bind(style)
@@ -69,7 +69,7 @@ function Slider({ name }) {
                                 <img
                                     id={post.id}
                                     className={cl('image')}
-                                    src={image}
+                                    src={post.image[0] || image}
                                     alt="postItem"
                                 />
                             </div>

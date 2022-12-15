@@ -1,11 +1,14 @@
 import { useContext, useEffect, useState } from "react";
 import { doc, onSnapshot } from "firebase/firestore";
 import classNames from "classnames/bind";
+import Slick from 'react-slick';
 
+import settings from '../../components/slider/Slick';
 import { db } from '../../firebase';
 import style from './InfoItem.module.scss';
 import { PostContext } from "../../context/PostContext";
 import icon from '../../assets/image/default-avatar.jpg';
+import image from '../../assets/image/background-sign-up.png';
 
 function InfoItem() {
     const cl = classNames.bind(style)
@@ -47,7 +50,17 @@ function InfoItem() {
                 {post.title}
             </div>
             <div className={cl('wrap-image')}>
-
+                <Slick {...settings}>
+                    {post.image && post.image.map((item, index) =>
+                        <div key={index} className={cl('image-item')}>
+                            <img
+                                className={cl('image')}
+                                src={item || image}
+                                alt="postItem"
+                            />
+                        </div>
+                    )}
+                </Slick>
             </div>
             <div className={cl('wrap-content')}>
                 <div className={cl('information')}>

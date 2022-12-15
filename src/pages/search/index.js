@@ -10,7 +10,7 @@ import { db } from "../../firebase";
 import style from './Search.module.scss';
 import { PostContext } from "../../context/PostContext";
 import { PropsContext } from "../../context/PropsContext";
-import image from '../../assets/image/background-sign-up.png';
+import image from '../../assets/image/no-image.png';
 import { categorys, types, dvhc, sqms, priceRent, priceBuy } from '../../tree.js'
 
 function Search() {
@@ -386,7 +386,7 @@ function Search() {
                             <img
                                 id={post.id}
                                 className={cl('image')}
-                                src={image}
+                                src={post.image[0] || image}
                                 alt="postItem"
                             />
                         </div>

@@ -12,9 +12,19 @@
 
 .wrap-image {
     width: calc(100% - 128px);
-    height: 360px;
+    height: 388px;
     margin: 0 64px;
-    background-color: whitesmoke;
+}
+
+.image-item{
+    height: 359px;
+    border-radius: 4px;
+}
+
+.image{
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
 }
 
 .wrap-content {
