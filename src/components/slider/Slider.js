@@ -5,7 +5,7 @@ import { useState, useEffect, useContext } from 'react';
 import { collection, onSnapshot } from 'firebase/firestore';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faMap, faMoneyBill1 } from "@fortawesome/free-regular-svg-icons";
-import { faHouse, faRulerCombined, faAnglesRight } from '@fortawesome/free-solid-svg-icons';
+import { faHouse, faRulerCombined } from '@fortawesome/free-solid-svg-icons';
 
 import settings from './Slick';
 import { db } from '../../firebase'
@@ -36,10 +36,6 @@ function Slider({ name }) {
         }
     }, [])
 
-    const goSearchPage = () => {
-        navigate('/search')
-    };
-
     const goInfoItemPage = (e) => {
         const postId = { id: e.target.id }
         dispatch({ type: "SHOW", payload: postId })
@@ -49,13 +45,6 @@ function Slider({ name }) {
 
     return (
         <div className={cl('slider-container')}>
-            <div className={cl('name-slider')}>
-                Tin{' ' + name}
-                <div className={cl('see-more')} onClick={goSearchPage}>
-                    xem thêm
-                    <FontAwesomeIcon style={{ fontSize: '12px' }} icon={faAnglesRight} />
-                </div>
-            </div>
             <div className={cl('post-list')}>
                 <Slick {...settings}>
                     {posts.filter(item => item.category === name).map(post =>
