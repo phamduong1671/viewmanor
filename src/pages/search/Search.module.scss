@@ -3,38 +3,43 @@
 }
 
 // Header
-.content-header{
-    margin-top: 24px;
-    padding: 0 24px;
+.header{
     display: flex;
-    // justify-content: space-between;
+    flex-wrap: wrap;
 }
 
-.btn-search{
+.content-header{
+    margin-top: 24px;
+    padding-left: 24px;
     display: flex;
-    align-items: center;
-    padding: 0 12px;
-    border: solid 1px #bbb;
-    border-radius: 4px;
-    font-weight: 700;
-    font-size: 16px;
-    color: #fff;
-    background-color: rgb(0, 180, 24);
-    cursor: pointer;
-    &:hover{
-        background-color: rgb(0, 128, 24);
-    }
-    &:active{
-        background-color: rgb(0, 156, 24);
-    }
 }
+
+// .btn-search{
+//     display: flex;
+//     align-items: center;
+//     padding: 0 12px;
+//     border: solid 1px #bbb;
+//     border-radius: 4px;
+//     font-weight: 700;
+//     font-size: 16px;
+//     color: #fff;
+//     background-color: rgb(0, 180, 24);
+//     cursor: pointer;
+//     &:hover{
+//         background-color: rgb(0, 128, 24);
+//     }
+//     &:active{
+//         background-color: rgb(0, 156, 24);
+//     }
+// }
 
 .cbb-container{
     height: 42px;
+    padding: 0 10px;
 }
 
 .input-container{
-    width: 270px;
+    width: 180px;
     height: 42px;
     display: flex;
     justify-content: center;
@@ -72,7 +77,7 @@
 
 // Combobox Value
 .cbb-value{
-    width: 270px;
+    width: 180px;
     max-height: 270px;
     position: relative;
     background-color: #fff;
@@ -96,6 +101,35 @@
     &:active{
         background-color: #98fb84;
     }
+}
+
+.btn-reset{
+    width: 60px;
+    height: 30px;
+    margin: 10px 0 0 34px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 4px;
+    font-weight: 500;
+    color: #fff;
+    background-color: rgb(0, 180, 24);
+    cursor: pointer;
+    &:hover{
+        background-color: rgb(0, 156, 29);
+    }
+    &:active{
+        background-color: rgb(0, 189, 28);
+    }
+}
+
+// Results
+.results{
+    padding-top: 20px;
+    color: #541a8bd5;
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
 
 // Content

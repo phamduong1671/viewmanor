@@ -22,7 +22,9 @@ function SearchBox() {
     const [city, setCity] = useState({})
     const [distric, setDistric] = useState({})
     const [sqm, setSqm] = useState({})
-    const [props, setProps] = useState({category: 'Bán'})
+    const [props, setProps] = useState({
+        category: 'Bán'
+    })
     const { dispatch } = useContext(PropsContext)
 
     const handleCategory = (e) => {
@@ -60,7 +62,7 @@ function SearchBox() {
             case 4:
                 const selected4 = sqms.filter(item => item.id === e.target.id)
                 setSqm(selected4[0])
-                setProps({...props, sqm: selected4[0]})
+                setProps({...props, sqm: selected4[0], sqmMax: selected4[0].max, sqmMin: selected4[0].min})
                 break;
             default:
                 break;

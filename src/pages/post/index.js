@@ -1,13 +1,14 @@
 import classNames from "classnames/bind";
-import { useState, useContext } from "react";
+import { useState, useContext, useEffect } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faAngleDown } from "@fortawesome/free-solid-svg-icons";
 import { addDoc, collection } from "firebase/firestore";
 
 import style from './Post.module.scss'
 import { categorys, types, dvhc } from '../../tree.js'
-import { db } from '../../firebase'
+import { db, storage } from '../../firebase'
 import { AuthContext } from '../../context/AuthContext'
+import { getDownloadURL, ref, uploadBytesResumable } from "firebase/storage";
 
 function Post() {
     const cl = classNames.bind(style)
@@ -18,6 +19,8 @@ function Post() {
     const [city, setCity] = useState({})
     const [distric, setDistric] = useState({})
     const [ward, setWard] = useState({})
+    const [file, setFile] = useState('')
+    const [imgs, setImgs] = useState([])
     const [data, setData] = useState({})
     const [warn, setWarn] = useState([])
 
@@ -68,7 +71,9 @@ function Post() {
 
     const handleInput = (e) => {
         const id = e.target.id
-        const value = e.target.value
+        let value = e.target.value
+        if (id === 'sqm' || id === 'price')
+            value = parseInt(value)
 
         setData({ ...data, [id]: value })
     }
@@ -111,6 +116,44 @@ function Post() {
             setWarn(array)
         }
     }
+
+    useEffect(() => {
+        const uploadFile = () => {
+            const name = new Date().getTime() + file.name
+            const storageRef = ref(storage, name)
+            const uploadTask = uploadBytesResumable(storageRef, file);
+
+            uploadTask.on(
+                'state_changed',
+                (snapshot) => {
+                    const progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
+                    console.log('Upload is ' + progress + '% done');
+                    switch (snapshot.state) {
+                        case 'paused':
+                            console.log('Upload is paused');
+                            break;
+                        case 'running':
+                            console.log('Upload is running');
+                            break;
+                        default:
+                            break;
+                    }
+                },
+                (error) => {
+                    console.log(error)
+                },
+                () => {
+                    getDownloadURL(uploadTask.snapshot.ref).then((downloadURL) => {
+                        const array = [...imgs, downloadURL]
+                        setImgs(array)
+                        setData((prev) => ({ ...prev, image: array }))
+                    });
+                }
+            );
+        }
+        file && uploadFile()
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [file])
 
     return (
         <div className={cl('content')}>
@@ -343,11 +386,23 @@ function Post() {
                 <div className={cl('post-props')}>Hình ảnh
                     <div className={cl('btn-image')} onClick={() => document.querySelector('.input-field').click()}>
                         Tải ảnh lên
-                        <input type='file' className={cl('input-field')} hidden />
+                        <input
+                            type='file'
+                            className={cl('input-field')}
+                            onChange={(e) => setFile(e.target.files[0])}
+                            hidden
+                        />
                     </div>
                 </div>
                 <div className={cl('wrap-image')}>
-
+                    {imgs.map((item, index) =>
+                        <img
+                            key={index}
+                            className={cl('images')}
+                            src={item}
+                            alt="avatar"
+                        />
+                    )}
                 </div>
                 <button
                     className={cl('btn-post')}

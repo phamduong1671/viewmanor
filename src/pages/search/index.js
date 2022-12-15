@@ -1,30 +1,30 @@
 import classNames from "classnames/bind";
 import { useNavigate } from "react-router";
 import { useContext, useEffect, useState } from "react";
-import { collection, getDocs, query, where } from "firebase/firestore";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faMagnifyingGlass, faHouse, faRulerCombined } from "@fortawesome/free-solid-svg-icons";
+import { collection, getDocs, query, where } from "firebase/firestore";
 import { faMap, faMoneyBill1 } from "@fortawesome/free-regular-svg-icons";
-import { faAngleDown } from "@fortawesome/free-solid-svg-icons";
+import { faHouse, faRulerCombined, faAngleDown } from "@fortawesome/free-solid-svg-icons";
 
 import { db } from "../../firebase";
 import style from './Search.module.scss';
-import { types, dvhc, sqms } from '../../tree.js'
 import { PostContext } from "../../context/PostContext";
 import { PropsContext } from "../../context/PropsContext";
 import image from '../../assets/image/background-sign-up.png';
+import { categorys, types, dvhc, sqms, priceRent, priceBuy } from '../../tree.js'
 
 function Search() {
     const navigate = useNavigate()
     const cl = classNames.bind(style);
     const { currentProps } = useContext(PropsContext)
     const [posts, setPosts] = useState([])
-    const [props, setProps] = useState(currentProps)
     const { dispatch } = useContext(PostContext)
     const [show, setShow] = useState('')
     const [city, setCity] = useState({})
     const [distric, setDistric] = useState({})
     const [sqm, setSqm] = useState(currentProps.sqm || {})
+    const [price, setPrice] = useState({ min: 0, max: 999999999999 })
+    const [props, setProps] = useState(currentProps)
 
     useEffect(() => {
         handleSearch()
@@ -62,6 +62,24 @@ function Search() {
                 setSqm(selected4[0])
                 setProps({ ...props, sqmMin: selected4[0].min, sqmMax: selected4[0].max })
                 break;
+            case 5:
+                const selected5 = distric.level3s.filter(item => item.level3_id === e.target.id)
+                setProps({ ...props, ward: selected5[0].name })
+                break;
+            case 6:
+                const selected6 = categorys.filter(item => item.id === e.target.id)
+                setProps({ ...props, category: selected6[0].name })
+                break;
+            case 7:
+                const selected7 = priceRent.filter(item => item.id === e.target.id)
+                setPrice(selected7[0])
+                setProps({ ...props, priceMin: selected7[0].min, priceMax: selected7[0].max })
+                break;
+            case 8:
+                const selected8 = priceBuy.filter(item => item.id === e.target.id)
+                setPrice(selected8[0])
+                setProps({ ...props, priceMin: selected8[0].min, priceMax: selected8[0].max })
+                break;
             default:
                 break;
         }
@@ -71,7 +89,14 @@ function Search() {
         // Mảng chứa các query về đặc điểm cần tìm kiếm
         let array = []
         for (const [key, value] of Object.entries(props)) {
-            array.push(where(key, '==', value))
+            if (key !== 'sqmMin' && key !== 'sqmMax' && key !== 'sqm' && key !== 'priceMin' && key !== 'priceMax') {
+                array.push(where(key, '==', value))
+            } else {
+                if (key === 'sqmMin')
+                    array.push(where('sqm', '>', value))
+                if (key === 'sqmMax')
+                    array.push(where('sqm', '<=', value))
+            }
         }
 
         const q = query(
@@ -84,7 +109,14 @@ function Search() {
         querySnapshot.forEach((doc) => {
             list.push({ id: doc.id, ...doc.data() })
         });
+        list = list.filter(item => price.min < item.price && item.price <= price.max)
         setPosts(list);
+    }
+
+    const resetProps = () => {
+        setProps({ sqmMin: 0, sqmMax: 999999999 })
+        setPrice({ min: 0, max: 999999999999 })
+        setSqm({})
     }
 
     const goInfoItemPage = (e) => {
@@ -96,140 +128,252 @@ function Search() {
 
     return (
         <div className={cl('wrap-content')}>
-            <div className={cl('content-header')}>
-                {/* Loại */}
-                <div
-                    id='type'
-                    className={cl('cbb-container')}
-                    onClick={(e) => showValue(e)}
-                >
-                    <div className={cl('input-container')}>
-                        <input className={cl('input-cbb')}
-                            spellCheck={false}
-                            value={props.type || 'Loại'}
-                            readOnly
-                        />
-                        <div className={cl('icon-dropdown')}>
-                            <FontAwesomeIcon icon={faAngleDown} />
+            <div className={cl('header')}>
+                <div className={cl('content-header')}>
+                    {/* Danh mục */}
+                    <div
+                        id='category'
+                        className={cl('cbb-container')}
+                        onClick={(e) => showValue(e)}
+                    >
+                        <div className={cl('input-container')}>
+                            <input className={cl('input-cbb')}
+                                spellCheck={false}
+                                value={props.category || 'Danh mục'}
+                                readOnly
+                            />
+                            <div className={cl('icon-dropdown')}>
+                                <FontAwesomeIcon icon={faAngleDown} />
+                            </div>
                         </div>
-                    </div>
-                    {show === 'type' &&
-                        <div className={cl('cbb-value')}>
-                            {types.map(item => (
-                                <div
-                                    key={item.name}
-                                    id={item.id}
-                                    className={cl('cbb-item')}
-                                    onClick={(e) => selectItem(e)}
-                                >
-                                    {item.name}
-                                </div>
-                            ))}
-                        </div>
-                    }
-                </div>
-                {/* Tỉnh Thành */}
-                <div id='city' className={cl('cbb-container')} onClick={(e) => showValue(e)} >
-                    <div className={cl('input-container')}>
-                        <input className={cl('input-cbb')}
-                            spellCheck={false}
-                            value={props.city || 'Tỉnh / Thành phố'}
-                            readOnly
-                        />
-                        <div className={cl('icon-dropdown')}>
-                            <FontAwesomeIcon icon={faAngleDown} />
-                        </div>
-                    </div>
-                    {show === 'city' &&
-                        <div className={cl('cbb-value')}>
-                            {dvhc.map(item => (
-                                <div
-                                    key={item.level1_id}
-                                    id={item.level1_id}
-                                    className={cl('cbb-item')}
-                                    onClick={(e) => selectItem(e)}
-                                >
-                                    {item.name}
-                                </div>
-                            ))}
-                        </div>
-                    }
-                </div>
-                {/* Quận Huyện */}
-                <div
-                    id='distric'
-                    className={cl('cbb-container')}
-                    onClick={(e) => showValue(e)}
-                >
-                    <div className={cl('input-container')}>
-                        <input className={cl('input-cbb')}
-                            spellCheck={false}
-                            value={props.distric || 'Quận / Huyện'}
-                            readOnly
-                        />
-                        <div className={cl('icon-dropdown')}>
-                            <FontAwesomeIcon icon={faAngleDown} />
-                        </div>
-                    </div>
-                    {show === 'distric' &&
-                        <div className={cl('cbb-value')}>
-                            {city.name ?
-                                city.level2s.map(item => (
+                        {show === 'category' &&
+                            <div className={cl('cbb-value')}>
+                                {categorys.map(item => (
                                     <div
-                                        key={item.level2_id}
-                                        id={item.level2_id || ''}
+                                        key={item.id}
+                                        id={item.id}
                                         className={cl('cbb-item')}
                                         onClick={(e) => selectItem(e)}
                                     >
                                         {item.name}
                                     </div>
-                                ))
-                                : <div className={cl('cbb-item')}>Chưa chọn Tỉnh / Thành Phố</div>
-                            }
-                        </div>
-                    }
-                </div>
-
-                {/* Diện tích */}
-                <div
-                    id='sqm'
-                    className={cl('cbb-container')}
-                    onClick={(e) => showValue(e)}
-                >
-                    <div className={cl('input-container')}>
-                        <input className={cl('input-cbb')}
-                            spellCheck={false}
-                            value={sqm.name || 'Diện tích'}
-                            readOnly
-                        />
-                        <div className={cl('icon-dropdown')}>
-                            <FontAwesomeIcon icon={faAngleDown} />
-                        </div>
+                                ))}
+                            </div>
+                        }
                     </div>
-                    {show === 'sqm' &&
-                        <div className={cl('cbb-value')}>
-                            {sqms.map(item => (
-                                <div
-                                    key={item.name}
-                                    id={item.id}
-                                    className={cl('cbb-item')}
-                                    onClick={(e) => selectItem(e)}
-                                >
-                                    {item.name}
-                                </div>
-                            ))}
+                    {/* Loại */}
+                    <div
+                        id='type'
+                        className={cl('cbb-container')}
+                        onClick={(e) => showValue(e)}
+                    >
+                        <div className={cl('input-container')}>
+                            <input className={cl('input-cbb')}
+                                spellCheck={false}
+                                value={props.type || 'Loại'}
+                                readOnly
+                            />
+                            <div className={cl('icon-dropdown')}>
+                                <FontAwesomeIcon icon={faAngleDown} />
+                            </div>
                         </div>
-                    }
+                        {show === 'type' &&
+                            <div className={cl('cbb-value')}>
+                                {types.map(item => (
+                                    <div
+                                        key={item.name}
+                                        id={item.id}
+                                        className={cl('cbb-item')}
+                                        onClick={(e) => selectItem(e)}
+                                    >
+                                        {item.name}
+                                    </div>
+                                ))}
+                            </div>
+                        }
+                    </div>
+                    {/* Diện tích */}
+                    <div
+                        id='sqm'
+                        className={cl('cbb-container')}
+                        onClick={(e) => showValue(e)}
+                    >
+                        <div className={cl('input-container')}>
+                            <input className={cl('input-cbb')}
+                                spellCheck={false}
+                                value={sqm.name || 'Diện tích'}
+                                readOnly
+                            />
+                            <div className={cl('icon-dropdown')}>
+                                <FontAwesomeIcon icon={faAngleDown} />
+                            </div>
+                        </div>
+                        {show === 'sqm' &&
+                            <div className={cl('cbb-value')}>
+                                {sqms.map(item => (
+                                    <div
+                                        key={item.name}
+                                        id={item.id}
+                                        className={cl('cbb-item')}
+                                        onClick={(e) => selectItem(e)}
+                                    >
+                                        {item.name}
+                                    </div>
+                                ))}
+                            </div>
+                        }
+                    </div>
+                    {/* Giá */}
+                    <div
+                        id='price'
+                        className={cl('cbb-container')}
+                        onClick={(e) => showValue(e)}
+                    >
+                        <div className={cl('input-container')}>
+                            <input className={cl('input-cbb')}
+                                spellCheck={false}
+                                value={price.name || 'Giá'}
+                                readOnly
+                            />
+                            <div className={cl('icon-dropdown')}>
+                                <FontAwesomeIcon icon={faAngleDown} />
+                            </div>
+                        </div>
+                        {show === 'price' && (
+                            props.category === 'Cho thuê' ?
+                                <div className={cl('cbb-value')}>
+                                    {priceRent.map(item => (
+                                        <div
+                                            key={item.name}
+                                            id={item.id}
+                                            className={cl('cbb-item')}
+                                            onClick={(e) => selectItem(e)}
+                                        >
+                                            {item.name}
+                                        </div>
+                                    ))}
+                                </div>
+                                : <div className={cl('cbb-value')}>
+                                    {priceBuy.map(item => (
+                                        <div
+                                            key={item.name}
+                                            id={item.id}
+                                            className={cl('cbb-item')}
+                                            onClick={(e) => selectItem(e)}
+                                        >
+                                            {item.name}
+                                        </div>
+                                    ))}
+                                </div>
+                        )}
+                    </div>
                 </div>
-
-                <div className={cl('btn-search')} onClick={handleSearch}>
-                    <FontAwesomeIcon
-                        fontSize={'20px'}
-                        icon={faMagnifyingGlass}
-                    />
-                    Tìm
+                <div className={cl('content-header')}>
+                    {/* Tỉnh / Thành phố */}
+                    <div id='city' className={cl('cbb-container')} onClick={(e) => showValue(e)} >
+                        <div className={cl('input-container')}>
+                            <input className={cl('input-cbb')}
+                                spellCheck={false}
+                                value={props.city || 'Tỉnh / Thành phố'}
+                                readOnly
+                            />
+                            <div className={cl('icon-dropdown')}>
+                                <FontAwesomeIcon icon={faAngleDown} />
+                            </div>
+                        </div>
+                        {show === 'city' &&
+                            <div className={cl('cbb-value')}>
+                                {dvhc.map(item => (
+                                    <div
+                                        key={item.level1_id}
+                                        id={item.level1_id}
+                                        className={cl('cbb-item')}
+                                        onClick={(e) => selectItem(e)}
+                                    >
+                                        {item.name}
+                                    </div>
+                                ))}
+                            </div>
+                        }
+                    </div>
+                    {/* Quận / Huyện */}
+                    <div
+                        id='distric'
+                        className={cl('cbb-container')}
+                        onClick={(e) => showValue(e)}
+                    >
+                        <div className={cl('input-container')}>
+                            <input className={cl('input-cbb')}
+                                spellCheck={false}
+                                value={props.distric || 'Quận / Huyện'}
+                                readOnly
+                            />
+                            <div className={cl('icon-dropdown')}>
+                                <FontAwesomeIcon icon={faAngleDown} />
+                            </div>
+                        </div>
+                        {show === 'distric' &&
+                            <div className={cl('cbb-value')}>
+                                {city.name ?
+                                    city.level2s.map(item => (
+                                        <div
+                                            key={item.level2_id}
+                                            id={item.level2_id || ''}
+                                            className={cl('cbb-item')}
+                                            onClick={(e) => selectItem(e)}
+                                        >
+                                            {item.name}
+                                        </div>
+                                    ))
+                                    : <div className={cl('cbb-item')}>Chưa chọn Tỉnh / Thành Phố</div>
+                                }
+                            </div>
+                        }
+                    </div>
+                    {/* Xã / Phường */}
+                    <div
+                        id='ward'
+                        className={cl('cbb-container')}
+                        onClick={(e) => showValue(e)}
+                    >
+                        <div className={cl('input-container')}>
+                            <input className={cl('input-cbb')}
+                                spellCheck={false}
+                                value={props.ward || 'Xã / Phường'}
+                                readOnly
+                            />
+                            <div className={cl('icon-dropdown')}>
+                                <FontAwesomeIcon icon={faAngleDown} />
+                            </div>
+                        </div>
+                        {show === 'ward' &&
+                            <div className={cl('cbb-value')}>
+                                {distric.name ?
+                                    distric.level3s.map(item => (
+                                        <div
+                                            key={item.level3_id}
+                                            id={item.level3_id || ''}
+                                            className={cl('cbb-item')}
+                                            onClick={(e) => selectItem(e)}
+                                        >
+                                            {item.name}
+                                        </div>
+                                    ))
+                                    : <div className={cl('cbb-item')}>Chưa chọn Quận / Huyện</div>
+                                }
+                            </div>
+                        }
+                    </div>
                 </div>
             </div>
+
+            <div className={cl('btn-reset')} onClick={resetProps}>
+                Đặt lại
+            </div>
+            <div className={cl('results')}>
+                - {posts.length} kết quả được tìm thấy -
+            </div>
+            {/* Kết quả tìm kiếm */}
             <div className={cl('content')}>
                 {posts.map(post =>
                     <div

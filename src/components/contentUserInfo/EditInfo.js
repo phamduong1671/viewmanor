@@ -30,8 +30,6 @@ function EditInfo() {
         }
     }, [currentUser])
 
-    console.log(file);
-
     const handleInput = (e) => {
         setUser({ ...user, [e.target.id]: e.target.value })
     }
