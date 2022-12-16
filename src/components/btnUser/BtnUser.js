@@ -1,5 +1,5 @@
 import classNames from 'classnames/bind';
-import { collection, getDocs } from 'firebase/firestore';
+import { doc, onSnapshot } from 'firebase/firestore';
 import { useContext, useEffect, useState } from 'react';
 
 import style from './BtnUser.module.scss'
@@ -14,19 +14,16 @@ function BtnUser() {
     
     // Lấy thông tin người dùng đang hoạt động
     useEffect(() => {
-        const fetchUser = async () => {
-            try {
-                const querySnapshot = await getDocs(collection(db, "users"));
-                querySnapshot.forEach((doc) => {
-                    if (doc.id === currentUser.uid) {
-                        setUser({ id: doc.id, ...doc.data() })
-                    }
-                });
-            } catch (error) {
-                console.log(error)
+        const unsub = onSnapshot(doc(db, "users", currentUser.uid),
+            (doc) => {
+                setUser({ id: doc.id, ...doc.data() })
+            }, (error) => {
+                console.log(error);
             }
+        );
+        return () => {
+            unsub();
         }
-        fetchUser()
     }, [currentUser])
 
     return (

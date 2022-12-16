@@ -21,7 +21,7 @@ function Post() {
     const [ward, setWard] = useState({})
     const [file, setFile] = useState('')
     const [imgs, setImgs] = useState([])
-    const [data, setData] = useState({})
+    const [data, setData] = useState({ image: [] })
     const [warn, setWarn] = useState([])
 
     const today = new Date()
@@ -154,6 +154,11 @@ function Post() {
         file && uploadFile()
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [file])
+
+    const handleDeleteImage = (e) => {
+        const array = imgs.filter(i => i !== e.target.id)
+        setImgs(array)
+    }
 
     return (
         <div className={cl('content')}>
@@ -380,7 +385,14 @@ function Post() {
                 {warn.filter(i => i === 'description').length !== 0
                     && <div className={cl('d-warning')} >
                         Vui lòng nhập mô tả
-                    </div>}
+                    </div>
+                }
+                <button
+                    className={cl('btn-post')}
+                    onClick={handlePost}
+                >
+                    Đăng tin
+                </button>
             </div>
             <div className={cl('content-child-right')}>
                 <div className={cl('post-props')}>Hình ảnh
@@ -395,21 +407,26 @@ function Post() {
                     </div>
                 </div>
                 <div className={cl('wrap-image')}>
-                    {imgs.map((item, index) =>
+                {imgs.map((item, index) =>
+                    <div
+                        key={index}
+                        className={cl('d-images')}
+                    >
+                        <button
+                            id={item}
+                            className={cl('delete-image')}
+                            onClick={(e) => handleDeleteImage(e)}
+                        >
+                            x
+                        </button>
                         <img
-                            key={index}
                             className={cl('images')}
                             src={item}
                             alt="avatar"
                         />
-                    )}
+                    </div>
+                )}
                 </div>
-                <button
-                    className={cl('btn-post')}
-                    onClick={handlePost}
-                >
-                    Đăng tin
-                </button>
             </div>
         </div>
     );

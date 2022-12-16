@@ -8,13 +8,14 @@ import { db } from '../../firebase';
 import style from './InfoItem.module.scss';
 import { PostContext } from "../../context/PostContext";
 import icon from '../../assets/image/default-avatar.jpg';
-import image from '../../assets/image/background-sign-up.png';
+import image from '../../assets/image/no-image.png';
 
 function InfoItem() {
     const cl = classNames.bind(style)
     const { currentPost } = useContext(PostContext)
     const [post, setPost] = useState({})
     const [user, setUser] = useState({})
+    const [zoom, setZoom] = useState({ show: false, src: '' })
 
     useEffect(() => {
         const unsub = onSnapshot(doc(db, "posts", currentPost.id),
@@ -44,22 +45,46 @@ function InfoItem() {
         }
     }, [post])
 
+    const handleZoom = (e) => {
+        setZoom({ show: !zoom.show, src: e.target.src || '' })
+    }
+
     return (
         <div className={cl('item-container')}>
+            {zoom.show &&
+                <div className={cl('zoom')} onClick={handleZoom}>
+                    <img
+                        className={cl('image')}
+                        src={zoom.src}
+                        alt="postItem"
+                        onClick={e => handleZoom(e)}
+                    />
+                </div>
+            }
             <div className={cl('title')}>
                 {post.title}
             </div>
             <div className={cl('wrap-image')}>
                 <Slick {...settings}>
-                    {post.image && post.image.map((item, index) =>
-                        <div key={index} className={cl('image-item')}>
+                    {(post.image && post.image.length !== 0) ?
+                        post.image.map((item, index) =>
+                            <div key={index} className={cl('image-item')}>
+                                <img
+                                    className={cl('image')}
+                                    src={item}
+                                    alt="postItem"
+                                    onClick={e => handleZoom(e)}
+                                />
+                            </div>)
+                        : <div className={cl('image-item')}>
                             <img
                                 className={cl('image')}
-                                src={item || image}
+                                src={image}
                                 alt="postItem"
+                                onClick={e => handleZoom(e)}
                             />
                         </div>
-                    )}
+                    }
                 </Slick>
             </div>
             <div className={cl('wrap-content')}>
@@ -97,7 +122,7 @@ function InfoItem() {
                 <div className={cl('author')}>
                     <h1>Liên hệ</h1>
                     <div className={cl('btn-user')}>
-                        <div className={cl('icon-avatar')}><img className={cl('avatar')} src={icon} alt='avatar' /></div>
+                        <div className={cl('icon-avatar')}><img className={cl('avatar')} src={user.avatar || icon} alt='avatar' /></div>
                         <div className={cl('username')}>
                             {user.name}
                         </div>

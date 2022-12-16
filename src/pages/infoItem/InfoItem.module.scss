@@ -16,15 +16,23 @@
     margin: 0 64px;
 }
 
-.image-item{
+.image-item {
     height: 359px;
     border-radius: 4px;
 }
 
-.image{
+.image {
     width: 100%;
     height: 100%;
     object-fit: contain;
+}
+
+.zoom {
+    width: 100vw;
+    height: 100vh;
+    background-color: rgba(0,0,0,0.5);
+    position: fixed;
+    z-index: 1;
 }
 
 .wrap-content {
@@ -100,6 +108,7 @@ label {
 // Button Zalo & Facebook
 .wrap-btn {
     width: 100%;
+    margin-top: 20px;
     display: flex;
     align-items: center;
 }
@@ -112,7 +121,8 @@ label {
     align-items: center;
     background-color: #0a67fe89;
     border-radius: 4px;
-    &:hover{
+
+    &:hover {
         background-color: #0a67fec0;
     }
 }
@@ -126,12 +136,13 @@ label {
     background-color: #0A68FE;
     background-color: #0a67fe89;
     border-radius: 4px;
-    &:hover{
+
+    &:hover {
         background-color: #0a67fec0;
     }
 }
 
-.icon-zalo{
+.icon-zalo {
     width: 30px;
     height: 30px;
     margin-left: 5px;
