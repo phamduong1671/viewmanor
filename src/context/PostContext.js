@@ -19,14 +19,14 @@ const INITIAL_STATE = {
 export const PostContext = createContext(INITIAL_STATE);
 
 export const PostContextProvider = ({ children }) => {
-    const [state, dispatch] = useReducer(PostReducer, INITIAL_STATE);
+    const [state, postDispatch] = useReducer(PostReducer, INITIAL_STATE);
 
     useEffect(() => {
         localStorage.setItem("post", JSON.stringify(state.currentPost));
     }, [state.currentPost]);
 
     return (
-        <PostContext.Provider value={{ currentPost: state.currentPost, dispatch }}>
+        <PostContext.Provider value={{ currentPost: state.currentPost, postDispatch }}>
             {children}
         </PostContext.Provider>
     );

@@ -2,27 +2,47 @@ import classNames from "classnames/bind";
 import { useState, useContext, useEffect } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faAngleDown } from "@fortawesome/free-solid-svg-icons";
-import { addDoc, collection } from "firebase/firestore";
+import { addDoc, collection, doc, onSnapshot } from "firebase/firestore";
 
 import style from './Post.module.scss'
 import { categorys, types, dvhc } from '../../tree.js'
 import { db, storage } from '../../firebase'
 import { AuthContext } from '../../context/AuthContext'
+import { PostContext } from "../../context/PostContext";
 import { getDownloadURL, ref, uploadBytesResumable } from "firebase/storage";
 
 function Post() {
     const cl = classNames.bind(style)
     const { currentUser } = useContext(AuthContext)
-    const [category, setCategory] = useState('')
+    const { currentPost } = useContext(PostContext)
+    const [post, setPost] = useState({})
+    const [data, setData] = useState({ image: [] })
     const [show, setShow] = useState('')
+    const [category, setCategory] = useState('')
     const [type, setType] = useState({})
     const [city, setCity] = useState({})
     const [distric, setDistric] = useState({})
     const [ward, setWard] = useState({})
     const [file, setFile] = useState('')
     const [imgs, setImgs] = useState([])
-    const [data, setData] = useState({ image: [] })
     const [warn, setWarn] = useState([])
+
+    useEffect(() => {
+        if (currentPost) {
+            const unsub = onSnapshot(doc(db, "posts", currentPost),
+                (doc) => {
+                    setPost({ id: doc.id, ...doc.data() })
+                }, (error) => {
+                    console.log(error);
+                }
+            );
+            return () => {
+                unsub();
+            }
+        }
+    }, [currentPost])
+
+    console.log(post);
 
     const today = new Date()
     const currentDate = today.getDate() + '/' + (today.getMonth() + 1) + '/' + today.getFullYear();
@@ -76,6 +96,10 @@ function Post() {
             value = parseInt(value)
 
         setData({ ...data, [id]: value })
+    }
+
+    const handleSave = () => {
+
     }
 
     const handlePost = async (e) => {
@@ -387,12 +411,20 @@ function Post() {
                         Vui lòng nhập mô tả
                     </div>
                 }
-                <button
-                    className={cl('btn-post')}
-                    onClick={handlePost}
-                >
-                    Đăng tin
-                </button>
+                {currentPost ?
+                    <button
+                        className={cl('btn-post')}
+                        onClick={handleSave}
+                    >
+                        Lưu
+                    </button>
+                    : <button
+                        className={cl('btn-post')}
+                        onClick={handlePost}
+                    >
+                        Đăng tin
+                    </button>
+                }
             </div>
             <div className={cl('content-child-right')}>
                 <div className={cl('post-props')}>Hình ảnh
@@ -407,25 +439,25 @@ function Post() {
                     </div>
                 </div>
                 <div className={cl('wrap-image')}>
-                {imgs.map((item, index) =>
-                    <div
-                        key={index}
-                        className={cl('d-images')}
-                    >
-                        <button
-                            id={item}
-                            className={cl('delete-image')}
-                            onClick={(e) => handleDeleteImage(e)}
+                    {imgs.map((item, index) =>
+                        <div
+                            key={index}
+                            className={cl('d-images')}
                         >
-                            x
-                        </button>
-                        <img
-                            className={cl('images')}
-                            src={item}
-                            alt="avatar"
-                        />
-                    </div>
-                )}
+                            <button
+                                id={item}
+                                className={cl('delete-image')}
+                                onClick={(e) => handleDeleteImage(e)}
+                            >
+                                x
+                            </button>
+                            <img
+                                className={cl('images')}
+                                src={item}
+                                alt="avatar"
+                            />
+                        </div>
+                    )}
                 </div>
             </div>
         </div>

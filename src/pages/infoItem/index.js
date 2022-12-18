@@ -46,12 +46,13 @@ function InfoItem() {
     }, [post])
 
     const handleZoom = (e) => {
-        setZoom({ show: !zoom.show, src: e.target.src || '' })
+        if (post.image.length !== 0)
+            setZoom({ show: !zoom.show, src: e.target.src || '' })
     }
 
     return (
         <div className={cl('item-container')}>
-            {zoom.show &&
+            {zoom.show && post.image.length !== 0 &&
                 <div className={cl('zoom')} onClick={handleZoom}>
                     <img
                         className={cl('image')}
@@ -65,9 +66,9 @@ function InfoItem() {
                 {post.title}
             </div>
             <div className={cl('wrap-image')}>
-                <Slick {...settings}>
-                    {(post.image && post.image.length !== 0) ?
-                        post.image.map((item, index) =>
+                {(post.image && post.image.length !== 0) ?
+                    <Slick {...settings}>
+                        {post.image.map((item, index) =>
                             <div key={index} className={cl('image-item')}>
                                 <img
                                     className={cl('image')}
@@ -75,17 +76,17 @@ function InfoItem() {
                                     alt="postItem"
                                     onClick={e => handleZoom(e)}
                                 />
-                            </div>)
-                        : <div className={cl('image-item')}>
-                            <img
-                                className={cl('image')}
-                                src={image}
-                                alt="postItem"
-                                onClick={e => handleZoom(e)}
-                            />
-                        </div>
-                    }
-                </Slick>
+                            </div>)}
+                    </Slick>
+                    : <div className={cl('image-item')}>
+                        <img
+                            className={cl('image')}
+                            src={image}
+                            alt="postItem"
+                            onClick={e => handleZoom(e)}
+                        />
+                    </div>
+                }
             </div>
             <div className={cl('wrap-content')}>
                 <div className={cl('information')}>

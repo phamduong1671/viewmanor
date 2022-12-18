@@ -7,9 +7,8 @@ import DefaultLayout from './layouts/defaultLayout'
 import { AuthContext } from './context/AuthContext';
 
 function App() {
-
   const { currentUser } = useContext(AuthContext)
-  
+
   const RequireAuth = ({ children }) => {
     return currentUser ? children : <Navigate to="/sign-in" />;
   };

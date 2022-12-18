@@ -6,6 +6,7 @@ import style from './Header.module.scss';
 import BtnUser from "../../../components/btnUser/BtnUser";
 import { Fragment, useContext } from "react";
 import { AuthContext } from "../../../context/AuthContext";
+import { PostContext } from "../../../context/PostContext";
 import logo from '../../../assets/logo.png'
 
 function Header() {
@@ -16,6 +17,12 @@ function Header() {
     const navigate = useNavigate()
     const goHomePage = () => {
         navigate('/')
+    };
+
+    const { postDispatch } = useContext(PostContext)
+    const goPostPage = () => {
+        postDispatch({type: 'SHOW', payload: null})
+        navigate('/post')
     };
 
     const { dispatch } = useContext(AuthContext)
@@ -36,7 +43,7 @@ function Header() {
             <div className={cl('header-right')}>
                 <Link className={cl('btn-search', 'btn-header')} to='/search'>Tìm kiếm</Link>
                 <Link className={cl('btn-home', 'btn-header')} to='/'>Trang chủ</Link>
-                <Link className={cl('btn-post', 'btn-header')} to='/post'>Đăng tin</Link>
+                <div className={cl('btn-post', 'btn-header')} onClick={goPostPage}>Đăng tin</div>
                 <Tippy
                     interactive
                     render={attrs => (

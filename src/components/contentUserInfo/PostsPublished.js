@@ -1,14 +1,18 @@
 import classNames from "classnames/bind";
-import { useEffect, useState } from "react";
+import { useNavigate } from "react-router";
+import { useContext, useEffect, useState } from "react";
 import { collection, deleteDoc, doc, getDocs } from "firebase/firestore";
 
 import style from './PostsPublished.module.scss'
 import InputContainer from '../inputContainer'
 import { db } from '../../firebase.js'
+import { PostContext } from '../../context/PostContext'
 
 function PostsPublished({ id }) {
     const cl = classNames.bind(style)
+    const navigate = useNavigate()
     const [posts, setPosts] = useState([])
+    const { postDispatch } = useContext(PostContext)
 
     useEffect(() => {
         const fetchPosts = async () => {
@@ -38,8 +42,9 @@ function PostsPublished({ id }) {
         }
     }
 
-    const handleUpdate = (id) => {
-
+    const handleUpdate = (e) => {
+        postDispatch({type: 'SHOW', payload: e.target.id})
+        navigate('/post')
     }
 
     return (
@@ -74,7 +79,7 @@ function PostsPublished({ id }) {
                                             id={post.id}
                                             title="Sửa"
                                             className={cl('btn-icon', 'btn-update')}
-                                            onClick={(e) => handleUpdate(e.target.id)}
+                                            onClick={(e) => handleUpdate(e)}
                                         ></button>
                                         <button
                                             id={post.id}

@@ -17,7 +17,7 @@ function Slider({ name }) {
     const cl = classNames.bind(style)
     const navigate = useNavigate()
     const [posts, setPosts] = useState([])
-    const { dispatch } = useContext(PostContext)
+    const { postDispatch } = useContext(PostContext)
 
     useEffect(() => {
         const unsub = onSnapshot(collection(db, "posts"),
@@ -38,7 +38,7 @@ function Slider({ name }) {
 
     const goInfoItemPage = (e) => {
         const postId = { id: e.target.id }
-        dispatch({ type: "SHOW", payload: postId })
+        postDispatch({ type: "SHOW", payload: postId })
 
         navigate('./info-item')
     }
@@ -68,19 +68,19 @@ function Slider({ name }) {
                                 </div>
                                 <div id={post.id} className={cl('info')}>
                                     <div id={post.id}>
-                                        <FontAwesomeIcon icon={faHouse} color='#32a428' />
+                                        <FontAwesomeIcon icon={faHouse} color='#32a428' /> {}
                                         <label id={post.id}>{post.type}</label>
                                     </div>
                                     <div id={post.id}>
-                                        <FontAwesomeIcon icon={faRulerCombined} color='#32a428' />
+                                        <FontAwesomeIcon icon={faRulerCombined} color='#32a428' /> {}
                                         <label id={post.id}>{post.sqm + ' m²'}</label>
                                     </div>
                                     <div id={post.id}>
-                                        <FontAwesomeIcon icon={faMoneyBill1} color='#32a428' />
+                                        <FontAwesomeIcon icon={faMoneyBill1} color='#32a428' /> {}
                                         <label id={post.id}>{post.price.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',') + ' VND'}</label>
                                     </div>
                                     <div id={post.id}>
-                                        <FontAwesomeIcon icon={faMap} color='#32a428' />
+                                        <FontAwesomeIcon icon={faMap} color='#32a428' /> {}
                                         <label id={post.id}>{post.ward + ', ' + post.distric + ', ' + post.city}</label>
                                     </div>
                                 </div>
