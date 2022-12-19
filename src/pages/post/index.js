@@ -2,7 +2,7 @@ import classNames from "classnames/bind";
 import { useState, useContext, useEffect } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faAngleDown } from "@fortawesome/free-solid-svg-icons";
-import { addDoc, collection, doc, onSnapshot } from "firebase/firestore";
+import { addDoc, collection, doc, onSnapshot, runTransaction } from "firebase/firestore";
 
 import style from './Post.module.scss'
 import { categorys, types, dvhc } from '../../tree.js'
@@ -15,7 +15,6 @@ function Post() {
     const cl = classNames.bind(style)
     const { currentUser } = useContext(AuthContext)
     const { currentPost } = useContext(PostContext)
-    const [post, setPost] = useState({})
     const [data, setData] = useState({ image: [] })
     const [show, setShow] = useState('')
     const [category, setCategory] = useState('')
@@ -31,7 +30,13 @@ function Post() {
         if (currentPost) {
             const unsub = onSnapshot(doc(db, "posts", currentPost),
                 (doc) => {
-                    setPost({ id: doc.id, ...doc.data() })
+                    setCategory({name: doc.data().category})
+                    setType({name: doc.data().type})
+                    setCity({name: doc.data().city})
+                    setDistric({name: doc.data().distric})
+                    setWard({name: doc.data().ward})
+                    setImgs(doc.data().image)
+                    setData({ ...doc.data() })
                 }, (error) => {
                     console.log(error);
                 }
@@ -41,8 +46,6 @@ function Post() {
             }
         }
     }, [currentPost])
-
-    console.log(post);
 
     const today = new Date()
     const currentDate = today.getDate() + '/' + (today.getMonth() + 1) + '/' + today.getFullYear();
@@ -98,8 +101,22 @@ function Post() {
         setData({ ...data, [id]: value })
     }
 
-    const handleSave = () => {
-
+    const handleSave = async(e) => {
+        e.preventDefault();
+        try {
+            await runTransaction(db, async (transaction) => {
+                const sfDoc = await transaction.get(doc(db, "posts", currentPost));
+                if (!sfDoc.exists()) {
+                    // eslint-disable-next-line
+                    throw "Document does not exist!";
+                }
+                transaction.update(doc(db, "posts", currentPost), { ...data });
+            });
+            console.log(data);
+            alert('Đã lưu')
+        } catch (e) {
+            console.log("Transaction failed: ", e);
+        }
     }
 
     const handlePost = async (e) => {
@@ -182,6 +199,7 @@ function Post() {
     const handleDeleteImage = (e) => {
         const array = imgs.filter(i => i !== e.target.id)
         setImgs(array)
+        setData((prev) => ({ ...prev, image: array }))
     }
 
     return (
@@ -350,11 +368,11 @@ function Post() {
                 <div className={cl('post-props')}>Tiêu đề
                     <textarea
                         id='title'
+                        value={data.title || ''}
                         className={cl('input-text', 'title')}
                         onChange={(e) => handleInput(e)}
                         spellCheck='false'
-                    >
-                    </textarea>
+                    />
                 </div>
                 {warn.filter(i => i === 'title').length !== 0
                     && <div className={cl('d-warning')} >
@@ -363,11 +381,11 @@ function Post() {
                 <div className={cl('post-props')}>Địa chỉ cụ thể
                     <textarea
                         id='address'
+                        value={data.address || ''}
                         className={cl('input-text', 'address')}
                         onChange={(e) => handleInput(e)}
                         spellCheck='false'
-                    >
-                    </textarea>
+                    />
                 </div>
                 {warn.filter(i => i === 'address').length !== 0
                     && <div className={cl('d-warning')} >
@@ -377,6 +395,7 @@ function Post() {
                     <input
                         id='sqm'
                         type='number'
+                        value={data.sqm || ''}
                         className={cl('input-text')}
                         onChange={(e) => handleInput(e)}
                     />
@@ -389,6 +408,7 @@ function Post() {
                     <input
                         id='price'
                         type='number'
+                        value={data.price || ''}
                         className={cl('input-text')}
                         onChange={(e) => handleInput(e)}
                     />
@@ -400,11 +420,11 @@ function Post() {
                 <div className={cl('post-props')}>Mô tả chi tiết (nội thất, dịch vụ, ...)
                     <textarea
                         id='description'
+                        value={data.description || ''}
                         className={cl('input-text', 'description')}
                         onChange={(e) => handleInput(e)}
                         spellCheck='false'
-                    >
-                    </textarea>
+                    />
                 </div>
                 {warn.filter(i => i === 'description').length !== 0
                     && <div className={cl('d-warning')} >
