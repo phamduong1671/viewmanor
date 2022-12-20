@@ -26,7 +26,7 @@ function Slider({ name }) {
                 snapshot.docs.forEach((doc) => {
                     list.push({ id: doc.id, ...doc.data() })
                 });
-                setPosts(list);
+                setPosts(list.filter(item => item.category === name));
             }, (error) => {
                 console.log(error);
             }
@@ -34,6 +34,7 @@ function Slider({ name }) {
         return () => {
             unsub();
         }
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [])
 
     const goInfoItemPage = (e) => {
@@ -47,7 +48,8 @@ function Slider({ name }) {
         <div className={cl('slider-container')}>
             <div className={cl('post-list')}>
                 <Slick {...settings}>
-                    {posts.filter(item => item.category === name).map(post =>
+                    {posts.map((post, index) =>
+                        index < 30 &&
                         <div
                             key={post.id}
                             id={post.id}
@@ -68,19 +70,19 @@ function Slider({ name }) {
                                 </div>
                                 <div id={post.id} className={cl('info')}>
                                     <div id={post.id}>
-                                        <FontAwesomeIcon icon={faHouse} color='#32a428' /> {}
+                                        <FontAwesomeIcon icon={faHouse} color='#32a428' /> { }
                                         <label id={post.id}>{post.type}</label>
                                     </div>
                                     <div id={post.id}>
-                                        <FontAwesomeIcon icon={faRulerCombined} color='#32a428' /> {}
+                                        <FontAwesomeIcon icon={faRulerCombined} color='#32a428' /> { }
                                         <label id={post.id}>{post.sqm + ' m²'}</label>
                                     </div>
                                     <div id={post.id}>
-                                        <FontAwesomeIcon icon={faMoneyBill1} color='#32a428' /> {}
+                                        <FontAwesomeIcon icon={faMoneyBill1} color='#32a428' /> { }
                                         <label id={post.id}>{post.price.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',') + ' VND'}</label>
                                     </div>
                                     <div id={post.id}>
-                                        <FontAwesomeIcon icon={faMap} color='#32a428' /> {}
+                                        <FontAwesomeIcon icon={faMap} color='#32a428' /> { }
                                         <label id={post.id}>{post.ward + ', ' + post.distric + ', ' + post.city}</label>
                                     </div>
                                 </div>
