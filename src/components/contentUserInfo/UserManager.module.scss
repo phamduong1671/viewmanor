@@ -15,43 +15,8 @@
 
 // Table
 .wrap-table {
-    height: calc(100% - 50px);
+    height: calc(100% - 80px);
     overflow-y: auto;
-}
-
-table {
-    width: 100%;
-    border-spacing: 0;
-}
-
-tr {
-    height: 48px;
-}
-
-tbody tr {
-    &:nth-child(odd) {
-        background-color: #e5e5e5;
-    }
-
-    &:hover {
-        background-color: #26c64eb4;
-    }
-}
-
-thead {
-    position: sticky;
-    top: 0px;
-    background-color: #fff;
-}
-
-th,
-td {
-    border-bottom: 1px solid #bbb;
-    text-align: left;
-    align-items: center;
-    justify-content: center;
-    align-content: center;
-    padding: 0px 6px;
 }
 
 .btn-icon {

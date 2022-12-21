@@ -65,6 +65,7 @@ function InfoItem() {
             <div className={cl('title')}>
                 {post.title}
             </div>
+            <div className={cl('date')}>Ngày đăng: {post.date}</div>
             <div className={cl('wrap-image')}>
                 {(post.image && post.image.length !== 0) ?
                     <Slick {...settings}>

@@ -1,28 +1,49 @@
 import classNames from "classnames/bind";
 import { useNavigate } from "react-router";
-import { useContext, useEffect, useState } from "react";
+import { useContext, useEffect, useState, useMemo } from "react";
 import { collection, deleteDoc, doc, getDocs } from "firebase/firestore";
 
 import style from './PostsPublished.module.scss'
 import InputContainer from '../inputContainer'
 import { db } from '../../firebase.js'
 import { PostContext } from '../../context/PostContext'
+import Pagination from "../pagination";
+
+let PageSize = 4;
 
 function PostsPublished({ id }) {
     const cl = classNames.bind(style)
     const navigate = useNavigate()
-    const [posts, setPosts] = useState([])
     const { postDispatch } = useContext(PostContext)
+    const [posts, setPosts] = useState([])
+    const [personalPosts, setPersonalPosts] = useState([])
+    const [currentPage, setCurrentPage] = useState(1);
+
+    const currentTablePosts = useMemo(() => {
+        const firstPageIndex = (currentPage - 1) * PageSize;
+        const lastPageIndex = firstPageIndex + PageSize;
+        return posts.slice(firstPageIndex, lastPageIndex);
+    }, [currentPage, posts]);
+
+    const currentTablePersonalPosts = useMemo(() => {
+        const firstPageIndex = (currentPage - 1) * PageSize;
+        const lastPageIndex = firstPageIndex + PageSize;
+        return personalPosts.slice(firstPageIndex, lastPageIndex);
+    }, [currentPage, personalPosts]);
 
     useEffect(() => {
         const fetchPosts = async () => {
             let list = []
+            let list2 = []
             try {
                 const querySnapshot = await getDocs(collection(db, "posts"));
                 querySnapshot.forEach(doc => {
                     list.push({ id: doc.id, ...doc.data() })
+                    if (doc.data().userId === id)
+                        list2.push({ id: doc.id, ...doc.data() })
                 });
                 setPosts(list)
+                setPersonalPosts(list2)
             } catch (error) {
                 console.log(error)
             }
@@ -43,7 +64,7 @@ function PostsPublished({ id }) {
     }
 
     const handleUpdate = (e) => {
-        postDispatch({type: 'SHOW', payload: e.target.id})
+        postDispatch({ type: 'SHOW', payload: e.target.id })
         navigate('/post')
     }
 
@@ -66,7 +87,7 @@ function PostsPublished({ id }) {
                     </thead>
                     <tbody>
                         {id ?
-                            posts.map((post, index) => (
+                            currentTablePersonalPosts.map((post, index) => (
                                 post.userId === id &&
                                 <tr key={index}>
                                     <td>{post.id}</td>
@@ -90,7 +111,7 @@ function PostsPublished({ id }) {
                                     </td>
                                 </tr>
                             ))
-                            : posts.map((post, index) =>
+                            : currentTablePosts.map((post, index) =>
                                 <tr key={index}>
                                     <td>{post.id}</td>
                                     <td>{post.category}</td>
@@ -110,6 +131,24 @@ function PostsPublished({ id }) {
                     </tbody>
                 </table>
             </div>
+            {!id &&
+                <Pagination
+                    className="pagination-bar"
+                    currentPage={currentPage}
+                    totalCount={posts.length}
+                    pageSize={PageSize}
+                    onPageChange={page => setCurrentPage(page)}
+                />
+            }
+            {id &&
+                <Pagination
+                    className="pagination-bar"
+                    currentPage={currentPage}
+                    totalCount={personalPosts.length}
+                    pageSize={PageSize}
+                    onPageChange={page => setCurrentPage(page)}
+                />
+            }
         </div>
     );
 }

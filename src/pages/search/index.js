@@ -1,6 +1,6 @@
 import classNames from "classnames/bind";
 import { useNavigate } from "react-router";
-import { useContext, useEffect, useState } from "react";
+import { useContext, useEffect, useState, useMemo } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { collection, getDocs, query, where } from "firebase/firestore";
 import { faMap, faMoneyBill1 } from "@fortawesome/free-regular-svg-icons";
@@ -8,10 +8,13 @@ import { faHouse, faRulerCombined, faAngleDown } from "@fortawesome/free-solid-s
 
 import { db } from "../../firebase";
 import style from './Search.module.scss';
+import Pagination from "../../components/pagination";
 import { PostContext } from "../../context/PostContext";
 import { PropsContext } from "../../context/PropsContext";
 import image from '../../assets/image/no-image.png';
 import { categorys, types, dvhc, sqms, priceRent, priceBuy } from '../../tree.js'
+
+let PageSize = 6;
 
 function Search() {
     const navigate = useNavigate()
@@ -25,6 +28,13 @@ function Search() {
     const [sqm, setSqm] = useState(currentProps.sqm || {})
     const [price, setPrice] = useState({ min: 0, max: 999999999999 })
     const [props, setProps] = useState(currentProps)
+    const [currentPage, setCurrentPage] = useState(1);
+
+    const currentTableData = useMemo(() => {
+        const firstPageIndex = (currentPage - 1) * PageSize;
+        const lastPageIndex = firstPageIndex + PageSize;
+        return posts.slice(firstPageIndex, lastPageIndex);
+    }, [currentPage, posts]);
 
     useEffect(() => {
         handleSearch()
@@ -375,7 +385,7 @@ function Search() {
             </div>
             {/* Kết quả tìm kiếm */}
             <div className={cl('content')}>
-                {posts.map(post =>
+                {currentTableData.map(post =>
                     <div
                         key={post.id}
                         id={post.id}
@@ -416,6 +426,13 @@ function Search() {
                     </div>
                 )}
             </div>
+            <Pagination
+                className="pagination-bar"
+                currentPage={currentPage}
+                totalCount={posts.length}
+                pageSize={PageSize}
+                onPageChange={page => setCurrentPage(page)}
+            />
         </div>
     );
 }

@@ -1,13 +1,24 @@
 import classNames from "classnames/bind";
 import { collection, doc, runTransaction, onSnapshot } from "firebase/firestore";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useMemo } from "react";
 
 import style from './UserManager.module.scss'
+import InputContainer from '../inputContainer'
 import { db } from '../../firebase.js'
+import Pagination from "../pagination";
+
+let PageSize = 4;
 
 function UserManager({ id }) {
     const cl = classNames.bind(style)
     const [users, setUsers] = useState([])
+    const [currentPage, setCurrentPage] = useState(1);
+
+    const currentTableData = useMemo(() => {
+        const firstPageIndex = (currentPage - 1) * PageSize;
+        const lastPageIndex = firstPageIndex + PageSize;
+        return users.slice(firstPageIndex, lastPageIndex);
+    }, [currentPage, users]);
 
     useEffect(() => {
         const unsub = onSnapshot(collection(db, "users"),
@@ -73,6 +84,9 @@ function UserManager({ id }) {
 
     return (
         <div className={cl('content')}>
+            <div className={cl('header')}>
+                <InputContainer id='thoigian' value='Tất cả' />
+            </div>
             <div className={cl('wrap-table')}>
                 <table>
                     <thead>
@@ -86,7 +100,7 @@ function UserManager({ id }) {
                         </tr>
                     </thead>
                     <tbody>
-                        {users.map((user, index) =>
+                        {currentTableData.map((user, index) =>
                             <tr key={index}>
                                 <td>{user.id}</td>
                                 <td>{user.name}</td>
@@ -107,6 +121,13 @@ function UserManager({ id }) {
                     </tbody>
                 </table>
             </div>
+            <Pagination
+                className="pagination-bar"
+                currentPage={currentPage}
+                totalCount={users.length}
+                pageSize={PageSize}
+                onPageChange={page => setCurrentPage(page)}
+            />
         </div>
     );
 }
