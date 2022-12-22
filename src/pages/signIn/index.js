@@ -14,7 +14,7 @@ function SignIn() {
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
     const [error, setError] = useState(false);
-    const {dispatch} = useContext(AuthContext)
+    const { dispatch } = useContext(AuthContext)
 
     const goSignUpPage = () => {
         navigate('/sign-up')
@@ -28,23 +28,24 @@ function SignIn() {
         signInWithEmailAndPassword(auth, email, password)
             .then((userCredential) => {
                 const user = userCredential.user;
-                dispatch({type:"LOGIN", payload:user})
+                dispatch({ type: "LOGIN", payload: user })
                 navigate('/')
             })
             .catch((error) => {
                 setError(true)
             });
     }
-    
+
     return (
         <div className={cl('page')}>
             <div className={cl('container')}>
                 <div className={cl('title')}>Đăng nhập</div>
                 <div className={cl('account')}>
-                    <div className={cl('label')}>Tài khoản</div>
+                    <div className={cl('label')}>Email</div>
                     <input
+                        type='email'
                         className={cl('input-signIn')}
-                        placeholder='Nhập email hoặc tên đăng nhập'
+                        placeholder='Nhập email'
                         onChange={(e) => setEmail(e.target.value)}
                     />
                 </div>
@@ -60,7 +61,7 @@ function SignIn() {
                 </div>
 
                 <button className={cl('btn-signIn')} onClick={handleSignIn} >Đăng nhập</button>
-                {error && <div style={{color:'red'}}>Sai email hoặc mật khẩu!</div>}
+                {error && <div style={{ color: 'red' }}>Sai email hoặc mật khẩu!</div>}
 
                 <div className={cl('no-account')}>
                     Chưa có tài khoản?

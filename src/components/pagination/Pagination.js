@@ -51,7 +51,6 @@ function Pagination(props) {
                     return <li key={index} className={classnames('pagination-item dots')}>&#8230;</li>;
                 }
 
-                // Render our Page Pills
                 return (
                     <li
                         key={index}
@@ -64,7 +63,6 @@ function Pagination(props) {
                     </li>
                 );
             })}
-            {/*  Right Navigation arrow */}
             <li
                 className={classnames('pagination-item', {
                     disabled: currentPage === lastPage

@@ -15,7 +15,7 @@ function ForgotPassword() {
                     <div className={cl('label')}>Email</div>
                     <input className={cl('input-signIn')} placeholder='Nhập email' />
                 </div>
-                <button className={cl('btn-signIn')}>Đổi mật khẩu</button>
+                <button className={cl('btn-signIn')}>Lấy lại mật khẩu</button>
             </div>
         </div>
     );

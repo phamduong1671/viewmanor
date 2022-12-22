@@ -32,7 +32,7 @@ function SignUp() {
 
     const handleSignUp = async (e) => {
         e.preventDefault()
-        if (data.name && data.email && data.phone && data.password) {
+        if (data.name && data.email && data.phone && data.password && data.password.length >= 6) {
             setWarn([])
             if (password2 === data.password) {
                 try {
@@ -51,19 +51,20 @@ function SignUp() {
 
                     // Đăng nhập luôn khi đăng ký thành công
                     signInWithEmailAndPassword(auth, data.email, data.password)
-                    .then((userCredential) => {
-                        const user = userCredential.user;
-                        dispatch({type:"LOGIN", payload:user})
-                        navigate('/')
-                    })
-                    .catch(console.log('error'));
+                        .then((userCredential) => {
+                            const user = userCredential.user;
+                            dispatch({ type: "LOGIN", payload: user })
+                            navigate('/')
+                        })
+                        .catch(console.log('error'));
                 }
                 catch (err) {
-                    console.log(err)
+                    err.toString() === 'FirebaseError: Firebase: Error (auth/email-already-in-use).' &&
+                        alert('email đã tồn tại. Hãy đăng nhập hoặc sử dụng email khác');
                 }
                 setCompare(true)
             } else setCompare(false)
-        } else {                            // Bắt lỗi input trống
+        } else {                            // Bắt lỗi input
             const array = []
             if (!data.name)
                 array.push('name')
@@ -73,6 +74,8 @@ function SignUp() {
                 array.push('phone')
             if (!data.password)
                 array.push('password')
+            else if (data.password.length < 6)
+                array.push('short password')
             setWarn(array)
         }
     }
@@ -100,6 +103,7 @@ function SignUp() {
                     <div className={cl('label')}>Email</div>
                     <input
                         id='email'
+                        type='email'
                         className={cl('input-signIn')}
                         placeholder='Nhập email'
                         onChange={(e) => handleInput(e)}
@@ -127,8 +131,11 @@ function SignUp() {
                         placeholder='Nhập mật khẩu'
                         onChange={(e) => handleInput(e)}
                     />
-                    {warn.filter(i => i === 'password').length !== 0
-                        && <div className={cx('d-warning')}>Vui lòng nhập nhập Mật khẩu</div>}
+                    {warn.filter(i => i === 'password').length !== 0 ?
+                        <div className={cx('d-warning')}>Vui lòng nhập nhập Mật khẩu</div>
+                        : warn.filter(i => i === 'short password').length !== 0 &&
+                        <div className={cx('d-warning')}>Mật khẩu phải dài hơn 6 ký tự</div>
+                    }
                 </div>
                 <div className={cl('password')}>
                     <div className={cl('label')}>Nhập lại mật khẩu</div>
