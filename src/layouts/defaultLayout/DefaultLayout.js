@@ -12,7 +12,7 @@ function DefaultLayout({ children }) {
             <div className={cl('content')}>
                 {children}
             </div>
-            <div className={cl('footer')}>Footer</div>
+            {/* <div className={cl('footer')}>Footer</div> */}
         </div>
     );
 }

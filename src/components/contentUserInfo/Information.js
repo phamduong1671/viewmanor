@@ -37,7 +37,7 @@ function Information({user}) {
                     <label className={cl('value-item')}>{user.zalo}</label>
                 </div>
                 <div className={cl('props-item')}>
-                    <label>Khác</label>
+                    <label>Liên hệ khác</label>
                     <label className={cl('value-item')}>{user.other}</label>
                 </div>
             </div>

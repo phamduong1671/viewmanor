@@ -7,7 +7,7 @@ import InputContainer from '../inputContainer'
 import { db } from '../../firebase.js'
 import Pagination from "../pagination";
 
-let PageSize = 4;
+let PageSize = 10;
 
 function UserManager({ id }) {
     const cl = classNames.bind(style)
@@ -82,10 +82,49 @@ function UserManager({ id }) {
         }
     }
 
+    const handleChangeRole = (e)=> {
+        let user = {}
+        users.forEach(item => {
+            if (item.id === e.target.id)
+                user = item
+        })
+
+        if (user.role === 'Người dùng') {
+            if (window.confirm('Phân quyền quản trị viên cho tài khoản này?')) {
+                try {
+                    console.log('Đã phân quyền');
+                } catch (err) {
+                    console.log("Transaction failed: ", err);
+                }
+            }
+        } else {
+            if (window.confirm('Phân quyền người dùng cho tài khoản này?')) {
+                try {
+                    console.log('đã phân quyền');
+                } catch (err) {
+                    console.log("Transaction failed: ", err);
+                }
+            }
+        }
+    }
+
     return (
         <div className={cl('content')}>
+            <div className={cl('header-content')}>Quản lý tài khoản người dùng</div>
             <div className={cl('header')}>
-                <InputContainer id='thoigian' value='Tất cả' />
+                <div>
+                    <InputContainer id='thoigian' value='Tất cả' />
+                </div>
+                <div className={cl('header-right')}>
+                    <input
+                        className={cl('box-search')}
+                        placeholder='Tìm theo email'
+                    />
+                    <input
+                        className={cl('box-search')}
+                        placeholder='Số điện thoại'
+                    />
+                </div>
             </div>
             <div className={cl('wrap-table')}>
                 <table>
@@ -94,6 +133,7 @@ function UserManager({ id }) {
                             <th>Id</th>
                             <th>Họ tên</th>
                             <th>Email</th>
+                            <th>Số điện thoại</th>
                             <th>Trạng thái</th>
                             <th>Cấp</th>
                             <th></th>
@@ -105,9 +145,17 @@ function UserManager({ id }) {
                                 <td>{user.id}</td>
                                 <td>{user.name}</td>
                                 <td>{user.email}</td>
+                                <td>{user.phone}</td>
                                 <td>{user.status}</td>
                                 <td>{user.role}</td>
                                 <td>
+                                    <button
+                                        id={user.id}
+                                        title="Xóa"
+                                        value={user.status}
+                                        className={cl('btn-icon', 'btn-change-role')}
+                                        onClick={(e) => handleChangeRole(e)}
+                                    ></button>
                                     <button
                                         id={user.id}
                                         title="Xóa"

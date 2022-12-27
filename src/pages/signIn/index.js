@@ -2,8 +2,10 @@ import classNames from "classnames/bind";
 import { useNavigate } from "react-router";
 import { useContext, useState } from "react";
 import { signInWithEmailAndPassword } from "firebase/auth";
-import { auth } from "../../firebase";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faXmark } from "@fortawesome/free-solid-svg-icons";
 
+import { auth } from "../../firebase";
 import style from './SignIn.module.scss'
 import { AuthContext } from "../../context/AuthContext";
 
@@ -15,13 +17,6 @@ function SignIn() {
     const [password, setPassword] = useState("");
     const [error, setError] = useState(false);
     const { dispatch } = useContext(AuthContext)
-
-    const goSignUpPage = () => {
-        navigate('/sign-up')
-    }
-    const goForgotPasswordPage = () => {
-        navigate('/forgot-password')
-    }
 
     const handleSignIn = (e) => {
         e.preventDefault();
@@ -39,6 +34,12 @@ function SignIn() {
     return (
         <div className={cl('page')}>
             <div className={cl('container')}>
+                <div
+                    className={cl('btn-close')}
+                    onClick={() => navigate('/')}
+                >
+                    <FontAwesomeIcon icon={faXmark} />
+                </div>
                 <div className={cl('title')}>Đăng nhập</div>
                 <div className={cl('account')}>
                     <div className={cl('label')}>Email</div>
@@ -57,7 +58,7 @@ function SignIn() {
                         placeholder='Nhập mật khẩu'
                         onChange={(e) => setPassword(e.target.value)}
                     />
-                    <div className={cl('link')} onClick={goForgotPasswordPage}>Quên mật khẩu?</div>
+                    <div className={cl('link')} onClick={() => navigate('/forgot-password')}>Quên mật khẩu?</div>
                 </div>
 
                 <button className={cl('btn-signIn')} onClick={handleSignIn} >Đăng nhập</button>
@@ -65,7 +66,7 @@ function SignIn() {
 
                 <div className={cl('no-account')}>
                     Chưa có tài khoản?
-                    <div className={cl('link')} onClick={goSignUpPage}>Đăng ký ngay</div>
+                    <div className={cl('link')} onClick={() => navigate('/sign-up')}>Đăng ký ngay</div>
                 </div>
             </div>
         </div>

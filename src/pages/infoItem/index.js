@@ -110,14 +110,14 @@ function InfoItem() {
                             </div>
                             <div>
                                 <label>Giá:</label>
-                                <label>{post.price && post.price.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',')} VND</label>
+                                <label>{post.price && post.price.toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.')} VND</label>
                             </div>
                         </div>
                     </div>
                 </div>
                 <div className={cl('description')}>
                     <h1>Mô tả</h1>
-                    <label>
+                    <label className={cl('description-content')}>
                         {post.description}
                     </label>
                 </div>

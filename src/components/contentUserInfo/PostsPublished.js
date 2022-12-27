@@ -9,7 +9,7 @@ import { db } from '../../firebase.js'
 import { PostContext } from '../../context/PostContext'
 import Pagination from "../pagination";
 
-let PageSize = 4;
+let PageSize = 10;
 
 function PostsPublished({ id }) {
     const cl = classNames.bind(style)
@@ -70,8 +70,24 @@ function PostsPublished({ id }) {
 
     return (
         <div className={cl('content')}>
+            {id ?
+                <div className={cl('header-content')}>Tin đã đăng</div>
+                : <div className={cl('header-content')}>Quản lý tin đăng</div>
+            }
             <div className={cl('header')}>
-                <InputContainer id='thoigian' value='Tất cả' />
+                <div>
+                    <InputContainer id='thoigian' value='Tất cả' />
+                </div>
+                <div className={cl('header-right')}>
+                    <input
+                        className={cl('box-search')}
+                        placeholder='Tìm theo Xã / Phường'
+                    />
+                    <input
+                        className={cl('box-search')}
+                        placeholder='Địa chỉ cụ thể'
+                    />
+                </div>
             </div>
             <div className={cl('wrap-table')}>
                 <table>
@@ -82,6 +98,7 @@ function PostsPublished({ id }) {
                             <th>Loại</th>
                             <th>Ngày đăng</th>
                             <th>Xã / Phường</th>
+                            <th>Địa chỉ</th>
                             <th></th>
                         </tr>
                     </thead>
@@ -95,6 +112,7 @@ function PostsPublished({ id }) {
                                     <td>{post.type}</td>
                                     <td>{post.date}</td>
                                     <td>{post.ward}</td>
+                                    <td>{post.address}</td>
                                     <td>
                                         <button
                                             id={post.id}
@@ -118,6 +136,7 @@ function PostsPublished({ id }) {
                                     <td>{post.type}</td>
                                     <td>{post.date}</td>
                                     <td>{post.ward}</td>
+                                    <td>{post.address}</td>
                                     <td>
                                         <button
                                             id={post.id}

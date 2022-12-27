@@ -3,6 +3,8 @@ import { useNavigate } from "react-router";
 import { doc, setDoc } from "firebase/firestore";
 import { useContext, useState } from "react";
 import { createUserWithEmailAndPassword, signInWithEmailAndPassword } from "firebase/auth";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faXmark } from "@fortawesome/free-solid-svg-icons";
 
 import signInStyle from '../signIn/SignIn.module.scss'
 import style from './SignUp.module.scss'
@@ -18,10 +20,6 @@ function SignUp() {
     const [compare, setCompare] = useState(true)
     const [warn, setWarn] = useState([])
     const { dispatch } = useContext(AuthContext)
-
-    const goSignInPage = () => {
-        navigate('/sign-in')
-    }
 
     const handleInput = (e) => {
         const id = e.target.id
@@ -87,6 +85,12 @@ function SignUp() {
     return (
         <div className={cx('page')}>
             <div className={cl('container')}>
+                <div
+                    className={cl('btn-close')}
+                    onClick={() => navigate('/')}
+                >
+                    <FontAwesomeIcon icon={faXmark} />
+                </div>
                 <div className={cl('title')}>Đăng ký tài khoản</div>
                 <div className={cl('account')}>
                     <div className={cl('label')}>Họ tên</div>
@@ -158,7 +162,7 @@ function SignUp() {
                     Đã có tài khoản?
                     <div
                         className={cl('link')}
-                        onClick={goSignInPage}
+                        onClick={() => navigate('/sign-in')}
                     >
                         Đăng nhập tại đây
                     </div>

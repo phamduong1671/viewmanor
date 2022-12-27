@@ -18,23 +18,26 @@ function ChangePassword() {
         <div className={cl('wrap-content')}>
             <div className={cl('header-content')}>Đổi mật khẩu</div>
             <div className={cl('content')}>
-                    <label className={cl('d-label')}>Mật khẩu cũ</label>
+                    <label className={cl('d-label')}>Mật khẩu hiện tại</label>
                     <input
                         id="name"
                         className={cl('value-item')}
                         onChange={(e) => handleInput(e)}
+                        placeholder='Nhập mật hiện tại'
                     />
                     <label className={cl('d-label')}>Mật khẩu mới</label>
                     <input
                         id="email"
                         className={cl('value-item')}
                         onChange={(e) => handleInput(e)}
+                        placeholder='Nhập mật mới'
                     />
-                    <label className={cl('d-label')}>Nhập lại mật khẩu mới</label>
+                    <label className={cl('d-label')}>Xác nhận mật khẩu mới</label>
                     <input
                         id="phone"
                         className={cl('value-item')}
                         onChange={(e) => handleInput(e)}
+                        placeholder='Nhập lại mật khẩu mới'
                     />
                 <button
                     className={cl('btn-change')}

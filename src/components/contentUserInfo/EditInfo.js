@@ -161,7 +161,7 @@ function EditInfo() {
                         />
                     </div>
                     <div className={cl('props-item')}>
-                        <label>Khác</label>
+                        <label>Liên hệ khác</label>
                         <input
                             id="other"
                             value={user.other || ''}

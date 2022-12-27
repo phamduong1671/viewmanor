@@ -12,18 +12,32 @@
     padding: 24px;
 }
 
+.btn-close {
+    width: 20px;
+    height: 20px;
+    border-radius: 4px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-left: auto;
+
+    &:hover {
+        background-color: rgb(220, 72, 72);
+    }
+}
+
 .title {
     width: 100%;
     display: flex;
     justify-content: center;
-    padding-top: 64px;
+    padding-top: 44px;
     padding-bottom: 24px;
     font-size: 36px;
     font-weight: 700;
     color: rgba(24, 128, 36, 255);
 }
 
-.label{
+.label {
     font-weight: 500;
 }
 

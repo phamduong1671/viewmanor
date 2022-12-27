@@ -30,11 +30,11 @@ function Post() {
         if (currentPost) {
             const unsub = onSnapshot(doc(db, "posts", currentPost),
                 (doc) => {
-                    setCategory({name: doc.data().category})
-                    setType({name: doc.data().type})
-                    setCity({name: doc.data().city})
-                    setDistric({name: doc.data().distric})
-                    setWard({name: doc.data().ward})
+                    setCategory({ name: doc.data().category })
+                    setType({ name: doc.data().type })
+                    setCity({ name: doc.data().city })
+                    setDistric({ name: doc.data().distric })
+                    setWard({ name: doc.data().ward })
                     setImgs(doc.data().image)
                     setData({ ...doc.data() })
                 }, (error) => {
@@ -101,7 +101,7 @@ function Post() {
         setData({ ...data, [id]: value })
     }
 
-    const handleSave = async(e) => {
+    const handleSave = async (e) => {
         e.preventDefault();
         try {
             await runTransaction(db, async (transaction) => {
@@ -404,7 +404,8 @@ function Post() {
                     && <div className={cl('d-warning')} >
                         Vui lòng nhập diện tích
                     </div>}
-                <div className={cl('post-props')}>Giá (VND)
+                <div className={cl('post-props')}>
+                    Giá (VND)
                     <input
                         id='price'
                         type='number'
@@ -412,6 +413,13 @@ function Post() {
                         className={cl('input-text')}
                         onChange={(e) => handleInput(e)}
                     />
+                    {data.price &&
+                        <div
+                            className={cl('preview-price')}
+                        >
+                            {data.price.toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.')} VND
+                        </div>
+                    }
                 </div>
                 {warn.filter(i => i === 'price').length !== 0
                     && <div className={cl('d-warning')} >
