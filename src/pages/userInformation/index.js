@@ -101,7 +101,7 @@ function UserInformation() {
             {feature === '1' && <Information user={user} />}
             {feature === '2' && <PostsPublished id={user.id} />}
             {feature === '3' && <EditInfo />}
-            {feature === '4' && <ChangePassword />}
+            {feature === '4' && <ChangePassword user={user} />}
             {feature === '5' && <PostsPublished />}
             {feature === '6' && <UserManager id={user.id} />}
         </div >

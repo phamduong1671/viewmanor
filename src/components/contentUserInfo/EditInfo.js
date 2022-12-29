@@ -3,10 +3,11 @@ import { doc, runTransaction, onSnapshot } from "firebase/firestore";
 import { getDownloadURL, ref, uploadBytesResumable } from "firebase/storage";
 import { useContext, useEffect, useState } from "react";
 
-import { storage } from "../../firebase";
+import { auth, storage } from "../../firebase";
 import style from './EditInfo.module.scss'
 import { db } from '../../firebase'
 import { AuthContext } from '../../context/AuthContext'
+import { updateEmail } from "firebase/auth";
 
 function EditInfo() {
     const cl = classNames.bind(style)
@@ -51,6 +52,11 @@ function EditInfo() {
                     }
                     transaction.update(doc(db, "users", user.id), { ...user });
                 });
+                if (user.email !== auth.currentUser.email)
+                    updateEmail(auth.currentUser, user.email).then(() => {
+                        console.log('changed');
+                    })
+
                 alert('Đã lưu')
             } catch (e) {
                 console.log("Transaction failed: ", e);

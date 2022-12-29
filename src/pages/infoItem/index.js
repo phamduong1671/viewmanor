@@ -77,7 +77,8 @@ function InfoItem() {
                                     alt="postItem"
                                     onClick={e => handleZoom(e)}
                                 />
-                            </div>)}
+                            </div>)
+                        }
                     </Slick>
                     : <div className={cl('image-item')}>
                         <img
