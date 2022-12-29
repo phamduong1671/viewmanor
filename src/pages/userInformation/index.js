@@ -9,7 +9,7 @@ import PostsPublished from "../../components/contentUserInfo/PostsPublished";
 import UserManager from "../../components/contentUserInfo/UserManager";
 import { AuthContext } from '../../context/AuthContext'
 import { db } from '../../firebase'
-import icon from '../../assets/image/default-avatar.jpg';
+import defaultAvatar from '../../assets/image/default-avatar.jpg';
 import ChangePassword from "../../components/contentUserInfo/ChangePassword";
 
 function UserInformation() {
@@ -43,7 +43,7 @@ function UserInformation() {
                     <div className={cl('user')}>
                         <img
                             className={cl('avatar')}
-                            src={user.avatar || icon}
+                            src={user.avatar || defaultAvatar}
                             alt='avatar'
                         />
                         <div className={cl('name')}>{user.name}</div>

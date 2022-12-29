@@ -4,28 +4,49 @@ import Tippy from "@tippyjs/react/headless";
 
 import style from './Header.module.scss';
 import BtnUser from "../../../components/btnUser/BtnUser";
-import { Fragment, useContext } from "react";
+import { Fragment, useContext, useEffect, useState } from "react";
 import { AuthContext } from "../../../context/AuthContext";
 import { PostContext } from "../../../context/PostContext";
 import logo from '../../../assets/logo.png'
+import { doc, onSnapshot } from "firebase/firestore";
+import { db } from "../../../firebase";
 
 function Header() {
     const cl = classNames.bind(style)
-
-    const { currentUser } = useContext(AuthContext)
-
     const navigate = useNavigate()
+    const { currentUser } = useContext(AuthContext)
+    const { postDispatch } = useContext(PostContext)
+    const { dispatch } = useContext(AuthContext)
+    const [user, setUser] = useState({})
+
+    useEffect(() => {
+        if (currentUser !== null) {
+            const unsub = onSnapshot(doc(db, "users", currentUser.uid),
+                (doc) => {
+                    setUser({ id: doc.id, ...doc.data() })
+                }, (error) => {
+                    console.log(error);
+                }
+            );
+            return () => {
+                unsub();
+            }
+        }
+    }, [currentUser])
+
     const goHomePage = () => {
         navigate('/')
     };
 
-    const { postDispatch } = useContext(PostContext)
     const goPostPage = () => {
-        postDispatch({type: 'SHOW', payload: null})
-        navigate('/post')
+        if (user.status === 'Bị khóa') {
+            alert('Tài khoản của bạn đã bị khóa, bạn không thể đăng tin mới. Hãy liên hệ quản trị viên để biết thêm chi tiết.')
+        } else {
+            postDispatch({ type: 'SHOW', payload: null })
+            navigate('/post')
+        }
     };
 
-    const { dispatch } = useContext(AuthContext)
     const handleSignOut = () => {
         dispatch({ type: "LOGOUT", payload: null })
         navigate('/')

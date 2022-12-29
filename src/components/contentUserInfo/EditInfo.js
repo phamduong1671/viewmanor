@@ -2,12 +2,13 @@ import classNames from "classnames/bind";
 import { doc, runTransaction, onSnapshot } from "firebase/firestore";
 import { getDownloadURL, ref, uploadBytesResumable } from "firebase/storage";
 import { useContext, useEffect, useState } from "react";
+import { updateEmail } from "firebase/auth";
 
 import { auth, storage } from "../../firebase";
 import style from './EditInfo.module.scss'
 import { db } from '../../firebase'
 import { AuthContext } from '../../context/AuthContext'
-import { updateEmail } from "firebase/auth";
+import defaultAvatar from '../../assets/image/default-avatar.jpg';
 
 function EditInfo() {
     const cl = classNames.bind(style)
@@ -190,7 +191,7 @@ function EditInfo() {
                         </div>
                         <img
                             className={cl('avatar')}
-                            src={user.avatar}
+                            src={user.avatar || defaultAvatar}
                             alt="avatar"
                         />
                     </div>
