@@ -58,7 +58,6 @@ function UserManager({ id }) {
                         }
                         transaction.update(doc(db, "users", user.id), { ...user, status: 'Bị khóa' });
                     });
-                    console.log('đã khóa');
                 } catch (err) {
                     console.log("Transaction failed: ", err);
                 }
@@ -82,7 +81,7 @@ function UserManager({ id }) {
         }
     }
 
-    const handleChangeRole = (e)=> {
+    const handleChangeRole = async (e) => {
         let user = {}
         users.forEach(item => {
             if (item.id === e.target.id)
@@ -90,17 +89,31 @@ function UserManager({ id }) {
         })
 
         if (user.role === 'Người dùng') {
-            if (window.confirm('Phân quyền quản trị viên cho tài khoản này?')) {
+            if (window.confirm('Phân quyền cho tài khoản này là Quản trị viên?')) {
                 try {
-                    console.log('Đã phân quyền');
+                    await runTransaction(db, async (transaction) => {
+                        const sfDoc = await transaction.get(doc(db, "users", e.target.id));
+                        if (!sfDoc.exists()) {
+                            // eslint-disable-next-line
+                            throw "Document does not exist!";
+                        }
+                        transaction.update(doc(db, "users", user.id), { ...user, role: 'Quản trị viên' });
+                    });
                 } catch (err) {
                     console.log("Transaction failed: ", err);
                 }
             }
         } else {
-            if (window.confirm('Phân quyền người dùng cho tài khoản này?')) {
+            if (window.confirm('Phân quyền cho tài khoản này là Người dùng?')) {
                 try {
-                    console.log('đã phân quyền');
+                    await runTransaction(db, async (transaction) => {
+                        const sfDoc = await transaction.get(doc(db, "users", e.target.id));
+                        if (!sfDoc.exists()) {
+                            // eslint-disable-next-line
+                            throw "Document does not exist!";
+                        }
+                        transaction.update(doc(db, "users", user.id), { ...user, role: 'Người dùng' });
+                    });
                 } catch (err) {
                     console.log("Transaction failed: ", err);
                 }
@@ -151,7 +164,7 @@ function UserManager({ id }) {
                                 <td>
                                     <button
                                         id={user.id}
-                                        title="Xóa"
+                                        title="Phân quyền"
                                         value={user.status}
                                         className={cl('btn-icon', 'btn-change-role')}
                                         onClick={(e) => handleChangeRole(e)}
