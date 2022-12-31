@@ -48,8 +48,7 @@ function Slider({ name }) {
         <div className={cl('slider-container')}>
             <div className={cl('post-list')}>
                 <Slick {...settings}>
-                    {posts.map((post, index) =>
-                        index < 30 &&
+                    {posts.slice(0,30).map((post, index) =>
                         <div
                             key={post.id}
                             id={post.id}
