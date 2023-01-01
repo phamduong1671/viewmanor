@@ -23,7 +23,7 @@
     margin-bottom: 5px;
 }
 
-.header-right{
+.header-right {
     display: flex;
 }
 
@@ -63,10 +63,21 @@
     }
 }
 
-.btn-disable{
+.btn-disable {
     background-image: url('../../assets/image/block.svg');
 }
 
-.btn-change-role{
+.btn-change-role {
     background-image: url('../../assets/image/change-role.png');
+}
+
+.wrap-pagination {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.page-info {
+    font-size: 14px;
+    font-weight: 500;
 }

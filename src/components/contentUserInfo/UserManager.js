@@ -11,8 +11,9 @@ let PageSize = 10;
 
 function UserManager({ id }) {
     const cl = classNames.bind(style)
-    const [users, setUsers] = useState([])
     const [currentPage, setCurrentPage] = useState(1);
+    const [users, setUsers] = useState([])
+    const [search, setSearch] = useState({})
 
     const currentTableData = useMemo(() => {
         const firstPageIndex = (currentPage - 1) * PageSize;
@@ -25,7 +26,10 @@ function UserManager({ id }) {
             (snapshot) => {
                 let list = [];
                 snapshot.docs.forEach((doc) => {
-                    if (doc.id !== id)
+                    if (doc.id !== id &&
+                        doc.data().email.toLowerCase().search(search.emailSearch) !== -1 &&
+                        doc.data().phone.toLowerCase().search(search.phoneSearch) !== -1
+                    )
                         list.push({ id: doc.id, ...doc.data() })
                 });
                 setUsers(list);
@@ -38,7 +42,7 @@ function UserManager({ id }) {
             unsub();
         }
 
-    }, [id])
+    }, [id, search])
 
     const handleDisable = async (e) => {
         let user = {}
@@ -121,6 +125,10 @@ function UserManager({ id }) {
         }
     }
 
+    const handleSearch = (e) => {
+        setSearch({ ...search, [e.target.id]: e.target.value })
+    }
+
     return (
         <div className={cl('content')}>
             <div className={cl('header-content')}>Quản lý tài khoản người dùng</div>
@@ -130,12 +138,16 @@ function UserManager({ id }) {
                 </div>
                 <div className={cl('header-right')}>
                     <input
+                        id="emailSearch"
                         className={cl('box-search')}
                         placeholder='Tìm theo email'
+                        onChange={e => handleSearch(e)}
                     />
                     <input
+                        id="phoneSearch"
                         className={cl('box-search')}
                         placeholder='Số điện thoại'
+                        onChange={e => handleSearch(e)}
                     />
                 </div>
             </div>
@@ -182,13 +194,25 @@ function UserManager({ id }) {
                     </tbody>
                 </table>
             </div>
-            <Pagination
-                className="pagination-bar"
-                currentPage={currentPage}
-                totalCount={users.length}
-                pageSize={PageSize}
-                onPageChange={page => setCurrentPage(page)}
-            />
+            <div className={cl('wrap-pagination')}>
+                <div className={cl('page-info')}>
+                    Hiển thị {currentPage * PageSize - PageSize + 1}
+                    -
+                    {currentPage * PageSize < users.length ?
+                        currentPage * PageSize
+                        : users.length}/{users.length} tài khoản
+                </div>
+                <Pagination
+                    className="pagination-bar"
+                    currentPage={currentPage}
+                    totalCount={users.length}
+                    pageSize={PageSize}
+                    onPageChange={page => setCurrentPage(page)}
+                />
+                <div className={cl('page-info')}>
+                    {PageSize} tài khoản/trang
+                </div>
+            </div>
         </div>
     );
 }
