@@ -108,3 +108,14 @@ td {
 .btn-update {
     background-image: url('../../assets/image/update.svg');
 }
+
+.wrap-pagination {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.page-info {
+    font-size: 14px;
+    font-weight: 500;
+}

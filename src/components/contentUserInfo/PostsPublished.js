@@ -18,6 +18,7 @@ function PostsPublished({ id }) {
     const [posts, setPosts] = useState([])
     const [personalPosts, setPersonalPosts] = useState([])
     const [currentPage, setCurrentPage] = useState(1);
+    const [search, setSearch] = useState({})
 
     const currentTablePosts = useMemo(() => {
         const firstPageIndex = (currentPage - 1) * PageSize;
@@ -38,8 +39,14 @@ function PostsPublished({ id }) {
             try {
                 const querySnapshot = await getDocs(collection(db, "posts"));
                 querySnapshot.forEach(doc => {
-                    list.push({ id: doc.id, ...doc.data() })
-                    if (doc.data().userId === id)
+                    if (doc.data().ward.toLowerCase().search(search.wardSearch) !== -1 &&
+                        doc.data().address.toLowerCase().search(search.addressSearch) !== -1
+                    )
+                        list.push({ id: doc.id, ...doc.data() })
+                    if (doc.data().userId === id &&
+                        doc.data().ward.toLowerCase().search(search.wardSearch) !== -1 &&
+                        doc.data().address.toLowerCase().search(search.addressSearch) !== -1
+                    )
                         list2.push({ id: doc.id, ...doc.data() })
                 });
                 setPosts(list)
@@ -49,8 +56,7 @@ function PostsPublished({ id }) {
             }
         }
         fetchPosts();
-    }, [id])
-
+    }, [id, search])
 
     const handleDelete = async (id) => {
         if (window.confirm('Xóa tin đăng này?')) {
@@ -68,6 +74,10 @@ function PostsPublished({ id }) {
         navigate('/post')
     }
 
+    const handleSearch = (e) => {
+        setSearch({ ...search, [e.target.id]: e.target.value })
+    }
+
     return (
         <div className={cl('content')}>
             {id ?
@@ -80,12 +90,16 @@ function PostsPublished({ id }) {
                 </div>
                 <div className={cl('header-right')}>
                     <input
+                        id="wardSearch"
                         className={cl('box-search')}
                         placeholder='Tìm theo Xã / Phường'
+                        onChange={e => handleSearch(e)}
                     />
                     <input
+                        id="addressSearch"
                         className={cl('box-search')}
                         placeholder='Địa chỉ cụ thể'
+                        onChange={e => handleSearch(e)}
                     />
                 </div>
             </div>
@@ -150,24 +164,36 @@ function PostsPublished({ id }) {
                     </tbody>
                 </table>
             </div>
-            {!id &&
-                <Pagination
-                    className="pagination-bar"
-                    currentPage={currentPage}
-                    totalCount={posts.length}
-                    pageSize={PageSize}
-                    onPageChange={page => setCurrentPage(page)}
-                />
-            }
-            {id &&
-                <Pagination
-                    className="pagination-bar"
-                    currentPage={currentPage}
-                    totalCount={personalPosts.length}
-                    pageSize={PageSize}
-                    onPageChange={page => setCurrentPage(page)}
-                />
-            }
+            <div className={cl('wrap-pagination')}>
+                <div className={cl('page-info')}>
+                    Hiển thị {currentPage * PageSize - PageSize + 1}
+                    -
+                    {currentPage * PageSize < posts.length ?
+                        currentPage * PageSize
+                        : posts.length}/{posts.length} tin
+                </div>
+                {!id &&
+                    <Pagination
+                        className="pagination-bar"
+                        currentPage={currentPage}
+                        totalCount={posts.length}
+                        pageSize={PageSize}
+                        onPageChange={page => setCurrentPage(page)}
+                    />
+                }
+                {id &&
+                    <Pagination
+                        className="pagination-bar"
+                        currentPage={currentPage}
+                        totalCount={personalPosts.length}
+                        pageSize={PageSize}
+                        onPageChange={page => setCurrentPage(page)}
+                    />
+                }
+                <div className={cl('page-info')}>
+                    {PageSize} tin/trang
+                </div>
+            </div>
         </div>
     );
 }

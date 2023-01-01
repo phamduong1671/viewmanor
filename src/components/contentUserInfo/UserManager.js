@@ -1,19 +1,23 @@
 import classNames from "classnames/bind";
 import { collection, doc, runTransaction, onSnapshot } from "firebase/firestore";
 import { useEffect, useState, useMemo } from "react";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faAngleDown } from "@fortawesome/free-solid-svg-icons";
 
 import style from './UserManager.module.scss'
-import InputContainer from '../inputContainer'
 import { db } from '../../firebase.js'
 import Pagination from "../pagination";
 
 let PageSize = 10;
+const roles = ['Tất cả', 'Người dùng', 'Quản trị viên']
 
 function UserManager({ id }) {
     const cl = classNames.bind(style)
     const [currentPage, setCurrentPage] = useState(1);
     const [users, setUsers] = useState([])
     const [search, setSearch] = useState({})
+    const [show, setShow] = useState(false)
+    const [role, setRole] = useState('Tất cả')
 
     const currentTableData = useMemo(() => {
         const firstPageIndex = (currentPage - 1) * PageSize;
@@ -29,8 +33,12 @@ function UserManager({ id }) {
                     if (doc.id !== id &&
                         doc.data().email.toLowerCase().search(search.emailSearch) !== -1 &&
                         doc.data().phone.toLowerCase().search(search.phoneSearch) !== -1
-                    )
-                        list.push({ id: doc.id, ...doc.data() })
+                    ) {
+                        if (role === 'Tất cả')
+                            list.push({ id: doc.id, ...doc.data() })
+                        else if (doc.data().role === role)
+                            list.push({ id: doc.id, ...doc.data() })
+                    }
                 });
                 setUsers(list);
             }, (error) => {
@@ -42,7 +50,7 @@ function UserManager({ id }) {
             unsub();
         }
 
-    }, [id, search])
+    }, [id, search, role])
 
     const handleDisable = async (e) => {
         let user = {}
@@ -129,12 +137,49 @@ function UserManager({ id }) {
         setSearch({ ...search, [e.target.id]: e.target.value })
     }
 
+    const showValue = (e) => {
+        setShow(!show)
+    }
+
+    const selectItem = (e) => {
+        setRole(e.target.id)
+    }
+
     return (
         <div className={cl('content')}>
             <div className={cl('header-content')}>Quản lý tài khoản người dùng</div>
             <div className={cl('header')}>
                 <div>
-                    <InputContainer id='thoigian' value='Tất cả' />
+                    <div
+                        id='role'
+                        className={cl('cbb-container')}
+                        onClick={(e) => showValue(e)}
+                    >
+                        <div className={cl('input-container')}>
+                            <input className={cl('input-cbb')}
+                                spellCheck={false}
+                                value={role || 'Tất cả'}
+                                readOnly
+                            />
+                            <div className={cl('icon-dropdown')}>
+                                <FontAwesomeIcon icon={faAngleDown} />
+                            </div>
+                        </div>
+                        {show &&
+                            <div className={cl('cbb-value')}>
+                                {roles.map(item => (
+                                    <div
+                                        id={item}
+                                        key={item}
+                                        className={cl('cbb-item')}
+                                        onClick={(e) => selectItem(e)}
+                                    >
+                                        {item}
+                                    </div>
+                                ))}
+                            </div>
+                        }
+                    </div>
                 </div>
                 <div className={cl('header-right')}>
                     <input
