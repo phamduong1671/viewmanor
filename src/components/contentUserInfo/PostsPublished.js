@@ -198,6 +198,4 @@ function PostsPublished({ id }) {
     );
 }
 
-
-
 export default PostsPublished;

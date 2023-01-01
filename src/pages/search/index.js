@@ -14,7 +14,7 @@ import { PropsContext } from "../../context/PropsContext";
 import image from '../../assets/image/no-image.png';
 import { categorys, types, dvhc, sqms, priceRent, priceBuy } from '../../tree.js'
 
-let PageSize = 6;
+let PageSize = 15;
 
 function Search() {
     const navigate = useNavigate()
