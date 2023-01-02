@@ -4,7 +4,7 @@ import { useContext, useEffect, useState, useMemo } from "react";
 import { collection, deleteDoc, doc, getDocs } from "firebase/firestore";
 
 import style from './PostsPublished.module.scss'
-import InputContainer from '../inputContainer'
+// import InputContainer from '../inputContainer'
 import { db } from '../../firebase.js'
 import { PostContext } from '../../context/PostContext'
 import Pagination from "../pagination";
@@ -86,7 +86,7 @@ function PostsPublished({ id }) {
             }
             <div className={cl('header')}>
                 <div>
-                    <InputContainer id='thoigian' value='Tất cả' />
+                    {/* <InputContainer id='thoigian' value='Tất cả' /> */}
                 </div>
                 <div className={cl('header-right')}>
                     <input
