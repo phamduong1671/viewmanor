@@ -20,6 +20,10 @@
     font-weight: 900;
 }
 
+.logo {
+    cursor: pointer;
+}
+
 // Header right
 .header-right {
     margin-right: 12px;
@@ -77,11 +81,6 @@
     }
 }
 
-// .btn-signUp {}
-
-// .btn-post {}
-
-// User Features
 .user-features {
     width: 200px;
     background-color: #fff;
@@ -102,4 +101,8 @@
     &:hover {
         background-color: #eee;
     }
+}
+
+.tippy{
+    animation: 'scale',
 }

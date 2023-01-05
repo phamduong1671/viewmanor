@@ -2,6 +2,8 @@ import { useContext, useEffect, useState } from "react";
 import { doc, onSnapshot } from "firebase/firestore";
 import classNames from "classnames/bind";
 import Slick from 'react-slick';
+import { faSquareFacebook } from "@fortawesome/free-brands-svg-icons";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
 import settings from '../../components/slider/Slick';
 import { db } from '../../firebase';
@@ -140,7 +142,10 @@ function InfoItem() {
                     </div>
                     <div className={cl('wrap-btn')}>
                         {user.zalo &&
-                            <div className={cl('btn-zalo')} onClick={() => window.location = `https://zalo.me/${user.zalo}`}>
+                            <div
+                                className={cl('btn')}
+                                onClick={() => window.location = `https://zalo.me/${user.zalo}`}
+                            >
                                 <div className={cl('icon-zalo')}></div>
                                 <div className={cl('label-zalo')}>
                                     Zalo
@@ -148,8 +153,11 @@ function InfoItem() {
                             </div>
                         }
                         {user.facebook &&
-                            <div className={cl('btn-facebook')} onClick={() => window.location = user.facebook}>
-                                <div className={cl('icon-facebook')}></div>
+                            <div
+                                className={cl('btn')}
+                                onClick={() => window.location = user.facebook}
+                            >
+                                <FontAwesomeIcon icon={faSquareFacebook} size="2x" color="#3B5998"/>
                                 <div className={cl('label-facebook')}>
                                     Facebook
                                 </div>

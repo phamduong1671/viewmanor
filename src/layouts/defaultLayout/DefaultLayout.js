@@ -2,6 +2,8 @@ import classNames from "classnames/bind";
 
 import style from './DefaultLayout.module.scss'
 import Header from "../components/header";
+import Footer from "../components/footer";
+
 
 function DefaultLayout({ children }) {
     const cl = classNames.bind(style)
@@ -12,7 +14,7 @@ function DefaultLayout({ children }) {
             <div className={cl('content')}>
                 {children}
             </div>
-            {/* <div className={cl('footer')}>Footer</div> */}
+            <Footer />
         </div>
     );
 }

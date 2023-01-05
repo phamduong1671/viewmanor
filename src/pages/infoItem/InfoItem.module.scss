@@ -125,53 +125,29 @@ label {
     align-items: center;
 }
 
-.btn-zalo {
-    width: 76px;
+.btn {
     height: 40px;
     margin-right: 36px;
+    padding: 0 5px;
     display: flex;
     align-items: center;
-    background-color: #0a67fe89;
     border-radius: 4px;
+    font-weight: 500;
+    color: #3B5998;
+    background-color: #c8d4e0;
 
     &:hover {
-        background-color: #0a67fec0;
-    }
-}
-
-.btn-facebook {
-    width: 112px;
-    height: 40px;
-    margin-right: 36px;
-    display: flex;
-    align-items: center;
-    background-color: #0A68FE;
-    background-color: #0a67fe89;
-    border-radius: 4px;
-
-    &:hover {
-        background-color: #0a67fec0;
+        background-color: #54f942;
     }
 }
 
 .icon-zalo {
     width: 30px;
     height: 30px;
-    margin-left: 5px;
     background-image: url(../../assets/image/zalo-logo.png);
     background-size: cover;
     background-position: center;
     background-size: 52px;
-}
-
-.icon-facebook {
-    width: 30px;
-    height: 30px;
-    margin-left: 5px;
-    background-image: url(../../assets/image/facebook-logo.png);
-    background-size: cover;
-    background-position: center;
-    background-size: 72px;
 }
 
 .label-zalo,

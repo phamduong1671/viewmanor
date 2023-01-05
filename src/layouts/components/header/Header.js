@@ -85,7 +85,7 @@ function Header() {
                     </Fragment>
                     : null}
             </div>
-        </div>
+        </div >
     );
 }
 
