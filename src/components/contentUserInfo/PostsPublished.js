@@ -165,17 +165,6 @@ function PostsPublished({ id }) {
         })
     }
 
-    // console.log(props);
-    var dateString = "23/10/2015";
-
-    let dateObject = Date.parse(
-        [
-            dateString.split("/")[1],
-            dateString.split("/")[0],
-            dateString.split("/")[2]
-        ].join('/')
-    );
-
     return (
         <Fragment>
             {showFilter &&

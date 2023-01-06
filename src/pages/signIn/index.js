@@ -22,6 +22,7 @@ function SignIn() {
         e.preventDefault();
         signInWithEmailAndPassword(auth, email, password)
             .then((userCredential) => {
+                console.log(userCredential);
                 const user = userCredential.user;
                 dispatch({ type: "LOGIN", payload: user })
                 navigate('/')

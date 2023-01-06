@@ -51,12 +51,12 @@ function EditInfo() {
                         // eslint-disable-next-line
                         throw "Document does not exist!";
                     }
+                    if (user.email !== auth.currentUser.email)
+                        updateEmail(auth.currentUser, user.email).then(() => {
+                            console.log('changed');
+                        })
                     transaction.update(doc(db, "users", user.id), { ...user });
                 });
-                if (user.email !== auth.currentUser.email)
-                    updateEmail(auth.currentUser, user.email).then(() => {
-                        console.log('changed');
-                    })
 
                 alert('Đã lưu')
             } catch (e) {
