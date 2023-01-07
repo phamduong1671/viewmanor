@@ -23,8 +23,6 @@
     margin-bottom: 5px;
 }
 
-.header-left {}
-
 .btn-filter {
     width: 118px;
     height: 33px;
@@ -41,7 +39,7 @@
         background-color: #bbb;
     }
 
-    &:active{
+    &:active {
         background-color: #ccc;
     }
 }
@@ -75,19 +73,19 @@
 }
 
 // Filter
-.wrap-filter{
+.wrap-filter {
     width: 100vw;
     height: 100vh;
     position: fixed;
-    background-color: rgba(0,0,0,0.5);
+    background-color: rgba(0, 0, 0, 0.5);
     z-index: 1;
     display: flex;
     justify-content: center;
 }
 
-.filter{
+.filter {
     height: 330px;
-    margin-top: 150px;
+    margin-top: 100px;
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -110,7 +108,7 @@
     }
 }
 
-.filter-props{
+.filter-props {
     margin: 15px;
 }
 
@@ -182,7 +180,7 @@
 // Combobox Value
 .cbb-value {
     width: 80px;
-    max-height: 270px;
+    max-height: 170px;
     position: relative;
     background-color: #fff;
     overflow-y: auto;
@@ -192,7 +190,7 @@
 }
 
 .cbb-item {
-    height: 40px;
+    height: 30px;
     padding: 0px 10px;
     display: flex;
     align-items: center;
@@ -218,6 +216,7 @@
 table {
     width: 100%;
     border-spacing: 0;
+    table-layout: fixed;
 }
 
 tr {
@@ -233,7 +232,7 @@ tbody tr {
     }
 
     &:hover {
-        background-color: #26c64eb4;
+        background-color: #26c64e43;
     }
 }
 
@@ -244,6 +243,14 @@ thead {
     color: #551a8b;
 }
 
+.td-sqm{
+    text-align: center;
+}
+
+.td-btn{
+    text-align: right;
+}
+
 th,
 td {
     border-bottom: 1px solid #bbb;
@@ -252,6 +259,13 @@ td {
     justify-content: center;
     align-content: center;
     padding: 0px 6px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.th-center {
+    text-align: center;
 }
 
 .btn-icon {
@@ -259,24 +273,36 @@ td {
     height: 30px;
     border: none;
     border-radius: 4px;
-    background-color: rgb(251, 107, 107);
+    background-color: rgb(174, 174, 174);
     margin: 0 5px;
     cursor: pointer;
     background-position: center;
     background-size: 18px;
     background-repeat: no-repeat;
+}
+
+.btn-view {
+    background-image: url('../../assets/image/view.svg');
 
     &:hover {
-        background-color: rgb(255, 59, 59);
+        background-color: rgb(137, 161, 0);
+    }
+}
+
+.btn-update {
+    background-image: url('../../assets/image/update.svg');
+
+    &:hover {
+        background-color: rgb(0, 134, 20);
     }
 }
 
 .btn-delete {
     background-image: url('../../assets/image/delete.svg');
-}
 
-.btn-update {
-    background-image: url('../../assets/image/update.svg');
+    &:hover {
+        background-color: rgb(255, 59, 59);
+    }
 }
 
 .wrap-pagination {

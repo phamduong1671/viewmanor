@@ -1,14 +1,14 @@
 import { Link, useNavigate } from "react-router-dom";
 import classNames from 'classnames/bind';
+import { doc, onSnapshot } from "firebase/firestore";
+import { Fragment, useContext, useEffect, useState } from "react";
 import Tippy from "@tippyjs/react/headless";
 
 import style from './Header.module.scss';
 import BtnUser from "../../../components/btnUser/BtnUser";
-import { Fragment, useContext, useEffect, useState } from "react";
 import { AuthContext } from "../../../context/AuthContext";
 import { PostContext } from "../../../context/PostContext";
 import logo from '../../../assets/logo.png'
-import { doc, onSnapshot } from "firebase/firestore";
 import { db } from "../../../firebase";
 
 function Header() {

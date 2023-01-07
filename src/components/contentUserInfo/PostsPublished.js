@@ -1,15 +1,19 @@
 import classNames from "classnames/bind";
 import { useNavigate } from "react-router";
 import { useContext, useEffect, useState, useMemo, Fragment } from "react";
-import { collection, deleteDoc, doc, getDocs } from "firebase/firestore";
+import { collection, deleteDoc, doc, getDocs, onSnapshot } from "firebase/firestore";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCalendarCheck } from "@fortawesome/free-regular-svg-icons";
+import { faAngleDown, faXmark } from "@fortawesome/free-solid-svg-icons";
+import 'tippy.js/animations/shift-away.css';
+import Tippy from "@tippyjs/react";
+import 'tippy.js/dist/tippy.css';
+
 
 import style from './PostsPublished.module.scss'
 import { db } from '../../firebase.js'
 import { PostContext } from '../../context/PostContext'
 import Pagination from "../pagination";
-import { faAngleDown, faXmark } from "@fortawesome/free-solid-svg-icons";
 
 let PageSize = 10;
 const days = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31]
@@ -20,6 +24,7 @@ function PostsPublished({ id }) {
     const cl = classNames.bind(style)
     const navigate = useNavigate()
     const { postDispatch } = useContext(PostContext)
+    const [users, setUsers] = useState([])
     const [posts, setPosts] = useState([])
     const [personalPosts, setPersonalPosts] = useState([])
     const [currentPage, setCurrentPage] = useState(1);
@@ -50,21 +55,44 @@ function PostsPublished({ id }) {
     }, [currentPage, personalPosts]);
 
     useEffect(() => {
+        const unsub = onSnapshot(collection(db, "users"),
+            (snapshot) => {
+                let list = [];
+                snapshot.docs.forEach((doc) => {
+                    list.push({ id: doc.id, ...doc.data() })
+                });
+                setUsers(list);
+            }, (error) => {
+                console.log(error);
+            }
+        );
+
+        return () => {
+            unsub();
+        }
+
+    }, [])
+
+    useEffect(() => {
         const fetchPosts = async () => {
             let list = []
             let list2 = []
             try {
                 const querySnapshot = await getDocs(collection(db, "posts"));
                 querySnapshot.forEach(doc => {
-                    if (doc.data().ward.toLowerCase().search(search.wardSearch) !== -1 &&
-                        doc.data().address.toLowerCase().search(search.addressSearch) !== -1 &&
-                        convertDateToNumber(doc.data().date) >= convertDateToNumber(prevDate) &&
-                        convertDateToNumber(doc.data().date) <= convertDateToNumber(lastDate)
-                    )
-                        list.push({ id: doc.id, ...doc.data() })
+                    const address = [doc.data().address, doc.data().ward, doc.data().distric, doc.data().city].join(', ')
+                    users.forEach(user => {
+                        if (user.id === doc.data().userId) {
+                            if (user.name.toLowerCase().search(search.userSearch) !== -1 &&
+                                address.toLowerCase().search(search.addressSearch) !== -1 &&
+                                convertDateToNumber(doc.data().date) >= convertDateToNumber(prevDate) &&
+                                convertDateToNumber(doc.data().date) <= convertDateToNumber(lastDate)
+                            )
+                                list.push({ id: doc.id, userName: user.name, ...doc.data() })
+                        }
+                    })
                     if (doc.data().userId === id &&
-                        doc.data().ward.toLowerCase().search(search.wardSearch) !== -1 &&
-                        doc.data().address.toLowerCase().search(search.addressSearch) !== -1 &&
+                        address.toLowerCase().search(search.addressSearch) !== -1 &&
                         convertDateToNumber(doc.data().date) >= convertDateToNumber(prevDate) &&
                         convertDateToNumber(doc.data().date) <= convertDateToNumber(lastDate)
                     )
@@ -77,7 +105,7 @@ function PostsPublished({ id }) {
             }
         }
         fetchPosts();
-    }, [id, search, prevDate, lastDate])
+    }, [id, search, prevDate, lastDate, users])
 
     const convertDateToNumber = (date) => {
         return Date.parse(
@@ -100,13 +128,19 @@ function PostsPublished({ id }) {
         }
     }
 
+    const handleView = (e) => {
+        const postId = { id: e.target.id }
+        postDispatch({ type: "SHOW", payload: postId })
+        navigate('/info-item')
+    }
+
     const handleUpdate = (e) => {
         postDispatch({ type: 'SHOW', payload: e.target.id })
         navigate('/post')
     }
 
     const handleSearch = (e) => {
-        setSearch({ ...search, [e.target.id]: e.target.value })
+        setSearch({ ...search, [e.target.id]: e.target.value.toLowerCase() })
     }
 
     const handleFilter = () => {
@@ -390,74 +424,143 @@ function PostsPublished({ id }) {
                     </div>
                     <div className={cl('header-right')}>
                         <input
-                            id="wardSearch"
-                            className={cl('box-search')}
-                            placeholder='Tìm theo Xã / Phường'
-                            onChange={e => handleSearch(e)}
-                        />
-                        <input
                             id="addressSearch"
                             className={cl('box-search')}
-                            placeholder='Địa chỉ cụ thể'
+                            placeholder='Tìm theo địa chỉ'
                             onChange={e => handleSearch(e)}
                         />
+                        {id ? null
+                            : <input
+                                id="userSearch"
+                                className={cl('box-search')}
+                                placeholder='Tìm theo người đăng'
+                                onChange={e => handleSearch(e)}
+                            />
+                        }
                     </div>
                 </div>
                 <div className={cl('wrap-table')}>
-                    <table>
+                    <table className={cl('d-table')}>
                         <thead>
                             <tr>
-                                <th>Id</th>
-                                <th>Danh Mục</th>
-                                <th>Loại</th>
-                                <th>Ngày đăng</th>
-                                <th>Xã / Phường</th>
-                                <th>Địa chỉ</th>
-                                <th></th>
+                                <th style={{ width: '100px' }}>Id</th>
+                                <th style={{ width: '80px' }}>Danh Mục</th>
+                                <th style={{ width: '80px' }}>Loại</th>
+                                <th style={{ width: '25%' }} className={cl('td-sqm')}>Địa chỉ</th>
+                                {id ?
+                                    <th
+                                        style={{ width: '80px' }}
+                                        className={cl('td-sqm')}
+                                    >
+                                        Diện tích
+                                    </th>
+                                    : <th>Người đăng</th>
+                                }
+                                <th style={{ width: '90px' }}>Ngày đăng</th>
+                                <th style={{ width: '13%' }}></th>
                             </tr>
                         </thead>
                         <tbody>
                             {id ?
+                                // Bảng quản lý tin đăng cá nhân
                                 currentTablePersonalPosts.map((post, index) => (
                                     post.userId === id &&
                                     <tr key={index}>
-                                        <td>{post.id}</td>
+                                        <Tippy
+                                            content={post.id}
+                                        >
+                                            <td>{post.id}</td>
+                                        </Tippy>
                                         <td>{post.category}</td>
-                                        <td>{post.type}</td>
+                                        <Tippy
+                                            content={post.type}
+                                        >
+                                            <td>{post.type}</td>
+                                        </Tippy>
+                                        <Tippy
+                                            content={[post.address, post.ward, post.distric, post.city].join(', ')}
+                                        >
+                                            <td>{[post.address, post.ward, post.distric, post.city].join(', ')}</td>
+                                        </Tippy>
+                                        <td className={cl('td-sqm')}>{post.sqm} m²</td>
                                         <td>{post.date}</td>
-                                        <td>{post.ward}</td>
-                                        <td>{post.address}</td>
                                         <td>
-                                            <button
-                                                id={post.id}
-                                                title="Sửa"
-                                                className={cl('btn-icon', 'btn-update')}
-                                                onClick={(e) => handleUpdate(e)}
-                                            ></button>
-                                            <button
-                                                id={post.id}
-                                                title="Xóa"
-                                                className={cl('btn-icon', 'btn-delete')}
-                                                onClick={(e) => handleDelete(e.target.id)}
-                                            ></button>
+                                            <Tippy
+                                                content='Xem'
+                                            >
+                                                <button
+                                                    id={post.id}
+                                                    className={cl('btn-icon', 'btn-view')}
+                                                    onClick={(e) => handleView(e)}
+                                                ></button>
+                                            </Tippy>
+                                            <Tippy
+                                                content='Sửa'
+                                            >
+                                                <button
+                                                    id={post.id}
+                                                    className={cl('btn-icon', 'btn-update')}
+                                                    onClick={(e) => handleUpdate(e)}
+                                                ></button>
+                                            </Tippy>
+                                            <Tippy
+                                                content='Xóa'
+                                            >
+                                                <button
+                                                    id={post.id}
+                                                    className={cl('btn-icon', 'btn-delete')}
+                                                    onClick={(e) => handleDelete(e.target.id)}
+                                                ></button>
+                                            </Tippy>
                                         </td>
                                     </tr>
                                 ))
+                                // Bảng quản lý tất cả tin đăng
                                 : currentTablePosts.map((post, index) =>
                                     <tr key={index}>
-                                        <td>{post.id}</td>
+                                        <Tippy
+                                            content={post.id}
+                                        >
+                                            <td>{post.id}</td>
+                                        </Tippy>
                                         <td>{post.category}</td>
-                                        <td>{post.type}</td>
+                                        <Tippy
+                                            content={post.type}
+                                        >
+                                            <td>{post.type}</td>
+                                        </Tippy>
+                                        <Tippy
+                                            content={[post.address, post.ward, post.distric, post.city].join(', ')}
+                                        >
+                                            <td>{[post.address, post.ward, post.distric, post.city].join(', ')}</td>
+                                        </Tippy>
+                                        <Tippy
+                                            content={post.userName}
+                                        >
+                                            <td>
+                                                {post.userName}
+                                            </td>
+                                        </Tippy>
                                         <td>{post.date}</td>
-                                        <td>{post.ward}</td>
-                                        <td>{post.address}</td>
-                                        <td>
-                                            <button
-                                                id={post.id}
-                                                title="Xóa"
-                                                className={cl('btn-icon', 'btn-delete')}
-                                                onClick={(e) => handleDelete(e.target.id)}
-                                            ></button>
+                                        <td className={cl('td-btn')}>
+                                            <Tippy
+                                                content='Xem'
+                                            >
+                                                <button
+                                                    id={post.id}
+                                                    className={cl('btn-icon', 'btn-view')}
+                                                    onClick={(e) => handleView(e)}
+                                                ></button>
+                                            </Tippy>
+                                            <Tippy
+                                                content='Xóa'
+                                            >
+                                                <button
+                                                    id={post.id}
+                                                    className={cl('btn-icon', 'btn-delete')}
+                                                    onClick={(e) => handleDelete(e.target.id)}
+                                                ></button>
+                                            </Tippy>
                                         </td>
                                     </tr>
                                 )}
@@ -465,13 +568,22 @@ function PostsPublished({ id }) {
                     </table>
                 </div>
                 <div className={cl('wrap-pagination')}>
-                    <div className={cl('page-info')}>
-                        Hiển thị {currentPage * PageSize - PageSize + 1}
-                        -
-                        {currentPage * PageSize < posts.length ?
-                            currentPage * PageSize
-                            : posts.length}/{posts.length} tin
-                    </div>
+                    {id ?
+                        <div className={cl('page-info')}>
+                            Hiển thị {currentPage * PageSize - PageSize + 1}
+                            -
+                            {currentPage * PageSize < personalPosts.length ?
+                                currentPage * PageSize
+                                : personalPosts.length}/{personalPosts.length} tin
+                        </div>
+                        : <div className={cl('page-info')}>
+                            Hiển thị {currentPage * PageSize - PageSize + 1}
+                            -
+                            {currentPage * PageSize < posts.length ?
+                                currentPage * PageSize
+                                : posts.length}/{posts.length} tin
+                        </div>
+                    }
                     {!id &&
                         <Pagination
                             className="pagination-bar"

@@ -18,8 +18,6 @@ function UserInformation() {
     const { currentUser } = useContext(AuthContext)
     const [user, setUser] = useState({})
 
-    console.log(currentUser);
-
     // Lấy thông tin người dùng đang hoạt động
     useEffect(() => {
         const unsub = onSnapshot(doc(db, "users", currentUser.uid),
