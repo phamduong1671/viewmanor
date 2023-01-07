@@ -206,7 +206,7 @@ function PostsPublished({ id }) {
         <Fragment>
             {showFilter &&
                 <div className={cl('wrap-filter')}>
-                    <div className={cl('filter')}>
+                    <div ref={wrapperRef} className={cl('filter')}>
                         <div
                             className={cl('btn-close')}
                             onClick={() => setShowFilter(false)}
@@ -214,7 +214,7 @@ function PostsPublished({ id }) {
                             <FontAwesomeIcon icon={faXmark} />
                         </div>
                         Từ:
-                        <div ref={wrapperRef} style={{ display: 'flex' }}>
+                        <div style={{ display: 'flex' }}>
                             {/* Ngày đầu */}
                             <div className={cl('filter-props')}>Ngày:
                                 <div id='prevDays' className={cl('cbb-container')} onClick={(e) => showValue(e)} >
