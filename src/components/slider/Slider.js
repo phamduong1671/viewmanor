@@ -16,8 +16,27 @@ import image from '../../assets/image/no-image.png';
 function Slider({ name }) {
     const cl = classNames.bind(style)
     const navigate = useNavigate()
+    const [lockedUsers, setLockedUsers] = useState([])
     const [posts, setPosts] = useState([])
     const { postDispatch } = useContext(PostContext)
+
+    useEffect(() => {
+        const unsub = onSnapshot(collection(db, "users"),
+            (snapshot) => {
+                let list = [];
+                snapshot.docs.forEach((doc) => {
+                    if (doc.data().status === 'Bị khóa')
+                        list.push({ id: doc.id, ...doc.data() })
+                });
+                setLockedUsers(list);
+            }, (error) => {
+                console.log(error);
+            }
+        );
+        return () => {
+            unsub();
+        }
+    }, [])
 
     useEffect(() => {
         const unsub = onSnapshot(collection(db, "posts"),
@@ -26,6 +45,9 @@ function Slider({ name }) {
                 snapshot.docs.forEach((doc) => {
                     list.push({ id: doc.id, ...doc.data() })
                 });
+                lockedUsers.forEach(lockedUser =>
+                    list = list.filter(item => item.userId !== lockedUser.id)
+                )
                 setPosts(list.filter(item => item.category === name));
             }, (error) => {
                 console.log(error);
@@ -35,7 +57,7 @@ function Slider({ name }) {
             unsub();
         }
         // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [])
+    }, [lockedUsers])
 
     const goInfoItemPage = (e) => {
         const postId = { id: e.target.id }
@@ -48,7 +70,7 @@ function Slider({ name }) {
         <div className={cl('slider-container')}>
             <div className={cl('post-list')}>
                 <Slick {...settings}>
-                    {posts.slice(0,30).map((post, index) =>
+                    {posts.slice(0, 30).map((post, index) =>
                         <div
                             key={post.id}
                             id={post.id}

@@ -2,7 +2,7 @@ import classNames from "classnames/bind";
 import { useNavigate } from "react-router";
 import { useContext, useEffect, useState, useMemo } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { collection, getDocs, query, where } from "firebase/firestore";
+import { collection, getDocs, onSnapshot, query, where } from "firebase/firestore";
 import { faMap, faMoneyBill1 } from "@fortawesome/free-regular-svg-icons";
 import { faHouse, faRulerCombined, faAngleDown } from "@fortawesome/free-solid-svg-icons";
 
@@ -12,7 +12,7 @@ import Pagination from "../../components/pagination";
 import { PostContext } from "../../context/PostContext";
 import { PropsContext } from "../../context/PropsContext";
 import image from '../../assets/image/no-image.png';
-import { categorys, types, dvhc, sqms, priceRent, priceBuy } from '../../tree.js'
+import { categorys, types, dvhc, sqms, priceRent, priceBuy } from '../../tree.js';
 
 let PageSize = 15;
 
@@ -20,6 +20,7 @@ function Search() {
     const navigate = useNavigate()
     const cl = classNames.bind(style);
     const { currentProps } = useContext(PropsContext)
+    const [lockedUsers, setLockedUsers] = useState([])
     const [posts, setPosts] = useState([])
     const { postDispatch } = useContext(PostContext)
     const [show, setShow] = useState('')
@@ -37,9 +38,27 @@ function Search() {
     }, [currentPage, posts]);
 
     useEffect(() => {
+        const unsub = onSnapshot(collection(db, "users"),
+            (snapshot) => {
+                let list = [];
+                snapshot.docs.forEach((doc) => {
+                    if (doc.data().status === 'Bị khóa')
+                        list.push({ id: doc.id, ...doc.data() })
+                });
+                setLockedUsers(list);
+            }, (error) => {
+                console.log(error);
+            }
+        );
+        return () => {
+            unsub();
+        }
+    }, [])
+
+    useEffect(() => {
         handleSearch()
         // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [props])
+    }, [props, lockedUsers])
 
     const showValue = (e) => {
         let id = ''
@@ -120,6 +139,9 @@ function Search() {
             list.push({ id: doc.id, ...doc.data() })
         });
         list = list.filter(item => price.min < item.price && item.price <= price.max)
+        lockedUsers.forEach(lockedUser =>
+            list = list.filter(item => item.userId !== lockedUser.id)
+        )
         setPosts(list);
     }
 
@@ -406,19 +428,19 @@ function Search() {
                             </div>
                             <div id={post.id} className={cl('info')}>
                                 <div id={post.id}>
-                                    <FontAwesomeIcon icon={faHouse} color='#32a428' /> {}
+                                    <FontAwesomeIcon icon={faHouse} color='#32a428' /> { }
                                     <label id={post.id}>{post.type}</label>
                                 </div>
                                 <div id={post.id}>
-                                    <FontAwesomeIcon icon={faRulerCombined} color='#32a428' /> {}
+                                    <FontAwesomeIcon icon={faRulerCombined} color='#32a428' /> { }
                                     <label id={post.id}>{post.sqm + ' m²'}</label>
                                 </div>
                                 <div id={post.id}>
-                                    <FontAwesomeIcon icon={faMoneyBill1} color='#32a428' /> {}
+                                    <FontAwesomeIcon icon={faMoneyBill1} color='#32a428' /> { }
                                     <label id={post.id}>{post.price.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',') + ' VND'}</label>
                                 </div>
                                 <div id={post.id}>
-                                    <FontAwesomeIcon icon={faMap} color='#32a428' /> {}
+                                    <FontAwesomeIcon icon={faMap} color='#32a428' /> { }
                                     <label id={post.id}>{post.ward + ', ' + post.distric + ', ' + post.city}</label>
                                 </div>
                             </div>

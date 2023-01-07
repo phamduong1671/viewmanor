@@ -245,7 +245,7 @@ function UserManager({ id }) {
                                         ></button>
                                     </Tippy>
                                     <Tippy
-                                        content='Khóa'
+                                        content='Khóa/Mở khóa'
                                     >
                                         <button
                                             id={user.id}

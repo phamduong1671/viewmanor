@@ -65,11 +65,9 @@ function PostsPublished({ id }) {
                 console.log(error);
             }
         );
-
         return () => {
             unsub();
         }
-
     }, [])
 
     useEffect(() => {
