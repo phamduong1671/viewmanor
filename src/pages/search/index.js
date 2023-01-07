@@ -1,11 +1,12 @@
 import classNames from "classnames/bind";
 import { useNavigate } from "react-router";
-import { useContext, useEffect, useState, useMemo } from "react";
+import { useContext, useEffect, useState, useMemo, useRef } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { collection, getDocs, onSnapshot, query, where } from "firebase/firestore";
 import { faMap, faMoneyBill1 } from "@fortawesome/free-regular-svg-icons";
 import { faHouse, faRulerCombined, faAngleDown } from "@fortawesome/free-solid-svg-icons";
 
+import { useClickOutside } from "../../hooks";
 import { db } from "../../firebase";
 import style from './Search.module.scss';
 import Pagination from "../../components/pagination";
@@ -36,6 +37,11 @@ function Search() {
         const lastPageIndex = firstPageIndex + PageSize;
         return posts.slice(firstPageIndex, lastPageIndex);
     }, [currentPage, posts]);
+
+    const wrapperRef = useRef("");
+    useClickOutside(wrapperRef, () => {
+        setShow('');
+    });
 
     useEffect(() => {
         const unsub = onSnapshot(collection(db, "users"),
@@ -160,7 +166,7 @@ function Search() {
 
     return (
         <div className={cl('wrap-content')}>
-            <div className={cl('header')}>
+            <div ref={wrapperRef} className={cl('header')}>
                 <div className={cl('content-header')}>
                     {/* Danh mục */}
                     <div

@@ -1,9 +1,10 @@
 import classNames from "classnames/bind";
-import { useState, useContext, useEffect } from "react";
+import { useState, useContext, useEffect, useRef } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faAngleDown } from "@fortawesome/free-solid-svg-icons";
 import { addDoc, collection, doc, onSnapshot, runTransaction } from "firebase/firestore";
 
+import { useClickOutside } from "../../hooks";
 import style from './Post.module.scss'
 import { categorys, types, dvhc } from '../../tree.js'
 import { db, storage } from '../../firebase'
@@ -25,6 +26,11 @@ function Post() {
     const [file, setFile] = useState('')
     const [imgs, setImgs] = useState([])
     const [warn, setWarn] = useState([])
+
+    const wrapperRef = useRef("");
+    useClickOutside(wrapperRef, () => {
+        setShow('');
+    });
 
     useEffect(() => {
         if (currentPost) {
@@ -204,7 +210,7 @@ function Post() {
 
     return (
         <div className={cl('content')}>
-            <div className={cl('content-child')}>
+            <div ref={wrapperRef} className={cl('content-child')}>
                 <div className={cl('post-props')}>Danh mục
                     <div id='category' className={cl('cbb-container')} onClick={(e) => showValue(e)} >
                         <div className={cl('input-container')}>

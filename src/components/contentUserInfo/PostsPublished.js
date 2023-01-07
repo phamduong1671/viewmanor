@@ -1,6 +1,6 @@
 import classNames from "classnames/bind";
 import { useNavigate } from "react-router";
-import { useContext, useEffect, useState, useMemo, Fragment } from "react";
+import { useContext, useEffect, useState, useMemo, Fragment, useRef } from "react";
 import { collection, deleteDoc, doc, getDocs, onSnapshot } from "firebase/firestore";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCalendarCheck } from "@fortawesome/free-regular-svg-icons";
@@ -13,6 +13,7 @@ import style from './PostsPublished.module.scss';
 import { db } from '../../firebase.js';
 import { PostContext } from '../../context/PostContext';
 import Pagination from "../pagination";
+import { useClickOutside } from "../../hooks";
 
 let PageSize = 10;
 const days = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31]
@@ -40,6 +41,11 @@ function PostsPublished({ id }) {
         lastMonth: 1,
         lastYear: 2048
     })
+
+    const wrapperRef = useRef("");
+    useClickOutside(wrapperRef, () => {
+        setShow('');
+    });
 
     const currentTablePosts = useMemo(() => {
         const firstPageIndex = (currentPage - 1) * PageSize;
@@ -208,7 +214,7 @@ function PostsPublished({ id }) {
                             <FontAwesomeIcon icon={faXmark} />
                         </div>
                         Từ:
-                        <div style={{ display: 'flex' }}>
+                        <div ref={wrapperRef} style={{ display: 'flex' }}>
                             {/* Ngày đầu */}
                             <div className={cl('filter-props')}>Ngày:
                                 <div id='prevDays' className={cl('cbb-container')} onClick={(e) => showValue(e)} >

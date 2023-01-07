@@ -1,6 +1,6 @@
 import classNames from "classnames/bind";
 import { collection, doc, runTransaction, onSnapshot } from "firebase/firestore";
-import { useEffect, useState, useMemo } from "react";
+import { useEffect, useState, useMemo, useRef } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faAngleDown } from "@fortawesome/free-solid-svg-icons";
 import 'tippy.js/animations/shift-away.css';
@@ -10,6 +10,7 @@ import 'tippy.js/dist/tippy.css';
 import style from './UserManager.module.scss'
 import { db } from '../../firebase.js'
 import Pagination from "../pagination";
+import { useClickOutside } from "../../hooks";
 
 let PageSize = 10;
 const roles = ['Tất cả', 'Người dùng', 'Quản trị viên']
@@ -27,6 +28,11 @@ function UserManager({ id }) {
         const lastPageIndex = firstPageIndex + PageSize;
         return users.slice(firstPageIndex, lastPageIndex);
     }, [currentPage, users]);
+
+    const wrapperRef = useRef("");
+    useClickOutside(wrapperRef, () => {
+        setShow('');
+    });
 
     useEffect(() => {
         const unsub = onSnapshot(collection(db, "users"),
@@ -152,37 +158,36 @@ function UserManager({ id }) {
         <div className={cl('content')}>
             <div className={cl('header-content')}>Quản lý tài khoản người dùng</div>
             <div className={cl('header')}>
-                <div>
-                    <div
-                        id='role'
-                        className={cl('cbb-container')}
-                        onClick={(e) => showValue(e)}
-                    >
-                        <div className={cl('input-container')}>
-                            <input className={cl('input-cbb')}
-                                spellCheck={false}
-                                value={role || 'Tất cả'}
-                                readOnly
-                            />
-                            <div className={cl('icon-dropdown')}>
-                                <FontAwesomeIcon icon={faAngleDown} />
-                            </div>
+                <div
+                    ref={wrapperRef}
+                    id='role'
+                    className={cl('cbb-container')}
+                    onClick={(e) => showValue(e)}
+                >
+                    <div className={cl('input-container')}>
+                        <input className={cl('input-cbb')}
+                            spellCheck={false}
+                            value={role || 'Tất cả'}
+                            readOnly
+                        />
+                        <div className={cl('icon-dropdown')}>
+                            <FontAwesomeIcon icon={faAngleDown} />
                         </div>
-                        {show &&
-                            <div className={cl('cbb-value')}>
-                                {roles.map(item => (
-                                    <div
-                                        id={item}
-                                        key={item}
-                                        className={cl('cbb-item')}
-                                        onClick={(e) => selectItem(e)}
-                                    >
-                                        {item}
-                                    </div>
-                                ))}
-                            </div>
-                        }
                     </div>
+                    {show &&
+                        <div className={cl('cbb-value')}>
+                            {roles.map(item => (
+                                <div
+                                    id={item}
+                                    key={item}
+                                    className={cl('cbb-item')}
+                                    onClick={(e) => selectItem(e)}
+                                >
+                                    {item}
+                                </div>
+                            ))}
+                        </div>
+                    }
                 </div>
                 <div className={cl('header-right')}>
                     <input

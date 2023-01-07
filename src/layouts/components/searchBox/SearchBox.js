@@ -1,16 +1,15 @@
 import classNames from "classnames/bind";
-import { useContext, useState } from "react";
+import { useContext, useRef, useState } from "react";
 import { useNavigate } from 'react-router';
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faMagnifyingGlass } from "@fortawesome/free-solid-svg-icons";
 import { faAngleDown } from "@fortawesome/free-solid-svg-icons";
 
-// import OutsideAlerter from '../../../components/OutsideAlerter.js'
+import { useClickOutside } from "../../../hooks";
 import style from './SearchBox.module.scss';
 import buttonHeader from '../header/Header.module.scss';
 import { types, dvhc, sqms } from '../../../tree.js';
 import { PropsContext } from '../../../context/PropsContext';
-
 
 function SearchBox() {
     const navigate = useNavigate()
@@ -27,9 +26,14 @@ function SearchBox() {
     })
     const { dispatch } = useContext(PropsContext)
 
+    const wrapperRef = useRef("");
+    useClickOutside(wrapperRef, () => {
+        setShow('');
+    });
+
     const handleCategory = (e) => {
         setCategory(e.target.id)
-        setProps({...props, category: e.target.id})
+        setProps({ ...props, category: e.target.id })
     }
 
     const showValue = (e) => {
@@ -47,22 +51,22 @@ function SearchBox() {
             case 1:
                 const selected1 = types.filter(item => item.id === e.target.id)
                 setType(selected1[0])
-                setProps({...props, type: selected1[0].name})
+                setProps({ ...props, type: selected1[0].name })
                 break;
             case 2:
                 const selected2 = dvhc.filter(item => item.level1_id === e.target.id)
                 setCity(selected2[0])
-                setProps({...props, city: selected2[0].name})
+                setProps({ ...props, city: selected2[0].name })
                 break;
             case 3:
                 const selected3 = city.level2s.filter(item => item.level2_id === e.target.id)
                 setDistric(selected3[0])
-                setProps({...props, distric: selected3[0].name})
+                setProps({ ...props, distric: selected3[0].name })
                 break;
             case 4:
                 const selected4 = sqms.filter(item => item.id === e.target.id)
                 setSqm(selected4[0])
-                setProps({...props, sqm: selected4[0], sqmMax: selected4[0].max, sqmMin: selected4[0].min})
+                setProps({ ...props, sqm: selected4[0], sqmMax: selected4[0].max, sqmMin: selected4[0].min })
                 break;
             default:
                 break;
@@ -94,10 +98,9 @@ function SearchBox() {
                         THUÊ
                     </div>
                 </div>
-                <div className={cl('search-props')}>
+                <div ref={wrapperRef} className={cl('search-props')}>
                     <div className={cl('center')}>
                         {/* Loại */}
-                        {/* <OutsideAlerter> */}
                         <div id='type' className={cl('cbb-container')} onClick={(e) => showValue(e)} >
                             <div className={cl('input-container')}>
                                 <input className={cl('input-cbb')}
@@ -124,7 +127,6 @@ function SearchBox() {
                                 </div>
                             }
                         </div>
-                        {/* </OutsideAlerter> */}
                         {/* Tỉnh Thành */}
                         <div id='city' className={cl('cbb-container')} onClick={(e) => showValue(e)} >
                             <div className={cl('input-container')}>
