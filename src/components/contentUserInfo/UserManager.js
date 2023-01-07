@@ -3,6 +3,9 @@ import { collection, doc, runTransaction, onSnapshot } from "firebase/firestore"
 import { useEffect, useState, useMemo } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faAngleDown } from "@fortawesome/free-solid-svg-icons";
+import 'tippy.js/animations/shift-away.css';
+import Tippy from "@tippyjs/react";
+import 'tippy.js/dist/tippy.css';
 
 import style from './UserManager.module.scss'
 import { db } from '../../firebase.js'
@@ -212,27 +215,45 @@ function UserManager({ id }) {
                     <tbody>
                         {currentTableData.map((user, index) =>
                             <tr key={index}>
-                                <td>{user.id}</td>
-                                <td>{user.name}</td>
-                                <td>{user.email}</td>
+                                <Tippy
+                                    content={user.id}
+                                >
+                                    <td>{user.id}</td>
+                                </Tippy>
+                                <Tippy
+                                    content={user.name}
+                                >
+                                    <td>{user.name}</td>
+                                </Tippy>
+                                <Tippy
+                                    content={user.email}
+                                >
+                                    <td>{user.email}</td>
+                                </Tippy>
                                 <td>{user.phone}</td>
                                 <td>{user.status}</td>
                                 <td>{user.role}</td>
                                 <td>
-                                    <button
-                                        id={user.id}
-                                        title="Phân quyền"
-                                        value={user.status}
-                                        className={cl('btn-icon', 'btn-change-role')}
-                                        onClick={(e) => handleChangeRole(e)}
-                                    ></button>
-                                    <button
-                                        id={user.id}
-                                        title="Xóa"
-                                        value={user.status}
-                                        className={cl('btn-icon', 'btn-disable')}
-                                        onClick={(e) => handleDisable(e)}
-                                    ></button>
+                                    <Tippy
+                                        content='Phân quyền'
+                                    >
+                                        <button
+                                            id={user.id}
+                                            value={user.status}
+                                            className={cl('btn-icon', 'btn-change-role')}
+                                            onClick={(e) => handleChangeRole(e)}
+                                        ></button>
+                                    </Tippy>
+                                    <Tippy
+                                        content='Khóa'
+                                    >
+                                        <button
+                                            id={user.id}
+                                            value={user.status}
+                                            className={cl('btn-icon', 'btn-disable')}
+                                            onClick={(e) => handleDisable(e)}
+                                        ></button>
+                                    </Tippy>
                                 </td>
                             </tr>
                         )}

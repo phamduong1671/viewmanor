@@ -9,10 +9,9 @@ import 'tippy.js/animations/shift-away.css';
 import Tippy from "@tippyjs/react";
 import 'tippy.js/dist/tippy.css';
 
-
-import style from './PostsPublished.module.scss'
-import { db } from '../../firebase.js'
-import { PostContext } from '../../context/PostContext'
+import style from './PostsPublished.module.scss';
+import { db } from '../../firebase.js';
+import { PostContext } from '../../context/PostContext';
 import Pagination from "../pagination";
 
 let PageSize = 10;
