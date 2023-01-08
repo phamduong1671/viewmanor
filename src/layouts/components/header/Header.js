@@ -35,6 +35,7 @@ function Header() {
     }, [currentUser])
 
     const goHomePage = () => {
+        postDispatch({ type: 'SHOW', payload: null })
         navigate('/')
     };
 
@@ -47,7 +48,18 @@ function Header() {
         }
     };
 
+    const goSignInPage = () => {
+        postDispatch({ type: 'SHOW', payload: null })
+        navigate('/sign-in')
+    }
+
+    const goSignUpPage = () => {
+        postDispatch({ type: 'SHOW', payload: null })
+        navigate('/sign-up')
+    }
+
     const handleSignOut = () => {
+        postDispatch({ type: 'SHOW', payload: null })
         dispatch({ type: "LOGOUT", payload: null })
         navigate('/')
     }
@@ -62,15 +74,40 @@ function Header() {
                 />
             </div>
             <div className={cl('header-right')}>
-                <Link className={cl('btn-search', 'btn-header')} to='/search'>Tìm kiếm</Link>
-                <Link className={cl('btn-home', 'btn-header')} to='/'>Trang chủ</Link>
-                <div className={cl('btn-post', 'btn-header')} onClick={goPostPage}>Đăng tin</div>
+                <Link
+                    className={cl('btn-search', 'btn-header')}
+                    to='/search'
+                >
+                    Tìm kiếm
+                </Link>
+                <div
+                    className={cl('btn-home', 'btn-header')}
+                    onClick={goHomePage}
+                >
+                    Trang chủ
+                </div>
+                <div
+                    className={cl('btn-post', 'btn-header')}
+                    onClick={goPostPage}
+                >
+                    Đăng tin
+                </div>
                 <Tippy
                     interactive
                     render={attrs => (
                         <div className={cl('user-features')} tabIndex="0" {...attrs}>
-                            <Link className={cl('item-feature')} to='/user-info'>Thông tin tài khoản</Link>
-                            <div className={cl('item-feature')} onClick={handleSignOut}>Đăng xuất</div>
+                            <Link
+                                className={cl('item-feature')}
+                                to='/user-info'
+                            >
+                                Thông tin tài khoản
+                            </Link>
+                            <div
+                                className={cl('item-feature')}
+                                onClick={handleSignOut}
+                            >
+                                Đăng xuất
+                            </div>
                         </div>
                     )}
                 >
@@ -80,8 +117,18 @@ function Header() {
                 </Tippy>
                 {currentUser === null ?
                     <Fragment>
-                        <Link className={cl('btn-signIn')} to='/sign-in'>Đăng nhập</Link>
-                        <Link className={cl('btn-signUp', 'btn-header')} to='/sign-up'>Đăng ký</Link>
+                        <div
+                            className={cl('btn-signIn')}
+                            onClick={goSignInPage}
+                        >
+                            Đăng nhập
+                        </div>
+                        <div
+                            className={cl('btn-signUp', 'btn-header')}
+                            onClick={goSignUpPage}
+                        >
+                            Đăng ký
+                        </div>
                     </Fragment>
                     : null}
             </div>

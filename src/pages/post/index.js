@@ -128,7 +128,6 @@ function Post() {
     const handlePost = async (e) => {
         e.preventDefault()
         if (data.title && data.address && data.sqm && data.price && data.description && data.category && data.type && data.ward) {
-            console.log('ok');
             try {
                 const res = await addDoc(collection(db, "posts"), {
                     ...data,

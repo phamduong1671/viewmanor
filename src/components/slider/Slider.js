@@ -63,7 +63,7 @@ function Slider({ name }) {
         const postId = { id: e.target.id }
         postDispatch({ type: "SHOW", payload: postId })
 
-        navigate('./info-item')
+        navigate('/info-item')
     }
 
     return (

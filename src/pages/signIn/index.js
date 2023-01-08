@@ -8,11 +8,12 @@ import { faXmark } from "@fortawesome/free-solid-svg-icons";
 import { auth } from "../../firebase";
 import style from './SignIn.module.scss'
 import { AuthContext } from "../../context/AuthContext";
+import { PostContext } from "../../context/PostContext";
 
 function SignIn() {
     const navigate = useNavigate()
     const cl = classNames.bind(style)
-
+    const { currentPost } = useContext(PostContext)
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
     const [error, setError] = useState(false);
@@ -22,10 +23,11 @@ function SignIn() {
         e.preventDefault();
         signInWithEmailAndPassword(auth, email, password)
             .then((userCredential) => {
-                console.log(userCredential);
                 const user = userCredential.user;
                 dispatch({ type: "LOGIN", payload: user })
-                navigate('/')
+                if (currentPost === null)
+                    navigate('/')
+                else navigate('/info-item')
             })
             .catch((error) => {
                 setError(true)

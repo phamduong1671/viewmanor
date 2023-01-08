@@ -1,9 +1,10 @@
 import { useContext, useEffect, useState } from "react";
-import { doc, onSnapshot } from "firebase/firestore";
+import { addDoc, collection, doc, onSnapshot } from "firebase/firestore";
 import classNames from "classnames/bind";
 import Slick from 'react-slick';
 import { faSquareFacebook } from "@fortawesome/free-brands-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { useNavigate } from "react-router";
 
 import settings from '../../components/slider/Slick';
 import { db } from '../../firebase';
@@ -11,13 +12,24 @@ import style from './InfoItem.module.scss';
 import { PostContext } from "../../context/PostContext";
 import icon from '../../assets/image/default-avatar.jpg';
 import image from '../../assets/image/no-image.png';
+import { faXmark } from "@fortawesome/free-solid-svg-icons";
+import { AuthContext } from "../../context/AuthContext";
 
 function InfoItem() {
+    const navigate = useNavigate()
     const cl = classNames.bind(style)
+    const { currentUser } = useContext(AuthContext)
     const { currentPost } = useContext(PostContext)
     const [post, setPost] = useState({})
     const [user, setUser] = useState({})
     const [zoom, setZoom] = useState({ show: false, src: '' })
+    const [showReport, setShowReport] = useState(false)
+    const [report, setReport] = useState({
+        reason: '',
+        otherReason: ''
+    })
+    const [warn, setWarn] = useState(false)
+    const [active, setActive] = useState('')
 
     useEffect(() => {
         const unsub = onSnapshot(doc(db, "posts", currentPost.id),
@@ -47,6 +59,65 @@ function InfoItem() {
         }
     }, [post])
 
+    const handleShowReport = () => {
+        if (currentUser !== null) {
+            if (currentUser.uid === post.userId)
+                alert('Bạn không thể tự báo cáo bài đăng của mình!')
+            else {
+                setActive('')
+                setReport({
+                    reason: '',
+                    otherReason: ''
+                })
+                setShowReport(true)
+            }
+        } else if (window.confirm('Hãy đăng nhập để báo cáo tin đăng này.')) {
+            navigate('/sign-in')
+        }
+    }
+
+    const chooseReason = (e) => {
+        setReport({
+            ...report,
+            reporterId: currentUser.uid,
+            postId: post.id,
+            userId: post.userId,
+            reason: e.target.id
+        })
+        setActive(e.target.id)
+    }
+
+    const handleReport = async () => {
+        if (report.reason === '' && report.otherReason === '')
+            setWarn(true)
+        else if (window.confirm('Gửi báo cáo tin đăng này?')) {
+            try {
+                const res = await addDoc(collection(db, "reports"), {
+                    ...report
+                });
+                console.log(res.id);
+                alert('Đã báo cáo')
+                window.location.reload(false);
+            }
+            catch (err) {
+                console.log(err)
+            }
+            setShowReport(false)
+            setWarn(false)
+        }
+    }
+
+    const handleInput = (e) => {
+        const value = e.target.value
+        setReport({
+            ...report,
+            reporterId: currentUser.uid,
+            postId: post.id,
+            userId: post.userId,
+            otherReason: value
+        })
+    }
+
     const handleZoom = (e) => {
         if (post.image.length !== 0)
             setZoom({ show: !zoom.show, src: e.target.src || '' })
@@ -54,13 +125,66 @@ function InfoItem() {
 
     return (
         <div className={cl('item-container')}>
+            {showReport &&
+                <div className={cl('wrap-report')}>
+                    <div className={cl('box-report')}>
+                        <div className={cl('header-report')}>
+                            <div className={cl('title-report')}>Báo cáo</div>
+                            <div
+                                className={cl('btn-close')}
+                                onClick={() => setShowReport(false)}
+                            >
+                                <FontAwesomeIcon icon={faXmark} />
+                            </div>
+                        </div>
+                        <div style={{ padding: '10px 10px 0 10px' }}>
+                            <div style={{ padding: '0 0 10px 0' }}>Hãy chọn vấn đề:</div>
+                            <div
+                                id="Nội dung sai sự thật"
+                                style={{ backgroundColor: (active === 'Nội dung sai sự thật') ? '#2eb71f' : '#fff' }}
+                                className={cl('reason-item')}
+                                onClick={e => chooseReason(e)}
+                            >
+                                Nội dung sai sự thật
+                            </div>
+                            <div
+                                id="Người đăng có dấu hiệu lừa đảo"
+                                style={{ backgroundColor: (active === 'Người đăng có dấu hiệu lừa đảo') ? '#2eb71f' : '#fff' }}
+                                className={cl('reason-item')}
+                                onClick={e => chooseReason(e)}
+                            >
+                                Người đăng có dấu hiệu lừa đảo
+                            </div>
+                            <textarea
+                                id='reason'
+                                value={report.otherReason || ''}
+                                className={cl('input-reason')}
+                                onChange={(e) => handleInput(e)}
+                                placeholder='Lý do khác...'
+                                spellCheck='false'
+                            />
+                            {warn &&
+                                <div className={cl('warn')}>Chưa chọn lý do báo cáo!</div>
+                            }
+                        </div>
+                        <div className={cl('wrap-btn-report')}>
+                            <button
+                                className={cl('btn-report')}
+                                onClick={handleReport}
+                            >
+                                Gửi
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            }
             {zoom.show && post.image.length !== 0 &&
                 <div className={cl('zoom')} onClick={handleZoom}>
                     <img
                         className={cl('image')}
                         src={zoom.src}
                         alt="postItem"
-                        onClick={e => handleZoom(e)}
+                        onClick={handleZoom}
                     />
                 </div>
             }
@@ -68,6 +192,14 @@ function InfoItem() {
                 {post.title}
             </div>
             <div className={cl('date')}>Ngày đăng: {post.date}</div>
+            <div className={cl('report')}>
+                <div
+                    className={cl('label-report')}
+                    onClick={handleShowReport}
+                >
+                    Báo cáo tin đăng
+                </div>
+            </div>
             <div className={cl('wrap-image')}>
                 {(post.image && post.image.length !== 0) ?
                     <Slick {...settings}>
@@ -157,7 +289,7 @@ function InfoItem() {
                                 className={cl('btn')}
                                 onClick={() => window.location = user.facebook}
                             >
-                                <FontAwesomeIcon icon={faSquareFacebook} size="2x" color="#3B5998"/>
+                                <FontAwesomeIcon icon={faSquareFacebook} size="2x" color="#3B5998" />
                                 <div className={cl('label-facebook')}>
                                     Facebook
                                 </div>
