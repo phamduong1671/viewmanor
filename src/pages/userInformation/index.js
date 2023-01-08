@@ -7,6 +7,7 @@ import Information from "../../components/contentUserInfo/Information";
 import EditInfo from "../../components/contentUserInfo/EditInfo";
 import PostsPublished from "../../components/contentUserInfo/PostsPublished";
 import UserManager from "../../components/contentUserInfo/UserManager";
+import ReportManager from "../../components/contentUserInfo/ReportManager";
 import { AuthContext } from '../../context/AuthContext'
 import { db } from '../../firebase'
 import defaultAvatar from '../../assets/image/default-avatar.jpg';
@@ -93,6 +94,13 @@ function UserInformation() {
                                 >
                                     Quản lý tài khoản người dùng
                                 </div>
+                                <div
+                                    id='7'
+                                    className={cl('item-feature')}
+                                    onClick={(e) => handleFeature(e.target.id)}
+                                >
+                                    Danh sách báo cáo
+                                </div>
                             </Fragment>
                         ) : null}
                     </div>
@@ -104,6 +112,7 @@ function UserInformation() {
             {feature === '4' && <ChangePassword user={user} />}
             {feature === '5' && <PostsPublished />}
             {feature === '6' && <UserManager id={user.id} />}
+            {feature === '7' && <ReportManager />}
         </div >
     );
 }

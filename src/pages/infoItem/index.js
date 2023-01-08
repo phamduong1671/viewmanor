@@ -31,6 +31,9 @@ function InfoItem() {
     const [warn, setWarn] = useState(false)
     const [active, setActive] = useState('')
 
+    const today = new Date()
+    const currentDate = today.getDate() + '/' + (today.getMonth() + 1) + '/' + today.getFullYear();
+
     useEffect(() => {
         const unsub = onSnapshot(doc(db, "posts", currentPost.id),
             (doc) => {
@@ -82,7 +85,8 @@ function InfoItem() {
             reporterId: currentUser.uid,
             postId: post.id,
             userId: post.userId,
-            reason: e.target.id
+            reason: e.target.id,
+            date: currentDate
         })
         setActive(e.target.id)
     }
@@ -114,7 +118,8 @@ function InfoItem() {
             reporterId: currentUser.uid,
             postId: post.id,
             userId: post.userId,
-            otherReason: value
+            otherReason: value,
+            date: currentDate
         })
     }
 

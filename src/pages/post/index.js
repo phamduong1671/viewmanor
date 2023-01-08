@@ -27,6 +27,9 @@ function Post() {
     const [imgs, setImgs] = useState([])
     const [warn, setWarn] = useState([])
 
+    const today = new Date()
+    const currentDate = today.getDate() + '/' + (today.getMonth() + 1) + '/' + today.getFullYear();
+
     const wrapperRef = useRef("");
     useClickOutside(wrapperRef, () => {
         setShow('');
@@ -52,9 +55,6 @@ function Post() {
             }
         }
     }, [currentPost])
-
-    const today = new Date()
-    const currentDate = today.getDate() + '/' + (today.getMonth() + 1) + '/' + today.getFullYear();
 
     const showValue = (e) => {
         let id = ''
