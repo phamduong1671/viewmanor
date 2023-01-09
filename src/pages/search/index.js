@@ -155,6 +155,8 @@ function Search() {
         setProps({ sqmMin: 0, sqmMax: 999999999 })
         setPrice({ min: 0, max: 999999999999 })
         setSqm({})
+        setCity({})
+        setDistric({})
     }
 
     const goInfoItemPage = (e) => {

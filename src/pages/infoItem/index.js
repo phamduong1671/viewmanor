@@ -1,19 +1,19 @@
-import { useContext, useEffect, useState } from "react";
-import { addDoc, collection, doc, onSnapshot } from "firebase/firestore";
-import classNames from "classnames/bind";
 import Slick from 'react-slick';
-import { faSquareFacebook } from "@fortawesome/free-brands-svg-icons";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import classNames from "classnames/bind";
 import { useNavigate } from "react-router";
+import { useContext, useEffect, useState } from "react";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { addDoc, collection, doc, onSnapshot } from "firebase/firestore";
+import { faSquareFacebook } from "@fortawesome/free-brands-svg-icons";
 
-import settings from '../../components/slider/Slick';
 import { db } from '../../firebase';
 import style from './InfoItem.module.scss';
+import image from '../../assets/image/no-image.png';
+import settings from '../../components/slider/Slick';
+import { AuthContext } from "../../context/AuthContext";
 import { PostContext } from "../../context/PostContext";
 import icon from '../../assets/image/default-avatar.jpg';
-import image from '../../assets/image/no-image.png';
 import { faXmark } from "@fortawesome/free-solid-svg-icons";
-import { AuthContext } from "../../context/AuthContext";
 
 function InfoItem() {
     const navigate = useNavigate()
