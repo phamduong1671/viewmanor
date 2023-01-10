@@ -88,14 +88,14 @@ function SearchBox() {
                         className={category === 'Bán' ? cl('buy', 'is-active') : cl('buy')}
                         onClick={e => handleCategory(e)}
                     >
-                        MUA
+                        BÁN
                     </div>
                     <div
                         id="Cho thuê"
                         className={category === 'Cho thuê' ? cl('buy', 'is-active') : cl('buy')}
                         onClick={e => handleCategory(e)}
                     >
-                        THUÊ
+                        CHO THUÊ
                     </div>
                 </div>
                 <div ref={wrapperRef} className={cl('search-props')}>

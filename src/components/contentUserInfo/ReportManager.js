@@ -491,7 +491,7 @@ function ReportManager({ id }) {
                                             ></button>
                                         </Tippy>
                                         <Tippy
-                                            content='Khóa/Mở khóa'
+                                            content='Khóa/Mở khóa người đăng tin'
                                         >
                                             <button
                                                 id={report.userId}
