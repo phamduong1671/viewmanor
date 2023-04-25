@@ -18,7 +18,7 @@ const publicRoutes = [
     { path: '/sign-up', component: SignUp, layout: null },
     { path: '/search', component: Search },
     { path: '/forgot-password', component: ForgotPassword, layout: null },
-    { path: '/info-item', component: InfoItem},
+    { path: '/info-item/:id', component: InfoItem},
     { path: '/privacy-policy', component: PrivacyPolicy },
     { path: '/covenant-terms', component: CovenantTerms }
 ];
